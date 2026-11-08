@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="az" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>JSÖyrən - Müasir JavaScript Developer Bootcamp (ES2026)</title>
+    <meta name="description" content="Müasir JavaScript (ES6+) dilini sıfırdan peşəkar səviyyəyə qədər öyrənin. İnteraktiv bootcamp yol xəritəsi, 21 modul üzrə tam praktiki tapşırıqlar, arxitektura sxemi, playground və canlı imtahan simulyatoru.">
+    
+    <!-- Favicon & PWA App Icons -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23F7DF1E'/><text x='50' y='68' font-family='sans-serif' font-size='55' font-weight='bold' text-anchor='middle' fill='%23000'>JS</text></svg>">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#090D16">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JSÖyrən">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+    
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CodeMirror Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="blueprint-canvas view-learn">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo" style="background:#F7DF1E; color:#000; font-weight:800; border-radius:14px; width:68px; height:68px; display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 1.25rem auto; box-shadow:0 0 32px rgba(247,223,30,0.45);">JS</div>
+            <h1 class="loading-title">JSÖyrən</h1>
+            <p class="loading-text">Developer Bootcamp Mühiti Hazırlanır...</p>
+            <div class="loading-bar">
+                <div class="loading-bar-fill" id="loading-bar-fill"></div>
+            </div>
+            <p class="loading-hint" id="loading-hint">ES2026 V8 JavaScript mühərriki aktivləşdirilir...</p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app hidden">
+        <!-- Top Navigation Bar -->
+        <header class="top-navbar" id="top-navbar">
+            <div class="navbar-left">
+                <div class="brand-badge" id="brand-badge" role="button" tabindex="0" title="js/bootcamp - Əsas Səhifə">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">js/bootcamp</span>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs (Strictly 5 tabs: Öyrən, İmtahan, Playground, Sxem, İrəliləyiş) -->
+            <nav class="navbar-center" id="navbar-nav">
+                <button class="nav-pill-btn active" data-view="learn" id="nav-btn-learn" title="Yol Xəritəsi və Dərslər">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-label">Öyrən</span>
+                </button>
+                <button class="nav-pill-btn" data-view="exam" id="nav-btn-exam" title="Real Vaxt İmtahan Simulyatoru">
+                    <span class="nav-icon">⏱️</span>
+                    <span class="nav-label">İmtahan</span>
+                </button>
+                <button class="nav-pill-btn" data-view="playground" id="nav-btn-playground" title="İnteraktiv Kod Məşq Meydançası">
+                    <span class="nav-icon">💻</span>
+                    <span class="nav-label">Playground</span>
+                </button>
+                <button class="nav-pill-btn top-nav-btn" data-view="errors-panel" id="nav-errors-panel-btn" title="Xəta Sazlama Paneli (210 Debugging Challenge)">
+                    <span class="nav-icon">🐛</span>
+                    <span class="nav-label">Xəta Paneli</span>
+                </button>
+                <button class="nav-pill-btn" data-view="diagram" id="nav-btn-diagram" title="JavaScript Ekosistem Arxitekturası">
+                    <span class="nav-icon">🕸️</span>
+                    <span class="nav-label">Sxem</span>
+                </button>
+                <button class="nav-pill-btn" data-view="progress" id="nav-btn-progress" title="Nailiyyətlər və Statistika">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-label">İrəliləyiş</span>
+                </button>
+            </nav>
+
+            <!-- Right Utility Elements -->
+            <div class="navbar-right">
+                <div class="engine-badge" title="V8 / SpiderMonkey Brauzer Mühiti Aktivdir">
+                    <span class="engine-dot"></span>
+                    <span class="engine-text">ES2026 · brauzerinizdə işləyir</span>
+                </div>
+                <button class="top-nav-reset-btn" id="header-reset-progress-btn" type="button" title="Bütün irəliləməni sıfırla" aria-label="Bütün irəliləməni sıfırla"><span>🔄</span></button>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menyu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Mobile Drawer Navigation -->
+        <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+            <div class="mobile-nav-header">
+                <div class="brand-badge">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">js/bootcamp</span>
+                </div>
+                <button class="mobile-drawer-close" id="mobile-drawer-close">✕</button>
+            </div>
+            <div class="mobile-nav-links">
+                <button class="mobile-nav-item active" data-view="learn">
+                    <span class="nav-icon">📖</span> Öyrən
+                </button>
+                <button class="mobile-nav-item" data-view="exam">
+                    <span class="nav-icon">⏱️</span> İmtahan
+                </button>
+                <button class="mobile-nav-item" data-view="playground">
+                    <span class="nav-icon">💻</span> Playground
+                </button>
+                <button class="mobile-nav-item" data-view="errors-panel">
+                    <span class="nav-icon">🐛</span> Xəta Paneli
+                </button>
+                <button class="mobile-nav-item" data-view="diagram">
+                    <span class="nav-icon">🕸️</span> Sxem
+                </button>
+                <button class="mobile-nav-item" data-view="progress">
+                    <span class="nav-icon">🏆</span> İrəliləyiş
+                </button>
+            </div>
+            <div class="mobile-nav-footer">
+                <button class="mobile-sub-btn" id="mobile-tasks-btn">📋 Tapşırıqlar Paneli (130)</button>
+                <button class="mobile-sub-btn" id="mobile-errors-btn">🐛 Xəta Paneli (210)</button>
+                <button class="mobile-sub-btn reset" id="mobile-reset-btn">🔄 İrəliləyişi Sıfırla</button>
+            </div>
+        </div>
+        <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+
+        <!-- App Body Layout -->
+        <div class="app-layout" id="app-layout">
+            <!-- Sidebar for Topic Workspace Navigation (collapsible / contextual) -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo" id="sidebar-logo" role="button" tabindex="0" title="Yol Xəritəsinə Qayıt">
+                        <span class="logo-icon" style="color:#f7df1e;">⚡</span>
+                        <span class="logo-text">JSÖyrən</span>
+                    </div>
+                </div>
+                
+                <!-- Progress Overview in Sidebar -->
+                <div class="progress-overview">
+                    <div class="progress-stats">
+                        <span id="progress-text">0% tamamlanıb</span>
+                        <span id="progress-fraction">0/557</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Navigation Accordion -->
+                <nav class="sidebar-nav" id="sidebar-nav">
+                    <!-- Populated by JS -->
+                </nav>
+            </aside>
+
+            <!-- Sidebar Overlay (mobile) -->
+            <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+            <!-- Main Content Area -->
+            <main class="main-content" id="main-content">
+                <!-- ============================================
+                     VIEW 1: ÖYRƏN (Home & Learning Roadmap)
+                     ============================================ -->
+                <div id="welcome-screen" class="welcome-screen learn-view">
+                    <div class="bootcamp-container">
+                        <!-- Hero Section (Screenshot 1 Inspiration) -->
+                        <section class="hero-section">
+                            <div class="hero-content">
+                                <div class="hero-badge-pill">
+                                    <span class="pulse-emerald-dot"></span>
+                                    <span>JAVASCRIPT ES2026 · BRAUZERİNİZDƏ İŞLƏYİR</span>
+                                </div>
+                                <h1 class="hero-title">
+                                    JavaScript-i mənimsə.<br>
+                                    <span class="gradient-text">Hər dəfə bir real sətir ilə.</span>
+                                </h1>
+                                <p class="hero-subtitle">
+                                    Sıfırdan tam asinxron, OOP, DOM, Web API, Fetch sorğuları, Node.js, Express, RESTful API və Verilənlər Bazası təhlükəsizliyinə qədər 21 əsas bölmə və interaktiv praktiki sınaqlar. Birbaşa brauzerdə real vaxtda öyrənin, kodlaşdırın və xətaları sazlayın.
+                                </p>
+
+                                <!-- Quick Stats Counter Row -->
+                                <div class="hero-stats-row">
+                                    <div class="stat-pill">
+                                        <span class="stat-label">BÖLMƏ</span>
+                                        <span class="stat-value" id="hero-sections-count">21</span>
+                                    </div>
+                                    <div class="stat-divider">/</div>
+                                    <div class="stat-pill">
+                                        <span class="stat-label">TAPŞIRIQ</span>
+                                        <span class="stat-value" id="hero-tasks-count">201</span>
+                                    </div>
+                                    <div class="stat-divider">/</div>
+                                    <div class="stat-pill">
+                                        <span class="stat-label">HƏLL EDİLİB</span>
+                                        <span class="stat-value" id="hero-solved-count">0</span>
+                                    </div>
+                                    <div class="stat-divider">/</div>
+                                    <div class="stat-pill highlight" id="hero-streak-pill">
+                                        <span class="stat-streak-wrap"><span class="stat-streak-text">ARDICIL GÜN <strong id="streak-days-count">1</strong> gün</span> <span class="streak-flame-container flame-tier-1" id="streak-flame" title="Ardıcıl giriş seriyası"><span class="flame-core">🔥</span><span class="flame-particles" aria-hidden="true"><span class="ember ember-1"></span><span class="ember ember-2"></span><span class="ember ember-3"></span></span></span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Hero Interactive Action Buttons -->
+                                <div class="hero-actions">
+                                    <button class="hero-btn primary" id="hero-resume-btn" type="button" title="Dərslərə davam et">
+                                        <span>🚀 Dərsə Davam Et:</span>
+                                        <span id="hero-current-topic-label" class="hero-topic-highlight">Bölmə 1: Giriş</span>
+                                    </button>
+                                    <button class="hero-btn secondary" id="hero-playground-btn" type="button" title="İnteraktiv laboratoriyanı aç">
+                                        <span>⚡ Qum Qutusu (Playground)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive macOS Terminal Card (Screenshot 1 Right Side) -->
+                            <div class="hero-terminal-card hero-terminal-window" id="hero-terminal-card">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <span class="mac-dot dot-red"></span>
+                                        <span class="mac-dot dot-yellow"></span>
+                                        <span class="mac-dot dot-green"></span>
+                                    </div>
+                                    <div class="terminal-title" id="terminal-file-title">roadmap.js - node</div>
+                                    <button class="terminal-run-chip" id="terminal-run-btn" title="Kodu canlı icra et">
+                                        ▶ İcra et
+                                    </button>
+                                </div>
+                                <div class="terminal-body terminal-code-body" id="terminal-body">
+                                    <pre class="terminal-code" id="terminal-code-snippet"><code id="terminal-code-content"></code><span class="terminal-cursor" id="terminal-cursor">█</span></pre>
+                                </div>
+                                <div class="terminal-output-pane terminal-console-drawer">
+                                    <div class="output-pane-header">
+                                        <span class="output-tag">KONSOL ÇIXIŞI</span>
+                                        <span class="output-meta" id="terminal-exec-time">8.45ms</span>
+                                    </div>
+                                    <pre class="terminal-output-content" id="terminal-output-content"></pre>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Roadmap Section (Screenshot 2 Inspiration: "YOL XƏRİTƏSİ") -->
+                        <section class="roadmap-section" id="roadmap-section">
+                            <div class="roadmap-header">
+                                <div class="roadmap-title-group">
+                                    <span class="section-tag">KURİKULUM XƏRİTƏSİ</span>
+                                    <h2 class="roadmap-heading">YOL XƏRİTƏSİ • 5 mərhələdə sıfırdan Full-Stack peşəkarlığa</h2>
+                                    <p class="roadmap-subheading">Hər mərhələ təməl anlayışlardan başlayaraq müasir sənaye standartlarına doğru addım-addım qurulub.</p>
+                                </div>
+                                
+                                <!-- Overall Progress Circular Wheel -->
+                                <div class="roadmap-progress-badge">
+                                    <div class="circular-progress-wrap">
+                                        <svg class="circular-progress-svg" viewBox="0 0 100 100">
+                                            <circle class="circle-bg" cx="50" cy="50" r="42"></circle>
+                                            <circle class="circle-fill" id="roadmap-circle-fill" cx="50" cy="50" r="42"></circle>
+                                        </svg>
+                                        <div class="circle-inner-text">
+                                            <span class="circle-pct" id="roadmap-pct">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-info-text">
+                                        <span class="info-title">Ümumi İrəliləyiş</span>
+                                        <span class="info-fraction" id="roadmap-fraction">0/21 bölmə (0/201 tapşırıq)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 5-Stage Progressive Roadmap Container -->
+                            <div class="roadmap-phases-container" id="roadmap-phases-container">
+                                <!-- Rendered dynamically by renderRoadmap() in roadmap.js -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     VIEW: TOPIC WORKSPACE (Interactive Lesson)
+                     ============================================ -->
+                <div id="topic-view" class="topic-view hidden">
+                    <!-- Topic Navigation Bar -->
+                    <div class="topic-header">
+                        <div class="topic-header-left">
+                            <button class="back-to-roadmap-btn" id="back-to-roadmap-btn" title="Yol xəritəsinə qayıt">
+                                ← Yol Xəritəsi
+                            </button>
+                            <div class="topic-breadcrumb">
+                                <span id="topic-section-name">Bölmə 1</span>
+                                <span class="breadcrumb-sep">›</span>
+                                <span id="topic-name">Konsol və İlk Addımlar</span>
+                            </div>
+                        </div>
+                        <div class="topic-nav-btns">
+                            <button class="topic-nav-btn" id="prev-topic-btn" title="Əvvəlki mövzu">
+                                ← Əvvəlki
+                            </button>
+                            <button class="topic-nav-btn" id="next-topic-btn" title="Növbəti mövzu">
+                                Növbəti →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Tab Bar -->
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="theory">
+                            <span class="tab-icon">📖</span>
+                            <span class="tab-label">Nəzəriyyə</span>
+                        </button>
+                        <button class="tab-btn" data-tab="exercises">
+                            <span class="tab-icon">✍️</span>
+                            <span class="tab-label">Tapşırıqlar</span>
+                        </button>
+                        <button class="tab-btn" data-tab="bugfix">
+                            <span class="tab-icon">🐛</span>
+                            <span class="tab-label">Xəta Düzəlt</span>
+                        </button>
+                    </div>
+
+                    <!-- Lesson Tab Content Panels -->
+                    <div class="tab-content">
+                        <!-- Theory Tab -->
+                        <div class="tab-panel active" id="theory-panel">
+                            <div class="theory-container" id="theory-content">
+                                <!-- Loaded dynamically -->
+                            </div>
+                            
+                            <!-- Code Examples in Theory -->
+                            <div class="code-examples" id="code-examples">
+                                <!-- Loaded dynamically -->
+                            </div>
+
+                            <div class="theory-complete-bar">
+                                <button class="mark-complete-btn" id="mark-theory-complete">
+                                    ✅ Nəzəriyyəni başa düşdüm — Tapşırıqlara keç
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Exercises Tab -->
+                        <div class="tab-panel" id="exercises-panel">
+                            <div class="exercises-container" id="exercises-container">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Bug Fix Tab -->
+                        <div class="tab-panel" id="bugfix-panel">
+                            <div class="bugfix-container" id="bugfix-container">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     VIEW 2: PLAYGROUND (Interactive Code Sandbox)
+                     ============================================ -->
+                <div id="sandbox-view" class="sandbox-view hidden">
+                    <div class="sandbox-header">
+                        <div class="sandbox-header-info">
+                            <h2>💻 JavaScript Məşq Meydançası (Playground)</h2>
+                            <p>İstədiyiniz kodu sərbəst yazın və brauzerinizin JavaScript mühərrikində dərhal icra edin.</p>
+                        </div>
+                        <!-- Quick Presets Toolbar -->
+                        <div class="sandbox-presets-bar">
+                            <span class="preset-label">Nümunə Şablonlar:</span>
+                            <button class="preset-chip" id="preset-dom">🌐 DOM Manipulyasiyası</button>
+                            <button class="preset-chip" id="preset-async">⏳ Asinxron Sorğu</button>
+                            <button class="preset-chip" id="preset-array">📊 Massiv Alqoritmləri</button>
+                            <button class="preset-chip" id="preset-class">🏛️ Obyekt və Sinif</button>
+                        </div>
+                    </div>
+                    <div class="sandbox-layout">
+                        <div class="sandbox-editor-container">
+                            <div class="editor-toolbar">
+                                <span class="editor-label">⚡ JavaScript (ES6+ Native Environment)</span>
+                                <div class="editor-actions">
+                                    <button class="editor-btn" id="sandbox-clear" title="Redaktoru təmizlə">🗑️ Təmizlə</button>
+                                    <button class="editor-btn run-btn" id="sandbox-run" title="İcra et (Ctrl+Enter)">▶ İcra et (Ctrl+Enter)</button>
+                                </div>
+                            </div>
+                            <div id="sandbox-editor" class="code-editor"></div>
+                        </div>
+                        <div class="sandbox-output-container">
+                            <div class="output-toolbar">
+                                <span class="output-label">Canlı Çıxış (Brauzer Konsolu)</span>
+                                <button class="editor-btn" id="sandbox-clear-output" title="Nəticəni təmizlə">🗑️</button>
+                            </div>
+                            <pre class="output-area" id="sandbox-output">Kodunuzu yazın və "▶ İcra et" düyməsinə basın...</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     VIEW 3: SXEM (JavaScript Ecosystem Architecture)
+                     ============================================ -->
+                <div id="diagram-view" class="diagram-view hidden">
+                    <!-- Catalog Overview Grid (4 Clusters) -->
+                    <div id="diagram-catalog" class="diagram-catalog">
+                        <div class="diagram-header">
+                            <div class="diagram-header-info">
+                                <span class="section-tag">ARXİTEKTURA XƏRİTƏSİ</span>
+                                <h2>🕸️ JavaScript Ekosistemi və Əlaqələr Sxemi</h2>
+                                <p>Core JavaScript mühərrikinin TypeScript, Node.js, Web API-lər və müasir freymvorklarla necə əlaqələndiyini kəşf edin. İnteraktiv dərs və canlı kodlaşdırma mühiti üçün istənilən bloka klikləyin.</p>
+                            </div>
+                            <div class="diagram-progress-chip" id="diagram-progress-chip">
+                                <span class="progress-chip-label">Ekosistem İrəliləyişi:</span>
+                                <span class="progress-chip-count" id="eco-progress-count">0 / 16 Tamamlandı</span>
+                                <div class="progress-chip-bar">
+                                    <div class="progress-chip-fill" id="eco-progress-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Diagram Mindmap Grid -->
+                        <div class="diagram-container">
+                            <!-- Central Core Hub -->
+                            <div class="diagram-core-hub">
+                                <div class="core-hub-inner" id="node-core-js">
+                                    <span class="core-icon">⚡</span>
+                                    <h3 class="core-title">JavaScript (ES2026)</h3>
+                                    <p class="core-sub">ECMAScript Standartı · V8 Engine</p>
+                                    <span class="core-pulse-pill">Əsas Mühərrik</span>
+                                </div>
+                            </div>
+
+                            <!-- 4 Connecting Ecosystem Clusters -->
+                            <div class="diagram-clusters-grid">
+                                <!-- Cluster 1: TypeScript -->
+                                <div class="cluster-card cluster-typescript">
+                                    <div class="cluster-header">
+                                        <span class="cluster-icon">📘</span>
+                                        <div>
+                                            <h4 class="cluster-title">TypeScript & Tip Sistemi</h4>
+                                            <p class="cluster-sub">Statik Tipləşdirmə və Böyük Layihələr</p>
+                                        </div>
+                                    </div>
+                                    <div class="cluster-nodes-list">
+                                        <button class="eco-node-btn" data-node="ts-types">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Statik Tip Təhlükəsizliyi</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="ts-interfaces">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">İnterfeyslər və Type Aliases</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="ts-generics">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Generics (Ümumi Tiplər)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="ts-compiler">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">`tsc` Transpiler (JS-ə Kompilyasiya)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Cluster 2: Node.js & Server -->
+                                <div class="cluster-card cluster-nodejs">
+                                    <div class="cluster-header">
+                                        <span class="cluster-icon">🟢</span>
+                                        <div>
+                                            <h4 class="cluster-title">Node.js & Server Mühiti</h4>
+                                            <p class="cluster-sub">Brauzerdən Kənar Backend İcrası</p>
+                                        </div>
+                                    </div>
+                                    <div class="cluster-nodes-list">
+                                        <button class="eco-node-btn" data-node="node-v8">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">V8 JavaScript Engine</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="node-eventloop">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Libuv & Event Loop (Asinxron I/O)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="node-fs">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">File System (`fs`, `path`, Buffers)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="node-runtimes">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Bun & Deno (Müasir Alternativlər)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Cluster 3: Web APIs & Browser -->
+                                <div class="cluster-card cluster-webapi">
+                                    <div class="cluster-header">
+                                        <span class="cluster-icon">🌐</span>
+                                        <div>
+                                            <h4 class="cluster-title">Web APIs & Brauzer</h4>
+                                            <p class="cluster-sub">İnteraktiv Veb və İstifadəçi İnterfeysi</p>
+                                        </div>
+                                    </div>
+                                    <div class="cluster-nodes-list">
+                                        <button class="eco-node-btn" data-node="web-dom">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">DOM & Hadisələr (Event Listener)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="web-fetch">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Fetch API & HTTP Şəbəkə Sorğuları</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="web-storage">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">LocalStorage, SessionStorage & IndexedDB</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="web-workers">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Web Workers (Çoxaxınlı Paralelləşmə)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Cluster 4: Modern Frameworks & Tooling -->
+                                <div class="cluster-card cluster-frameworks">
+                                    <div class="cluster-header">
+                                        <span class="cluster-icon">⚛️</span>
+                                        <div>
+                                            <h4 class="cluster-title">Müasir Frameworklər</h4>
+                                            <p class="cluster-sub">Ekosistem, Reaktivlik və Paketləyicilər</p>
+                                        </div>
+                                    </div>
+                                    <div class="cluster-nodes-list">
+                                        <button class="eco-node-btn" data-node="fw-react">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">React.js & Virtual DOM</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="fw-vue">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Vue.js & Svelte (Reaktivlik)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="fw-next">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Next.js & Server Components (SSR)</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                        <button class="eco-node-btn" data-node="fw-vite">
+                                            <span class="node-status-icon">●</span>
+                                            <span class="node-title">Vite, Rollup & npm Paket İdarəsi</span>
+                                            <span class="node-arrow">→</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Ecosystem Lesson Workspace -->
+                    <div id="ecosystem-workspace-view" class="ecosystem-workspace-view hidden">
+                        <!-- Breadcrumb & Navigation Bar -->
+                        <div class="eco-workspace-header">
+                            <div class="eco-header-left">
+                                <button type="button" class="eco-back-btn" id="eco-back-btn" title="Sxem xəritəsinə qayıt">
+                                    ← Sxemə Qayıt
+                                </button>
+                                <div class="eco-breadcrumb">
+                                    <span class="eco-breadcrumb-root">Sxem</span>
+                                    <span class="breadcrumb-sep">›</span>
+                                    <span class="eco-breadcrumb-cat" id="eco-crumb-cat">TypeScript & Tip Sistemi</span>
+                                    <span class="breadcrumb-sep">›</span>
+                                    <span class="eco-breadcrumb-title" id="eco-crumb-title">Statik Tip Təhlükəsizliyi</span>
+                                </div>
+                            </div>
+                            <div class="eco-header-right">
+                                <span class="eco-status-badge" id="eco-status-badge">● Öyrənilir</span>
+                                <div class="eco-nav-actions">
+                                    <button type="button" class="eco-nav-btn" id="eco-prev-btn" title="Əvvəlki mövzu">← Əvvəlki</button>
+                                    <button type="button" class="eco-nav-btn" id="eco-next-btn" title="Növbəti mövzu">Növbəti →</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Split-Screen Workspace Grid -->
+                        <div class="eco-workspace-grid">
+                            <!-- Left Panel: Theory, Analogy, Concepts & Task -->
+                            <div class="eco-theory-pane">
+                                <div class="eco-lesson-hero">
+                                    <div class="eco-category-pill" id="eco-lesson-cat-pill">📘 TypeScript & Tip Sistemi</div>
+                                    <h1 class="eco-lesson-title" id="eco-lesson-title">Statik Tip Təhlükəsizliyi</h1>
+                                    <p class="eco-lesson-desc" id="eco-lesson-desc">JavaScript dinamik tipləşdirməyə malik olduğu üçün...</p>
+                                </div>
+
+                                <!-- Deep Architectural Theory -->
+                                <div class="eco-theory-content" id="eco-theory-content">
+                                    <!-- Injected from dataset -->
+                                </div>
+
+                                <!-- Practical Task Instruction Card -->
+                                <div class="eco-task-card">
+                                    <div class="eco-task-header">
+                                        <span class="eco-task-icon">🎯</span>
+                                        <h4>Praktiki Tapşırıq</h4>
+                                    </div>
+                                    <p class="eco-task-instruction" id="eco-task-instruction"></p>
+                                    <div class="eco-task-hint-box" id="eco-task-hint-box">
+                                        <strong>💡 Köməkçi İpucu:</strong> <span id="eco-task-hint"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Panel: Code Editor + Dynamic Output & Simulation -->
+                            <div class="eco-editor-pane">
+                                <div class="eco-editor-header">
+                                    <div class="eco-editor-tabs">
+                                        <span class="eco-editor-tab active" id="eco-editor-tab-title">həll.js</span>
+                                        <span class="eco-env-pill" id="eco-env-pill">⚡ Brauzer / Node Mühiti</span>
+                                    </div>
+                                    <div class="eco-editor-actions">
+                                        <button type="button" class="eco-reset-code-btn" id="eco-reset-code-btn" title="Kodu ilkin vəziyyətə qaytar">↺ Sıfırla</button>
+                                        <button type="button" class="eco-run-btn" id="eco-run-btn">
+                                            <span class="run-icon">▶</span> İcra et
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="eco-editor-wrapper">
+                                    <textarea id="eco-code-editor"></textarea>
+                                </div>
+
+                                <div class="eco-output-drawer">
+                                    <div class="eco-output-header">
+                                        <div class="eco-output-title">
+                                            <span class="console-dot"></span> KONSOL ÇIXIŞI
+                                        </div>
+                                        <span class="eco-exec-time" id="eco-exec-time"></span>
+                                    </div>
+                                    <div class="eco-output-body" id="eco-output-body">
+                                        <pre class="eco-output-text" id="eco-output-text">// Nəticəni görmək üçün "İcra et" düyməsinə klikləyin...</pre>
+                                    </div>
+                                    <div class="eco-task-result-status" id="eco-task-result-status" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ecosystem Node Detail Modal -->
+                <dialog id="diagram-node-modal" class="diagram-modal">
+                    <div class="diagram-modal-card">
+                        <div class="diagram-modal-header">
+                            <div class="modal-badge-group">
+                                <span class="modal-category-badge" id="diag-modal-cat">TypeScript</span>
+                                <h3 id="diag-modal-title">Statik Tip Təhlükəsizliyi</h3>
+                            </div>
+                            <button type="button" class="diagram-modal-close" id="diagram-modal-close">✕</button>
+                        </div>
+                        <div class="diagram-modal-body">
+                            <div class="diag-section">
+                                <h4>🔗 JavaScript ilə Əlaqəsi:</h4>
+                                <p id="diag-modal-relation"></p>
+                            </div>
+                            <div class="diag-section">
+                                <h4>💡 Niyə Vacibdir?</h4>
+                                <p id="diag-modal-importance"></p>
+                            </div>
+                            <div class="diag-section">
+                                <h4>💻 Real Nümunə Kod:</h4>
+                                <pre class="diag-code-box" id="diag-modal-code"></pre>
+                            </div>
+                            <div class="diag-section highlight">
+                                <h4>🎯 Öyrənmə Məsləhəti:</h4>
+                                <p id="diag-modal-tip"></p>
+                            </div>
+                        </div>
+                    </div>
+                </dialog>
+
+                <!-- ============================================
+                     VIEW 4: İRƏLİLƏYİŞ (Progress & Badges Dashboard)
+                     ============================================ -->
+                <div id="progress-view" class="progress-view hidden">
+                    <div class="progress-dashboard-container">
+                        <!-- Dashboard Header Card -->
+                        <div class="progress-hero-card">
+                            <div class="progress-hero-left">
+                                <span class="rank-pill" id="user-rank-pill">Level 1: JavaScript Çırağı</span>
+                                <h2>Nailiyyətlər və İrəliləyiş Mərkəzi</h2>
+                                <p>Sizin bootcamp boyu qət etdiyiniz yol, topladığınız təcrübə xalları (XP) və qazandığınız nişanlar.</p>
+                            </div>
+                            <div class="progress-hero-stats">
+                                <div class="hero-xp-box">
+                                    <span class="xp-icon">⚡</span>
+                                    <div>
+                                        <div class="xp-value" id="total-xp-display">0 XP</div>
+                                        <div class="xp-label">Toplam Təcrübə Xalı</div>
+                                    </div>
+                                </div>
+                                <div class="hero-xp-box">
+                                    <span class="xp-icon">🎯</span>
+                                    <div>
+                                        <div class="xp-value" id="progress-solved-display">0 / 557</div>
+                                        <div class="xp-label">Tapşırıq Həll Edilib</div>
+                                    </div>
+                                </div>
+                                <div class="hero-xp-box">
+                                    <span class="xp-icon">🐛</span>
+                                    <div>
+                                        <div class="xp-value" id="progress-bugs-display">0 / 210</div>
+                                        <div class="xp-label">Xəta Sazlanıb</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dedicated Error Panel Progress Section -->
+                        <div class="errors-progress-section" id="errors-progress-section">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+
+                        <!-- 9 Gamified Badges Grid -->
+                        <div class="badges-section">
+                            <div class="section-title-wrap">
+                                <span class="section-tag">NAİLİYYƏTLƏR</span>
+                                <h3>🏆 Bootcamp Qazanılan Nişanları</h3>
+                                <p>Hər bir nişan JavaScript-in müəyyən bir təməl konsepsiyasını mənimsədikcə kiliddən çıxır.</p>
+                            </div>
+
+                            <div class="badges-grid" id="badges-grid">
+                                <!-- Populated dynamically by JS (9 Badges) -->
+                            </div>
+                        </div>
+
+                        <!-- Activity Streak Heatmap -->
+                        <div class="streak-section">
+                            <div class="section-title-wrap">
+                                <span class="section-tag">FƏALİYYƏT</span>
+                                <h3>🔥 Ardıcıl Kodlaşdırma Təqvimi (Streak Heatmap)</h3>
+                                <p>Hər gün kodlaşdırma vərdişi yaradın və qığılcımı sönməyə qoymayın.</p>
+                            </div>
+                            <div class="heatmap-card">
+                                <div class="heatmap-stats">
+                                    <div class="heatmap-stat-item">
+                                        <span class="h-stat-val" id="heatmap-current-streak">1 gün 🔥</span>
+                                        <span class="h-stat-lbl">Cari Ardıcıllıq</span>
+                                    </div>
+                                    <div class="heatmap-stat-item">
+                                        <span class="h-stat-val" id="heatmap-best-streak">1 gün</span>
+                                        <span class="h-stat-lbl">Ən Yaxşı Ardıcıllıq</span>
+                                    </div>
+                                    <div class="heatmap-stat-item">
+                                        <span class="h-stat-val" id="heatmap-total-active">1 gün</span>
+                                        <span class="h-stat-lbl">Aktiv Günlər</span>
+                                    </div>
+                                </div>
+                                <div class="heatmap-grid" id="heatmap-grid">
+                                    <!-- 12-week GitHub style grid populated dynamically -->
+                                </div>
+                                <div class="heatmap-legend">
+                                    <span>Az</span>
+                                    <span class="legend-cell lvl-0"></span>
+                                    <span class="legend-cell lvl-1"></span>
+                                    <span class="legend-cell lvl-2"></span>
+                                    <span class="legend-cell lvl-3"></span>
+                                    <span class="legend-cell lvl-4"></span>
+                                    <span>Çox</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completion Certificate Preview Card -->
+                        <div class="certificate-section">
+                            <div class="certificate-card">
+                                <div class="cert-border-glow"></div>
+                                <div class="cert-inner">
+                                    <div class="cert-header">
+                                        <div class="cert-badge-logo">JSÖyrən · ES2026</div>
+                                        <span class="cert-status" id="cert-status-badge">Kurs İcra Olunur</span>
+                                    </div>
+                                    <h3 class="cert-title">BOOTCAMP MƏZUNİYYƏT SERTİFİKATI</h3>
+                                    <p class="cert-subtitle">Modern JavaScript Developer Professional Mastery</p>
+                                    <p class="cert-recipient">Tələbə: <strong id="cert-user-name">JavaScript Proqramçısı</strong></p>
+                                    <p class="cert-body">
+                                        Bu rəsmi sertifikat təsdiq edir ki, tələbə JSÖyrən Developer Bootcamp çərçivəsində 21 əsas modulu, bütün interaktiv kurikulum tapşırıqlarını və praktiki sınaqları müvəffəqiyyətlə başa vurmuşdur.
+                                    </p>
+                                    <div class="cert-footer">
+                                        <div class="cert-meta">
+                                            <span>Sertifikat ID: <strong id="cert-id">JS-2026-BOOTCAMP</strong></span>
+                                            <span>Verilmə Tarixi: <strong id="cert-date">Canlı</strong></span>
+                                        </div>
+                                        <div class="cert-stamp">✓ TƏSDİQLƏNDİ</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     VIEW 5: İMTAHAN (Exam Simulator)
+                     ============================================ -->
+                <div id="exam-view" class="exam-view hidden">
+                    <!-- 1. Exam Lobby -->
+                    <div id="exam-lobby" class="exam-lobby">
+                        <div class="exam-lobby-hero">
+                            <div class="exam-lobby-header">
+                                <div class="exam-lobby-header-main">
+                                    <span class="exam-hero-icon">⏱️</span>
+                                    <div>
+                                        <h2>JavaScript İmtahan Mərkəzi</h2>
+                                        <p>Zamanla yarışaraq JavaScript biliklərinizi real kodlaşdırma tapşırıqları ilə sınaqdan keçirin</p>
+                                    </div>
+                                </div>
+                                <div class="exam-lobby-header-actions">
+                                    <button type="button" class="exam-bank-trigger-btn" id="exam-question-bank-btn">
+                                        📖 Sual Bankı (Bölmələr üzrə)
+                                    </button>
+                                    <button type="button" class="exam-hourglass-trigger-btn" id="exam-hourglass-btn" title="Genişmiqyaslı İnteqrasiya və Zamanla Yarış Rejimi">
+                                        <span class="hourglass-icon-spin">⏳</span> Qum Saatı (Zamanla Yarış)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="exam-lobby-grid">
+                            <!-- Setup Form Card -->
+                            <div class="exam-setup-card">
+                                <div class="card-section-title">
+                                    <span class="title-icon">⚙️</span>
+                                    <h3>Yeni İmtahan Parametrləri</h3>
+                                </div>
+
+                                <div class="setup-group">
+                                    <label class="setup-label">İmtahan Rejimi (Mərhələ / Əhatə):</label>
+                                    <div class="exam-pills-selector exam-mode-selector" id="exam-mode-selector">
+                                        <button type="button" class="exam-pill-btn active" data-mode="all">🌐 Bütün Kurikulum (21 Bölmə)</button>
+                                        <button type="button" class="exam-pill-btn" data-mode="stage-1" title="Bölmə 1-5: JS Sintaksisi və Məntiq">🟢 Mərhələ 1 (Təməllər)</button>
+                                        <button type="button" class="exam-pill-btn" data-mode="stage-2" title="Bölmə 6-13: Obyektlər, Funksiyalar, DOM">🔵 Mərhələ 2 (Dərinləşmə & DOM)</button>
+                                        <button type="button" class="exam-pill-btn" data-mode="stage-3" title="Bölmə 14-17: Asinxron, Storage, Fetch">🟣 Mərhələ 3 (Asinxron & Veb)</button>
+                                        <button type="button" class="exam-pill-btn" data-mode="stage-4" title="Bölmə 18-19: Node.js, Modullar, Express">🟠 Mərhələ 4 (Node.js & Server)</button>
+                                        <button type="button" class="exam-pill-btn" data-mode="stage-5" title="Bölmə 20-21: REST API, CRUD, Bazalar">🔴 Mərhələ 5 (REST API & DB)</button>
+                                    </div>
+                                </div>
+
+                                <div class="setup-group">
+                                    <label class="setup-label">Sual Sayı:</label>
+                                    <div class="exam-pills-selector" id="exam-q-selector">
+                                        <button type="button" class="exam-pill-btn" data-count="5">5 Sual (Sürətli)</button>
+                                        <button type="button" class="exam-pill-btn active" data-count="10">10 Sual (Standart)</button>
+                                        <button type="button" class="exam-pill-btn" data-count="15">15 Sual (Dərin)</button>
+                                        <button type="button" class="exam-pill-btn" data-count="20">20 Sual (Tam)</button>
+                                    </div>
+                                </div>
+
+                                <div class="setup-group">
+                                    <label class="setup-label">Vaxt Limiti:</label>
+                                    <div class="exam-pills-selector" id="exam-time-selector">
+                                        <button type="button" class="exam-pill-btn" data-minutes="10">10 Dəqiqə</button>
+                                        <button type="button" class="exam-pill-btn active" data-minutes="20">20 Dəqiqə</button>
+                                        <button type="button" class="exam-pill-btn" data-minutes="30">30 Dəqiqə</button>
+                                        <button type="button" class="exam-pill-btn" data-minutes="45">45 Dəqiqə</button>
+                                    </div>
+                                </div>
+
+                                <div class="exam-rules-box">
+                                    <h4>İmtahan Qaydaları:</h4>
+                                    <ul>
+                                        <li>Suallar seçilmiş rejimə əsasən 21 kurikulum bölməsi və 5 mərhələ üzrə seçilir.</li>
+                                        <li>Hər sual üçün 2 mərhələli ardıcıl ipucu mövcuddur (istifadə edildikdə bal cüzi azalır).</li>
+                                        <li>Çətinlik çəkdiyiniz sualda "Təslim ol" seçərək analitik izahı və rəsmi həlli görə bilərsiniz (0 bal).</li>
+                                        <li>Vaxt bitdikdə və ya testi tamamladıqda cavablarınız avtomatik yoxlanılır və qiymətləndirilir.</li>
+                                    </ul>
+                                </div>
+
+                                <button type="button" class="exam-start-btn exam-start-action-btn" id="exam-start-btn">
+                                    🚀 İmtahana Başla
+                                </button>
+                            </div>
+
+                            <!-- History & Stats Card -->
+                            <div class="exam-history-card">
+                                <div class="card-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span class="title-icon">📊</span>
+                                        <h3>İmtahan Tarixçəsi</h3>
+                                        <span class="exam-history-count-badge" id="exam-history-count">0 cəhd</span>
+                                    </div>
+                                    <button type="button" id="exam-clear-history-btn" title="Tarixçəni təmizlə" style="background: none; border: 1px solid var(--border-secondary); color: var(--text-tertiary); font-size: 0.75rem; border-radius: var(--radius-sm); padding: 0.2rem 0.5rem; cursor: pointer;">Təmizlə</button>
+                                </div>
+                                <div class="exam-history-list" id="exam-history-list">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Active Exam Session / Workspace -->
+                    <div id="exam-workspace" class="exam-workspace exam-active-session hidden">
+                        <!-- Top Status Bar -->
+                        <div class="exam-topbar exam-session-header">
+                            <div class="exam-topbar-left">
+                                <span class="exam-status-tag">
+                                    <span class="pulse-dot"></span>
+                                    CANLI İMTAHAN
+                                </span>
+                                <div class="exam-stepper exam-bubbles-nav" id="exam-stepper">
+                                    <!-- 1..N bubbles populated dynamically -->
+                                </div>
+                            </div>
+
+                            <div class="exam-topbar-center">
+                                <div class="exam-timer-box exam-timer-wrapper" id="exam-timer-box">
+                                    <span class="timer-icon">⏳</span>
+                                    <span class="timer-display timer-digits" id="exam-timer-display">20:00</span>
+                                </div>
+                            </div>
+
+                            <div class="exam-topbar-right exam-header-actions">
+                                <button type="button" class="exam-finish-btn" id="exam-finish-btn">
+                                    🏁 İmtahanı Bitir
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Question Workspace Split View -->
+                        <div class="exam-split-layout exam-workspace-grid">
+                            <!-- Left Panel: Problem Statement & Hint Ladder -->
+                            <div class="exam-task-panel exam-prompt-panel">
+                                <div class="exam-task-header exam-prompt-header">
+                                    <div class="exam-task-meta exam-prompt-meta">
+                                        <div class="exam-task-meta-left">
+                                            <span class="exam-task-section exam-section-tag" id="exam-task-section">Bölmə</span>
+                                            <span class="exam-task-diff diff-badge exam-diff-badge" id="exam-task-diff">Asan</span>
+                                        </div>
+                                        <button type="button" class="exam-header-next-btn hidden" id="exam-header-next-section-btn" title="Növbəti kurikulum bölməsinə keç">
+                                            <span class="btn-text">Növbəti Bölmə</span>
+                                            <span class="nav-arrow">→</span>
+                                        </button>
+                                    </div>
+                                    <h3 class="exam-task-title exam-prompt-title" id="exam-task-title">Tapşırıq Başlığı</h3>
+                                </div>
+
+                                <div class="exam-task-body exam-prompt-body">
+                                    <div class="exam-section-subtitle">Tapşırığın Şərti:</div>
+                                    <div class="exam-task-instruction exam-instruction-box" id="exam-task-instruction"></div>
+
+                                    <div class="exam-section-subtitle">Gözlənilən Konsol Çıxışı:</div>
+                                    <div class="exam-expected-container">
+                                        <pre class="exam-expected-box" id="exam-expected-box"></pre>
+                                    </div>
+
+                                    <!-- Progressive Hints Section -->
+                                    <div class="exam-hints-section exam-hints-ladder" id="exam-hints-ladder">
+                                        <div class="exam-hints-header">
+                                            <div class="exam-hints-title">
+                                                <span>💡 Köməkçi İpucları</span>
+                                            </div>
+                                            <span class="exam-hints-badge" id="exam-hints-badge">0 / 0 açılıb</span>
+                                        </div>
+                                        <div class="exam-revealed-hints-list" id="exam-revealed-hints-list"></div>
+                                        <button type="button" class="exam-hint-step-btn" id="exam-reveal-hint-btn">
+                                            💡 İpucu göstər (1/3)
+                                        </button>
+                                    </div>
+
+                                    <!-- Surrender / Solution Section -->
+                                    <div class="exam-surrender-section exam-surrender-wrapper">
+                                        <button type="button" class="exam-surrender-btn" id="exam-surrender-btn">
+                                            🏳️ Bu Sualda Təslim Ol (Həlli Göstər)
+                                        </button>
+                                        <div class="exam-solution-box surrender-solution-box hidden" id="exam-solution-box">
+                                            <div class="exam-solution-header">
+                                                <span class="exam-solution-title">Rəsmi Düzgün Həll:</span>
+                                            </div>
+                                            <pre class="exam-solution-code surrender-code" id="exam-solution-code"></pre>
+                                            <div class="exam-solution-explanation surrender-explanation" id="exam-solution-explanation"></div>
+                                            <div class="surrender-alert-note" style="font-size:0.82rem; color:#F87171; margin-top:0.35rem;">
+                                                ⚠️ Bu sual üzrə təslim olunduğu üçün bal hesablanmayacaq (0 bal) və redaktor kilidləndi.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="exam-tip-box">
+                                        💡 <strong>Məsləhət:</strong> Kodu sağdakı redaktorda yazın. Çıxışınızı görmək üçün <strong>"▶ Kodu Sınaqdan Keçir"</strong> düyməsinə basın.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Panel: Code Workspace -->
+                            <div class="exam-code-panel">
+                                <div class="exam-editor-toolbar">
+                                    <span class="editor-label">⚡ JavaScript Həlli</span>
+                                    <div class="exam-editor-actions">
+                                        <button type="button" class="editor-btn" id="exam-reset-code-btn" title="Başlanğıc vəziyyətinə qaytar">🔄 Sıfırla</button>
+                                        <button type="button" class="editor-btn run-btn" id="exam-test-code-btn" title="Kodu sınaqdan keçir (çıxışı göstər)">▶ Kodu Sınaqdan Keçir</button>
+                                    </div>
+                                </div>
+
+                                <div class="exam-editor-container">
+                                    <div id="exam-editor" class="code-editor"></div>
+                                </div>
+
+                                <!-- Test Output Drawer -->
+                                <div class="exam-output-drawer" id="exam-output-drawer">
+                                    <div class="output-drawer-header">
+                                        <span class="output-label">Sınaq Çıxışı (Konsol):</span>
+                                        <span class="output-status-note" id="exam-output-status">İcra gözlənilir</span>
+                                    </div>
+                                    <pre class="exam-test-output-text" id="exam-test-output-text">Kodu sınaqdan keçirmək üçün "▶ Kodu Sınaqdan Keçir" düyməsinə basın...</pre>
+                                </div>
+
+                                <!-- Bottom Navigation Bar -->
+                                <div class="exam-bottom-nav">
+                                    <button type="button" class="exam-nav-step-btn" id="exam-prev-btn">
+                                        ← Əvvəlki Sual
+                                    </button>
+                                    <div class="exam-progress-counter" id="exam-progress-counter">
+                                        Sual 1 / 10
+                                    </div>
+                                    <div class="exam-nav-actions" id="exam-nav-actions">
+                                        <button type="button" class="exam-nav-step-btn primary" id="exam-next-btn">
+                                            Növbəti Sual →
+                                        </button>
+                                        <button type="button" class="exam-nav-step-btn next-section-btn hidden" id="exam-next-section-btn" title="Növbəti kurikulum bölməsinə keç">
+                                            <span class="btn-text">Növbəti Bölmə</span>
+                                            <span class="nav-arrow">→</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Hourglass Workspace (Qum Saatı - Genişmiqyaslı Zamanla Yarış Rejimi) -->
+                    <div id="hourglass-workspace" class="hourglass-workspace hidden">
+                        <!-- Top Navigation / Status Header -->
+                        <div class="hourglass-topbar">
+                            <div class="hourglass-topbar-left">
+                                <span class="hourglass-status-badge">
+                                    <span class="pulse-dot-amber"></span>
+                                    ⏳ QUM SAATI · ZAMANLA YARIŞ
+                                </span>
+                                <div class="hourglass-challenges-nav" id="hourglass-challenges-nav">
+                                    <!-- Populated dynamically: hg-1, hg-2, hg-3 -->
+                                </div>
+                            </div>
+                            <div class="hourglass-topbar-right">
+                                <button type="button" class="hourglass-back-btn" id="hourglass-back-btn" title="İmtahan Mərkəzi Lobbisinə qayıt">
+                                    ← İmtahan Mərkəzinə Qayıt
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Split Layout: Left (Scenario & Timer) vs Right (Editor & Terminal) -->
+                        <div class="hourglass-split-layout">
+                            <!-- Left Panel: Scenario, Sandglass Timer & Architecture Requirements -->
+                            <div class="hourglass-left-panel">
+                                <!-- Interactive Sandglass & Countdown Widget -->
+                                <div class="hourglass-timer-card">
+                                    <div class="hourglass-visual-box">
+                                        <svg class="hourglass-svg" viewBox="0 0 100 140" width="84" height="118" aria-hidden="true">
+                                            <defs>
+                                                <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                    <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.9"/>
+                                                    <stop offset="50%" stop-color="#D97706" stop-opacity="0.45"/>
+                                                    <stop offset="100%" stop-color="#78350F" stop-opacity="0.95"/>
+                                                </linearGradient>
+                                                <linearGradient id="sandGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#FEF3C7"/>
+                                                    <stop offset="50%" stop-color="#F59E0B"/>
+                                                    <stop offset="100%" stop-color="#D97706"/>
+                                                </linearGradient>
+                                                <filter id="amberGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                                    <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                                                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                                                </filter>
+                                                <clipPath id="topBulbClip">
+                                                    <path d="M 18 18 L 82 18 L 54 68 Q 50 72 46 68 Z" />
+                                                </clipPath>
+                                                <clipPath id="botBulbClip">
+                                                    <path d="M 46 72 Q 50 68 54 72 L 82 122 L 18 122 Z" />
+                                                </clipPath>
+                                            </defs>
+                                            <!-- Top & Bottom Frame Caps -->
+                                            <rect x="12" y="10" width="76" height="8" rx="4" fill="#F59E0B" filter="url(#amberGlow)"/>
+                                            <rect x="12" y="122" width="76" height="8" rx="4" fill="#F59E0B" filter="url(#amberGlow)"/>
+                                            <!-- Hourglass Glass Body -->
+                                            <path d="M 20 18 L 80 18 L 54 68 Q 50 72 54 76 L 80 122 L 20 122 L 46 76 Q 50 72 46 68 Z" 
+                                                  fill="rgba(15, 23, 42, 0.75)" stroke="url(#glassGrad)" stroke-width="3" filter="url(#amberGlow)"/>
+                                            <!-- Top Sand Level (Clipped) -->
+                                            <g clip-path="url(#topBulbClip)">
+                                                <rect id="hg-sand-top" x="15" y="18" width="70" height="52" fill="url(#sandGrad)"/>
+                                            </g>
+                                            <!-- Falling Sand Stream -->
+                                            <line id="hg-sand-stream" x1="50" y1="68" x2="50" y2="120" stroke="#FEF3C7" stroke-width="2.5" stroke-dasharray="4 3" class="sand-stream-anim"/>
+                                            <!-- Bottom Sand Heap (Clipped) -->
+                                            <g clip-path="url(#botBulbClip)">
+                                                <rect id="hg-sand-bottom" x="15" y="122" width="70" height="0" fill="url(#sandGrad)"/>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="hourglass-timer-info timer-meta-box">
+                                        <span class="hourglass-time-label timer-caption">QALAN VAXT / HƏDƏF MÜDDƏT</span>
+                                        <div class="hourglass-digits timer-digital-display" id="hourglass-timer-display" data-id="hourglass-timer-digits">10:00</div>
+                                        
+                                        <!-- GERİ QAYTARILAN VAXT AYARLARI BLOKU -->
+                                        <div class="hourglass-time-selector" id="hourglass-time-selector">
+                                            <button type="button" class="time-pill-btn hg-time-btn" data-min="5" data-mins="5">5 dəq</button>
+                                            <button type="button" class="time-pill-btn hg-time-btn active" data-min="10" data-mins="10">10 dəq</button>
+                                            <button type="button" class="time-pill-btn hg-time-btn" data-min="15" data-mins="15">15 dəq</button>
+                                            <div class="time-stepper hg-stepper-group" title="Fərdi vaxt təyini (+/- 1 dəq)">
+                                                <button type="button" class="stepper-arrow-btn hg-step-btn" id="time-step-minus" title="1 dəqiqə azalt">−</button>
+                                                <span class="stepper-val hg-step-val" id="time-stepper-display">10 d</span>
+                                                <button type="button" class="stepper-arrow-btn hg-step-btn" id="time-step-plus" title="1 dəqiqə artır">+</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- TAYMERİN İŞƏ SALINMASI DÜYMƏSİ -->
+                                        <button type="button" class="hourglass-timer-toggle-btn is-paused" id="hourglass-timer-toggle-btn">
+                                            <span class="toggle-icon">▶</span>
+                                            <span class="toggle-text">Başlat</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Challenge Blueprint Specifications -->
+                                <div class="hourglass-scenario-card">
+                                    <div class="hourglass-scenario-header">
+                                        <div class="hourglass-scenario-meta">
+                                            <span class="hourglass-stage-pill hg-badge-stage" id="hourglass-stages-badge">Mərhələ 1, 2 və 3</span>
+                                            <span class="hourglass-diff-badge hg-badge-diff" id="hourglass-diff-badge">MÜRƏKKƏB</span>
+                                            <span class="hourglass-xp-badge hg-badge-xp" id="hourglass-xp-badge">⚡ +200 XP</span>
+                                        </div>
+                                        <h3 class="hourglass-task-title hourglass-scenario-title" id="hourglass-title">Tapşırıq Başlığı</h3>
+                                    </div>
+
+                                    <div class="hourglass-scenario-body">
+                                        <div class="hg-section-title">📌 Real Sistem Ssenarisi:</div>
+                                        <div class="hourglass-scenario-content hg-scenario-desc" id="hourglass-scenario-text"></div>
+
+                                        <div class="hg-section-title">⚙️ Mərhələli Həll Tələbləri:</div>
+                                        <div class="hourglass-instructions-content hg-instruction-box" id="hourglass-instructions-box"></div>
+
+                                        <div class="hg-section-title">🎯 Gözlənilən Konsol Çıxışı:</div>
+                                        <pre class="hourglass-expected-output hg-expected-box" id="hourglass-expected-box"></pre>
+
+                                        <!-- Progressive Hints Section -->
+                                        <div class="hg-hints-card">
+                                            <div class="hg-hints-header">
+                                                <span class="hg-hints-title">💡 Arxitektur İpucları</span>
+                                                <span class="hg-hints-badge" id="hourglass-hints-count">0 / 3 açılıb</span>
+                                            </div>
+                                            <div class="hg-hints-list" id="hourglass-hints-list"></div>
+                                            <button type="button" class="hg-hint-btn" id="hourglass-hint-btn">
+                                                💡 İpucu göstər (1/3)
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Panel: Editor, Controls & Live Output -->
+                            <div class="hourglass-right-panel">
+                                <div class="hourglass-editor-toolbar">
+                                    <div class="hourglass-editor-title">
+                                        <span class="editor-icon">⚡</span>
+                                        <span>JavaScript Arxitektura Həlli</span>
+                                    </div>
+                                    <div class="hourglass-editor-actions">
+                                        <button type="button" class="hg-btn secondary hourglass-reset-btn" id="hg-reset-code-btn" title="Başlanğıc şablonuna sıfırla">
+                                            🔄 Sıfırla
+                                        </button>
+                                        <button type="button" class="hg-btn run hourglass-test-btn" id="hg-test-code-btn" title="Kodu icra edin və çıxışı yoxlayın">
+                                            ▶ Kodu Sınaqdan Keçir
+                                        </button>
+                                        <button type="button" class="hg-btn submit hourglass-submit-btn" id="hg-submit-btn" title="Həlli yekunlaşdır və reytinqi hesabla">
+                                            🏁 Tamamla və Qiymətləndir
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="hourglass-editor-container">
+                                    <div id="hourglass-editor" class="code-editor"></div>
+                                </div>
+
+                                <!-- Live Console Drawer -->
+                                <div class="hourglass-output-drawer" id="hourglass-output-drawer">
+                                    <div class="hourglass-output-header">
+                                        <div class="output-header-left">
+                                            <span class="output-icon">💻</span>
+                                            <span class="output-title">Canlı Konsol Terminalı:</span>
+                                        </div>
+                                        <span class="hourglass-output-status" id="hourglass-output-status">İcra gözlənilir</span>
+                                    </div>
+                                    <pre class="hourglass-output-text" id="hourglass-output-text">Kodu yoxlamaq üçün "▶ Kodu Sınaqdan Keçir" düyməsinə basın...</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================
+                     PANELS: TASKS & ERRORS (Retained & Accessible)
+                     ============================================ -->
+                <!-- Tasks Panel View -->
+                <div id="tasks-panel-view" class="panel-view hidden">
+                    <div class="panel-view-header">
+                        <div class="panel-header-info">
+                            <h2>📋 Tapşırıqlar Paneli</h2>
+                            <p>13 bölmə üzrə 130 praktiki JavaScript tapşırığı (Asan, Orta və Çətin səviyyələrdə)</p>
+                        </div>
+                        <div class="panel-stats-badge" id="tasks-panel-stats">0/130 Tamamlandı</div>
+                    </div>
+
+                    <div class="panel-filter-bar">
+                        <div class="filter-group">
+                            <label for="tasks-section-filter">Bölmə:</label>
+                            <select id="tasks-section-filter" class="panel-select">
+                                <option value="all">Bütün Bölmələr (13 Bölmə)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="tasks-diff-filter">Çətinlik:</label>
+                            <select id="tasks-diff-filter" class="panel-select">
+                                <option value="all">Bütün Səviyyələr</option>
+                                <option value="Asan">🟢 Asan</option>
+                                <option value="Orta-asan">🔵 Orta-asan</option>
+                                <option value="Orta-çətin">🟡 Orta-çətin</option>
+                                <option value="Çətin">🔴 Çətin</option>
+                            </select>
+                        </div>
+                        <div class="filter-group filter-search">
+                            <input type="text" id="tasks-search-input" class="panel-search-input" placeholder="Tapşırıq axtar...">
+                        </div>
+                    </div>
+
+                    <div class="panel-items-container" id="tasks-items-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Errors Panel View -->
+                <div id="errors-panel-view" class="panel-view hidden">
+                    <div class="panel-view-header">
+                        <div class="panel-header-info">
+                            <h2>🐛 Xəta Paneli</h2>
+                            <p>21 bölmə üzrə 210 xətalı JavaScript kodu və sazlama sınağı (Debugging Challenge)</p>
+                        </div>
+                        <div class="panel-stats-badge" id="errors-panel-stats">0/210 Həll edildi</div>
+                    </div>
+
+                    <div class="panel-filter-bar">
+                        <div class="filter-group">
+                            <label for="errors-section-filter">Bölmə:</label>
+                            <select id="errors-section-filter" class="panel-select">
+                                <option value="all">Bütün Bölmələr (21 Bölmə)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="errors-diff-filter">Çətinlik:</label>
+                            <select id="errors-diff-filter" class="panel-select">
+                                <option value="all">Bütün Səviyyələr</option>
+                                <option value="Asan">🟢 Asan</option>
+                                <option value="Orta-asan">🔵 Orta-asan</option>
+                                <option value="Orta-çətin">🟡 Orta-çətin</option>
+                                <option value="Çətin">🔴 Çətin</option>
+                            </select>
+                        </div>
+                        <div class="filter-group filter-search">
+                            <input type="text" id="errors-search-input" class="panel-search-input" placeholder="Xəta axtar...">
+                        </div>
+                    </div>
+
+                    <div class="panel-items-container" id="errors-items-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Exam Confirmation Modal -->
+    <dialog id="exam-confirm-modal" class="exam-modal">
+        <div class="modal-dialog-content">
+            <div class="modal-header">
+                <h3>🏁 İmtahanı Bitirmək İstəyirsiniz?</h3>
+            </div>
+            <div class="modal-body" id="exam-confirm-body">
+                <!-- Details about answered/unanswered questions -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn secondary" id="exam-confirm-cancel-btn">Davam Et (Qayıt)</button>
+                <button type="button" class="modal-btn danger" id="exam-confirm-submit-btn">Bəli, İmtahanı Bitir</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Exam Surrender Modal -->
+    <dialog id="exam-surrender-modal" class="exam-modal">
+        <div class="modal-dialog-content">
+            <div class="modal-header">
+                <h3>🏳️ Təslim Olmaq İstəyirsiniz?</h3>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+                    Təslim olmaq istədiyinizə əminsiniz? <strong>Bu sual üzrə bal hesablanmayacaq (0 bal).</strong>
+                </p>
+                <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin-top: 0.4rem;">
+                    Təsdiq etdikdən sonra bu tapşırığın rəsmi düzgün həll kodu və izahı göstəriləcək, lakin bu sual üçün yenidən bal toplamaq mümkün olmayacaq.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn secondary" id="exam-surrender-cancel-btn">Ləğv et</button>
+                <button type="button" class="modal-btn danger" id="exam-surrender-confirm-btn">Bəli, təslim ol</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Exam Result Modal -->
+    <dialog id="exam-result-modal" class="exam-modal result-modal">
+        <div class="modal-dialog-content modal-lg">
+            <div class="modal-header">
+                <div class="result-header-badge" id="exam-result-badge">🏆</div>
+                <div>
+                    <h3 id="exam-result-title">İmtahan Yekunlaşdı</h3>
+                    <p class="modal-subtitle" id="exam-result-subtitle">Nəticələriniz hesablandı</p>
+                </div>
+            </div>
+            <div class="modal-body" id="exam-result-body">
+                <!-- Big Score Card, Stats, Questions Review Accordion -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn secondary" id="exam-result-close-btn">Nəticələri Bağla</button>
+                <button type="button" class="modal-btn primary" id="exam-result-new-btn">Yeni İmtahana Başla</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- ============================================
+         QUESTION BANK MODAL (Sual Bankı)
+         ============================================ -->
+    <dialog id="question-bank-modal" class="exam-modal question-bank-modal">
+        <div class="modal-dialog-content question-bank-container">
+            <!-- Modal Header -->
+            <div class="modal-header qb-modal-header">
+                <div class="qb-header-text">
+                    <div class="qb-title-row">
+                        <span class="qb-icon">📚</span>
+                        <h3>İmtahan Sual Bankı</h3>
+                    </div>
+                    <p class="modal-subtitle">Bütün 21 bölmə üzrə mövcud olan imtahan və sınaq tapşırıqları</p>
+                </div>
+                <button type="button" class="qb-close-btn" id="question-bank-close-btn" aria-label="Bağla" title="Bağla (ESC)">✕</button>
+            </div>
+
+            <!-- Filter & Search Toolbar -->
+            <div class="qb-toolbar">
+                <div class="qb-search-wrapper">
+                    <span class="qb-search-icon">🔍</span>
+                    <input type="text" id="qb-search-input" class="qb-search-input" placeholder="Sual və ya açar söz axtar..." autocomplete="off">
+                    <button type="button" id="qb-search-clear" class="qb-search-clear hidden" title="Axtarışı təmizlə">✕</button>
+                </div>
+                <div class="qb-filters-row">
+                    <div class="qb-select-wrap">
+                        <label for="qb-section-filter" class="qb-select-label">Bölmə:</label>
+                        <select id="qb-section-filter" class="qb-filter-select">
+                            <option value="all">Bütün Bölmələr (1-21)</option>
+                        </select>
+                    </div>
+                    <div class="qb-select-wrap">
+                        <label for="qb-diff-filter" class="qb-select-label">Çətinlik:</label>
+                        <select id="qb-diff-filter" class="qb-filter-select">
+                            <option value="all">Bütün Çətinliklər</option>
+                            <option value="ASAN">Asan</option>
+                            <option value="ORTA">Orta</option>
+                            <option value="ÇƏTİN">Çətin</option>
+                            <option value="EKSPERT">Ekspert</option>
+                        </select>
+                    </div>
+                    <div class="qb-count-indicator" id="qb-count-indicator">
+                        Mövcud Suallar: <strong>315 sual</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scrollable Questions List / Accordion Body -->
+            <div class="modal-body qb-body" id="qb-questions-list">
+                <!-- Rendered dynamically by renderQuestionBank() in exam.js -->
+            </div>
+        </div>
+    </dialog>
+
+    <!-- ============================================
+         HOURGLASS RESULT MODAL (Qum Saatı Reytinq Modalı)
+         ============================================ -->
+    <dialog id="hourglass-result-modal" class="exam-modal hourglass-result-modal">
+        <div class="modal-card hourglass-result-card">
+            <div class="hourglass-result-header">
+                <div class="hourglass-rank-badge-glow" id="hg-result-rank-badge">⚡</div>
+                <h3 id="hg-result-title">Sınaq Tamamlandı!</h3>
+                <p class="modal-subtitle" id="hg-result-subtitle">E-Ticarət Səbət & Valyuta Konvertasiya Borusu</p>
+            </div>
+
+            <div class="hourglass-result-body">
+                <!-- Cyberpunk Metrics Grid -->
+                <div class="hourglass-metrics-grid">
+                    <div class="hg-metric-card">
+                        <span class="hg-metric-label">Reytinq Dərəcəsi</span>
+                        <div class="hg-metric-val rank-val" id="hg-result-rank-title">S-Rank</div>
+                        <span class="hg-metric-sub" id="hg-result-rank-sub">⚡ Super Sürət</span>
+                    </div>
+                    <div class="hg-metric-card">
+                        <span class="hg-metric-label">Dəqiqlik</span>
+                        <div class="hg-metric-val" id="hg-result-accuracy">100%</div>
+                        <span class="hg-metric-sub">Səhvsiz Kod İcrası</span>
+                    </div>
+                    <div class="hg-metric-card">
+                        <span class="hg-metric-label">Sərf Olunan Vaxt</span>
+                        <div class="hg-metric-val" id="hg-result-time-spent">04:15</div>
+                        <span class="hg-metric-sub" id="hg-result-time-ratio">Hədəf vaxtın 42%-i</span>
+                    </div>
+                    <div class="hg-metric-card">
+                        <span class="hg-metric-label">Qazanılan Təcrübə</span>
+                        <div class="hg-metric-val xp-val" id="hg-result-earned-xp">+300 XP</div>
+                        <span class="hg-metric-sub" id="hg-result-xp-detail">200 XP + 100 Bonus</span>
+                    </div>
+                </div>
+
+                <div class="hourglass-feedback-box" id="hg-result-feedback">
+                    <!-- Detailed rank description -->
+                </div>
+            </div>
+
+            <div class="modal-actions hourglass-modal-actions">
+                <button type="button" class="modal-btn secondary" id="hg-result-retry-btn">
+                    🔄 Yenidən Sına
+                </button>
+                <button type="button" class="modal-btn secondary" id="hg-result-close-btn">
+                    🚪 İmtahan Mərkəzinə Qayıt
+                </button>
+                <button type="button" class="modal-btn primary" id="hg-result-next-btn">
+                    ➡️ Növbəti Tapşırıq
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- CodeMirror Core and JavaScript Mode -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    
+    <!-- Curriculum Data -->
+    <script src="data_sections_1_5.js"></script>
+    <script src="data_sections_6_9.js"></script>
+    <script src="data_sections_10_13.js"></script>
+    <script src="data_section_14.js"></script>
+    <script src="data_section_15.js"></script>
+    <script src="data_section_16.js"></script>
+    <script src="data_section_17.js"></script>
+    <script src="data_section_18.js"></script>
+    <script src="data_section_19.js"></script>
+    <script src="data_section_20.js"></script>
+    <script src="data_section_21.js"></script>
+    <script src="panel_data.js"></script>
+    <script src="data_bug_panel.js"></script>
+    <script src="ecosystem_lessons_data.js"></script>
+    <script src="data_exam_questions.js"></script>
+    
+    <!-- Storage Engine (IndexedDB + Migration + Dual-Write) -->
+    <script src="storage_engine.js"></script>
+
+    <!-- Roadmap Engine -->
+    <script src="roadmap.js"></script>
+    
+    <!-- Exam Question Bank Engine -->
+    <script src="exam.js"></script>
+    
+    <!-- Hourglass Challenges Data -->
+    <script src="data_hourglass_challenges.js"></script>
+    
+    <!-- App Logic Engine -->
+    <script src="app.js"></script>
+
+    <!-- Progressive Web App Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('[PWA] Service Worker qeydiyyatdan keçdi:', registration.scope);
+                        registration.onupdatefound = () => {
+                            const installingWorker = registration.installing;
+                            if (installingWorker) {
+                                installingWorker.onstatechange = () => {
+                                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        console.log('[PWA] Yeni versiya keşləndi.');
+                                        if (typeof showToast === 'function') {
+                                            showToast('⚡ Tətbiqin yeni versiyası hazırdır. Oflayn rejim aktivdir!', 'success');
+                                        }
+                                    }
+                                };
+                            }
+                        };
+                    })
+                    .catch((error) => {
+                        console.warn('[PWA] Service Worker qeydiyyat xətası:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

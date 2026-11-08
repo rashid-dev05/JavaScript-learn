@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#070B14"/>
+    </linearGradient>
+    <linearGradient id="jsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF066"/>
+      <stop offset="100%" stop-color="#F7DF1E"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Outer Border -->
+  <rect x="16" y="16" width="480" height="480" rx="84" fill="none" stroke="rgba(247, 223, 30, 0.25)" stroke-width="4"/>
+
+  <!-- Glowing JS Card -->
+  <g transform="translate(96, 96)">
+    <!-- Shadow / Glow -->
+    <rect width="320" height="320" rx="64" fill="#F7DF1E" opacity="0.2" filter="url(#glow)"/>
+    <!-- Yellow JS Plate -->
+    <rect width="320" height="320" rx="56" fill="url(#jsGrad)"/>
+    <!-- Lightning Icon Top Right -->
+    <path d="M 230 40 L 195 125 L 235 125 L 185 210 L 255 110 L 215 110 Z" fill="#000000" opacity="0.15"/>
+    <!-- JS Letters -->
+    <text x="160" y="215" font-family="'JetBrains Mono', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="160" font-weight="900" text-anchor="middle" fill="#070B14" letter-spacing="-6">JS</text>
+    <!-- Subtitle Bar -->
+    <rect x="80" y="245" width="160" height="12" rx="6" fill="#070B14" opacity="0.85"/>
+  </g>
+</svg>

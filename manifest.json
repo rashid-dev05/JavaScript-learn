@@ -1,0 +1,70 @@
+{
+  "name": "JSÖyrən - Müasir JavaScript Developer Bootcamp",
+  "short_name": "JSÖyrən",
+  "description": "Müasir JavaScript (ES2026) dilini sıfırdan peşəkar səviyyəyə qədər öyrənin. İnteraktiv roadmap, 21 modul, xəta paneli, playground və canlı imtahan simulyatoru.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070B14",
+  "theme_color": "#090D16",
+  "orientation": "any",
+  "lang": "az",
+  "dir": "ltr",
+  "categories": ["education", "developer", "productivity"],
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Öyrən və Dərslər",
+      "short_name": "Dərslər",
+      "description": "21 Modullu JavaScript Yol Xəritəsi və Tədris Materialları",
+      "url": "./index.html#learn",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "İmtahan Simulyatoru",
+      "short_name": "İmtahan",
+      "description": "Real vaxt rejimində JavaScript imtahanı və testlər",
+      "url": "./index.html#exam",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Kod Playground",
+      "short_name": "Playground",
+      "description": "Canlı ES2026 kod redaktoru və terminal",
+      "url": "./index.html#playground",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Xəta Sazlama Paneli",
+      "short_name": "Xəta Paneli",
+      "description": "210 praktiki debugging və bug-fix məşqi",
+      "url": "./index.html#errors-panel",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}

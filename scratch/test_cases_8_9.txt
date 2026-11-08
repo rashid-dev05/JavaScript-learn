@@ -1,0 +1,12 @@
+    // Case 8: Promise.reject(new Error("x"))
+    const c8 = await runInVM('Promise.reject(new Error("x"));');
+    console.log('Case 8 (Unhandled Rejection): error =', c8.error);
+    if (!c8.error || !c8.error.includes('x')) throw new Error('Case 8 failed');
+
+    // Case 9: async function f(){ throw new Error("y"); } f();
+    const c9 = await runInVM('async function f(){ throw new Error("y"); } f();');
+    console.log('Case 9 (Async Throw): error =', c9.error);
+    if (!c9.error || !c9.error.includes('y')) throw new Error('Case 9 failed');
+
+    console.log('\nALL 9 EXTENDED VM TEST CASES PASSED SUCCESSFULLY! 🎉');
+    process.exit(0);

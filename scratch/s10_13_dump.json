@@ -1,0 +1,538 @@
+[
+  {
+    "id": "section-10",
+    "title": "Bölmə 10: Xəta İdarəetmə (try...catch, throw new Error)",
+    "icon": "🛡️",
+    "topics": [
+      {
+        "id": "topic-10-1",
+        "title": "try...catch Strukturu və Xətaların Tutulması",
+        "theory": "<h3>🛡️ Təhlükəsizlik Kəməri: try...catch</h3>\n<p>Real layihələrdə bəzən kodumuzdan asılı olmayan səbəblərdən xətalar baş verə bilər (məsələn, internet kəsilir, server səhv cavab qaytarır, istifadəçi yanlış fayl yükləyir). Əgər bu xətanı qabaqcadan idarə etməsək, bütün veb sayt <strong>çökər və dayanar</strong>.</p>\n\n<p>Bunun qarşısını almaq üçün <strong>try...catch</strong> blokundan istifadə edirik:</p>\n<pre><code>try {\n  // Riskli kod (burada xəta baş verə bilər)\n} catch (xeta) {\n  // Xəta baş verdikdə bu blok işə düşür\n  console.log(\"Xəta baş verdi:\", xeta.message);\n}</code></pre>\n\n<ul>\n  <li><strong><code>try</code> bloku:</strong> JavaScript əvvəlcə bu blokdakı kodu icra etməyə çalışır.</li>\n  <li><strong><code>catch (error)</code> bloku:</strong> Əgər <code>try</code> daxilində hər hansı xəta yaranarsa, proqram dayanmır, dərhal <code>catch</code> blokuna keçir və xəta obyekti (<code>error.message</code>, <code>error.name</code>) təhlil edilir.</li>\n</ul>\n\n<div class=\"warning-box\">\n  <strong>⚠️ Python Fərqi:</strong><br>\n  Python-dakı <code>try...except</code> bloku JavaScript-də <strong><code>try...catch</code></strong> adlanır. 'except' açar sözü JavaScript-də mövcud deyil!\n</div>",
+        "codeExamples": [
+          {
+            "title": "try...catch ilə Xətanı Tutmaq",
+            "code": "try {\n  // Təyin edilməmiş dəyişəni çağıraq (ReferenceError)\n  let netice = namelumDeyisen + 5;\n} catch (err) {\n  console.log(\"Xəta tutuldu:\", err.name);\n}\nconsole.log(\"Proqram sağ-salamat davam edir!\");",
+            "output": "Xəta tutuldu: ReferenceError\nProqram sağ-salamat davam edir!"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-10-1-1",
+            "title": "İstisnanın Təhlükəsiz Tutulması və Bərpası",
+            "instruction": "Təyin olunmamış funksiya çağırışı zamanı proqramın qəzaya uğramasının qarşısını alın və xəta baş verdikdə konsola \"Xəta aradan qaldırıldı\" bildirişini təhlükəsiz ötürün.",
+            "starterCode": "try {\n  qeyriMovcud();\n} catch (err) {\n  // Kodunuzu buraya yazın\n}\n",
+            "expectedOutput": "Xəta aradan qaldırıldı",
+            "hint": "Gözlənilməz xətaları tutmaq və proqramın dayanmasının qarşısını almaq üçün try...catch mexanizmindən istifadə edin.",
+            "solutionCode": "try {\n  qeyriMovcud();\n} catch (err) {\n  console.log(\"Xəta aradan qaldırıldı\");\n}"
+          },
+          {
+            "id": "ex-10-1-2",
+            "title": "Xəta Obyektindən Mesajın Oxunması",
+            "instruction": "Sistemdə yaranmış istisna obyektini tutaraq onun daxilindəki \"Sistem məşğuldur\" mətn təsvirini konsol ekranında əks etdirin.",
+            "starterCode": "try {\n  throw new Error(\"Sistem məşğuldur\");\n} catch (err) {\n  // Kodunuzu buraya yazın\n}\n",
+            "expectedOutput": "Sistem məşğuldur",
+            "hint": "Tutulan xəta obyektinin izahını oxumaq üçün err.message xassəsindən istifadə olunur.",
+            "solutionCode": "try {\n  throw new Error(\"Sistem məşğuldur\");\n} catch (err) {\n  console.log(err.message);\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-10-1-1",
+            "title": "Xəta İdarəetmə Bloku Sintaksis Xətası",
+            "instruction": "Proqramçı baş verə biləcək xətanı təhlükəsiz şəkildə yaxalamaq istəyir, lakin yad sintaksis səbəbindən skript işə düşmür. Xəta idarəetmə blokunu standart JavaScript qaydalarına uyğunlaşdırın.",
+            "buggyCode": "try {\n  let a = b;\n} except (err) {\n  console.log(\"Xəta\");\n}",
+            "correctCode": "try {\n  let a = b;\n} catch (err) {\n  console.log(\"Xəta\");\n}",
+            "correctOutput": "Xəta",
+            "explanation": "JavaScript-də xətaları tutmaq üçün 'except' deyil, 'catch' açar sözündən istifadə olunur."
+          }
+        ]
+      },
+      {
+        "id": "topic-10-2",
+        "title": "Xüsusi Xəta Yaratmaq: throw və new Error()",
+        "theory": "<h3>⚠️ Xüsusi Xəta Yaratmaq (throw new Error)</h3>\n<p>Bəzən kod texniki cəhətdən düzgün olsa da, biznes məntiqinə ziddir (məsələn, yaş mənfi daxil edilib və ya bank hesabında kifayət qədər vəsait yoxdur). Belə hallarda biz özümüz bilərəkdən xəta yaradıb ata bilərik:</p>\n\n<pre><code>function yoxla(yas) {\n  if (yas < 0) {\n    throw new Error(\"Yaş mənfi ola bilməz!\");\n  }\n  return \"Yaş təsdiqləndi\";\n}</code></pre>\n\n<ul>\n  <li><strong><code>throw</code>:</strong> Xətanı \"atır\" və proqramın normal axınını dayandırır.</li>\n  <li><strong><code>new Error(\"Mesaj\")</code>:</strong> JavaScript-in daxili xəta obyektini yaradır.</li>\n</ul>\n\n<div class=\"warning-box\">\n  <strong>⚠️ Python Fərqi:</strong><br>\n  Python-dakı <code>raise ValueError(\"...\")</code> əvəzinə JavaScript-də <strong><code>throw new Error(\"...\")</code></strong> yazılır.\n</div>",
+        "codeExamples": [
+          {
+            "title": "throw ilə Doğrulama",
+            "code": "function pulKocur(mebleg) {\n  if (mebleg <= 0) {\n    throw new Error(\"Məbləğ müsbət olmalıdır\");\n  }\n  return \"Köçürüldü: \" + mebleg + \" AZN\";\n}\n\ntry {\n  console.log(pulKocur(-50));\n} catch (e) {\n  console.log(e.message);\n}",
+            "output": "Məbləğ müsbət olmalıdır"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-10-2-1",
+            "title": "Qeyri-Mümkün Əməliyyat üçün Xəta Generasiyası",
+            "instruction": "İki ədədi bölən <code>bol</code> funksiyası tərtib edin. Məxrəc 0 olduqda qəsdən \"Sıfıra bölmək olmaz!\" xətası fırladın və funksiyanı 10 ilə 0 üçün sınaqdan keçirib xəta mesajını ekranda əks etdirin.",
+            "starterCode": "function bol(a, b) {\n  // Kodunuzu buraya yazın\n  return a / b;\n}\n\ntry {\n  bol(10, 0);\n} catch (e) {\n  console.log(e.message);\n}\n",
+            "expectedOutput": "Sıfıra bölmək olmaz!",
+            "hint": "Xüsusi xəta vəziyyətlərini qeydə almaq üçün if (b === 0) throw new Error(...) strukturundan istifadə edin.",
+            "solutionCode": "function bol(a, b) {\n  if (b === 0) throw new Error(\"Sıfıra bölmək olmaz!\");\n  return a / b;\n}\n\ntry {\n  bol(10, 0);\n} catch (e) {\n  console.log(e.message);\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-10-2-1",
+            "title": "Fərdi Xəta Fırlatma Sintaksis Xətası",
+            "instruction": "Yaş mənfi olduqda sistem xüsusi xəta fırlatmalıdır, lakin istifadə olunan açar söz JavaScript tərəfindən tanınmır. Xəta generasiyasını JavaScript qaydalarına uyğunlaşdırın.",
+            "buggyCode": "function test() {\n  raise Error(\"Yanlış dəyər\");\n}\ntry {\n  test();\n} catch(err) {\n  console.log(err.message);\n}",
+            "correctCode": "function test() {\n  throw new Error(\"Yanlış dəyər\");\n}\ntry {\n  test();\n} catch(err) {\n  console.log(err.message);\n}",
+            "correctOutput": "Yanlış dəyər",
+            "explanation": "JavaScript-də xəta yaratmaq üçün 'raise' deyil, 'throw new Error()' sintaksisindən istifadə edilir."
+          }
+        ]
+      },
+      {
+        "id": "topic-10-3",
+        "title": "finally Bloku",
+        "theory": "<h3>🏁 Hər Halda İcra Olunan: finally</h3>\n<p><code>try...catch</code> zəncirinin sonuna <strong>finally</strong> bloku əlavə edilə bilər. Bu blok <code>try</code>-da xəta baş versə də, verməsə də <strong>MÜTLƏQ VƏ HƏR HALDA</strong> sonda icra olunur:</p>\n\n<pre><code>try {\n  // 1. Əməliyyat başladılır\n} catch (err) {\n  // 2. Xəta olarsa bura gəlir\n} finally {\n  // 3. Xəta olsa da, olmasa da həmişə işləyir (Məs: yüklənmə spinner-ini söndürmək)\n}</code></pre>",
+        "codeExamples": [
+          {
+            "title": "finally Blokunun İcrası",
+            "code": "try {\n  console.log(\"1. Əməliyyat uğurludur\");\n} catch (err) {\n  console.log(\"Xəta baş verdi\");\n} finally {\n  console.log(\"2. Təmizlik işləri tamamlandı\");\n}",
+            "output": "1. Əməliyyat uğurludur\n2. Təmizlik işləri tamamlandı"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-10-3-1",
+            "title": "Zəmanətli Yekunlaşdırma Əməliyyatı",
+            "instruction": "Əməliyyatın uğurlu və ya xətalı olmasından asılı olmayaraq, başlanğıcda \"Başladı\", sonunda isə mütləq icra olunan zəmanətli blokda \"Yekunlaşdı\" mesajını konsolda əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Başladı\nYekunlaşdı",
+            "hint": "Hər bir halda icra olunması zəmanətlənən kodları yerləşdirmək üçün try...finally strukturundan istifadə olunur.",
+            "solutionCode": "try {\n  console.log(\"Başladı\");\n} finally {\n  console.log(\"Yekunlaşdı\");\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-10-3-1",
+            "title": "finally Blokunun Quraşdırılma Xətası",
+            "instruction": "Resursların bağlanması üçün nəzərdə tutulan təmizləmə bloku sintaksis xətası verir və icra olunmur. Blokun strukturunu bərpa edərək hər vəziyyətdə işləməsini təmin edin.",
+            "buggyCode": "try {\n  console.log(\"İşləyir\");\n} finally\n  console.log(\"Bitdi\");",
+            "correctCode": "try {\n  console.log(\"İşləyir\");\n} finally {\n  console.log(\"Bitdi\");\n}",
+            "correctOutput": "İşləyir\nBitdi",
+            "explanation": "try, catch və finally blokları mütləq fiqurlu mötərizələrlə { } əhatə olunmalıdır."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "section-11",
+    "title": "Bölmə 11: Müasir Massiv Əməliyyatları (map, filter, reduce, find)",
+    "icon": "⚡",
+    "topics": [
+      {
+        "id": "topic-11-1",
+        "title": "map() Metodu ilə Transformasiya",
+        "theory": "<h3>🗺️ map() Metodu Nədir?</h3>\n<p><strong>map()</strong> — funksional proqramlaşdırmanın ən vacib metodlarından biridir. O, mövcud massivin hər bir elementini verilmiş funksiyadan keçirərək <strong>tamamilə yeni massiv</strong> yaradır. Orijinal massiv isə toxunulmaz (immutable) qalır:</p>\n\n<pre><code>const ededler = [1, 2, 3];\nconst ikiqat = ededler.map(x => x * 2);\nconsole.log(ikiqat); // [2, 4, 6]</code></pre>\n\n<div class=\"tip-box\">\n  <strong>🌟 Klassik for Dövrü ilə Müqayisə:</strong><br>\n  Klassik dövrlərdə boş massiv yaradıb <code>for</code> ilə gəzərək tək-tək <code>push()</code> etmək lazım idi. <code>map()</code> isə bunu tək bir sətirdə, aydın və xətasız həyata keçirir.\n</div>",
+        "codeExamples": [
+          {
+            "title": "map() Nümunəsi",
+            "code": "const adlar = [\"leyla\", \"murad\", \"aygül\"];\nconst boyukAdlar = adlar.map(ad => ad.toUpperCase());\nconsole.log(boyukAdlar);",
+            "output": "[\n  \"LEYLA\",\n  \"MURAD\",\n  \"AYGÜL\"\n]"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-11-1-1",
+            "title": "Kolleksiyanın Riyazi Transformasiyası",
+            "instruction": "Verilmiş ədədlər massivindəki hər bir qiymətin riyazi kvadratından ibarət yeni massiv formalaşdıraraq konsola çıxarın.",
+            "starterCode": "const ededler = [2, 3, 4];\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "[\n  4,\n  9,\n  16\n]",
+            "hint": "Hər bir elementi dəyişdirərək eyni ölçülü yeni massiv almaq üçün map() metodundan istifadə edin.",
+            "solutionCode": "const ededler = [2, 3, 4];\nconst netice = ededler.map(x => x * x);\nconsole.log(netice);"
+          },
+          {
+            "id": "ex-11-1-2",
+            "title": "Bütün Qiymətlərə Əlavənin Tətbiqi",
+            "instruction": "Qiymətlər siyahısındakı hər bir elementi 5 vahid artıraraq əldə olunan yeni qiymətlər siyahısını konsol ekranında əks etdirin.",
+            "starterCode": "const qiymetler = [10, 20, 30];\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "[\n  15,\n  25,\n  35\n]",
+            "hint": "Bütün elementləri ardıcıl artırmaq üçün qiymetler.map(x => x + 5) əməliyyatını tətbiq edin.",
+            "solutionCode": "const qiymetler = [10, 20, 30];\nconsole.log(qiymetler.map(x => x + 5));"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-11-1-1",
+            "title": "Massiv Çevrilməsində Qayıdış Qiyməti Xətası",
+            "instruction": "Massivin elementlərinin ikiqat qiyməti hesablanmalıdır, lakin nəticədə elementlər 'undefined' olaraq qayıdır. Çevirmə funksiyasının daxili məntiqini araşdırıb hədəf massivi əldə edin.",
+            "buggyCode": "const reqemler = [1, 2];\nconst netice = reqemler.map(x => {\n  x * 10;\n});\nconsole.log(netice);",
+            "correctCode": "const reqemler = [1, 2];\nconst netice = reqemler.map(x => {\n  return x * 10;\n});\nconsole.log(netice);",
+            "correctOutput": "[\n  10,\n  20\n]",
+            "explanation": "map() metoduna ötürülən funksiyada fiqurlu mötərizə açılırsa, yeni dəyəri qaytarmaq üçün mütləq return yazılmalıdır."
+          }
+        ]
+      },
+      {
+        "id": "topic-11-2",
+        "title": "filter() Metodu ilə Filtrləmə",
+        "theory": "<h3>🎯 filter() Metodu Nədir?</h3>\n<p><strong>filter()</strong> — massivin elementlərini süzgəcdən keçirərək yalnız verilmiş şərti ödəyən (yəni <code>true</code> qaytaran) elementlərdən ibarət yeni massiv qaytarır:</p>\n\n<pre><code>const ballar = [45, 80, 92, 35, 74];\nconst kecenler = ballar.filter(bal => bal >= 50);\nconsole.log(kecenler); // [80, 92, 74]</code></pre>\n\n<div class=\"tip-box\">\n  <strong>💡 filter() Qaydası:</strong> Callback funksiyası həmişə Boolean (<code>true</code> və ya <code>false</code>) qaytarmalıdır. Əgər <code>true</code> qayıtsa, həmin element yeni massivə daxil edilir, <code>false</code> olarsa kənarda qalır.\n</div>",
+        "codeExamples": [
+          {
+            "title": "filter() ilə Cüt Ədədləri Seçmək",
+            "code": "const ededler = [1, 2, 3, 4, 5, 6];\nconst cutler = ededler.filter(n => n % 2 === 0);\nconsole.log(cutler);",
+            "output": "[\n  2,\n  4,\n  6\n]"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-11-2-1",
+            "title": "Müsbət Ədədlərin Seçilməsi",
+            "instruction": "Qarışıq ədədlər toplusundan yalnız sıfırdan böyük olan müsbət kəmiyyətləri süzgəcdən keçirərək yeni massiv şəklində konsola ötürün.",
+            "starterCode": "const ededler = [-5, 10, -2, 8, 0];\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "[\n  10,\n  8\n]",
+            "hint": "Müəyyən şərtə cavab verən elementləri seçib ayırmaq üçün filter() metodundan istifadə olunur.",
+            "solutionCode": "const ededler = [-5, 10, -2, 8, 0];\nconst musbetler = ededler.filter(x => x > 0);\nconsole.log(musbetler);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-11-2-1",
+            "title": "filter Əvəzinə map İstifadəsi Səhvi",
+            "instruction": "Aşağıdakı proqramçı tək ədədləri seçmək istəyərkən səhvən <code>map</code> yazıb və nəticədə <code>[true, false, true]</code> alıb. <code>filter</code> ilə düzəldin ki, tək ədədlərin özü (<code>[1, 3]</code>) çıxsın.",
+            "buggyCode": "const saylar = [1, 2, 3];\nconst tekler = saylar.map(x => x % 2 !== 0);\nconsole.log(tekler);",
+            "correctCode": "const saylar = [1, 2, 3];\nconst tekler = saylar.filter(x => x % 2 !== 0);\nconsole.log(tekler);",
+            "correctOutput": "[\n  1,\n  3\n]",
+            "explanation": "Şərtə görə elementləri seçmək üçün map deyil, filter metodundan istifadə edilməlidir."
+          }
+        ]
+      },
+      {
+        "id": "topic-11-3",
+        "title": "reduce() Metodu ilə Yekun Dəyər Hesablama",
+        "theory": "<h3>🧮 reduce() Metodu Nədir?</h3>\n<p><strong>reduce()</strong> — bütöv bir massivin bütün elementlərini addım-addım tək bir yekun dəyərə (cəm, hasil, ən böyük ədəd və s.) çevirən ən güclü massiv metodudur:</p>\n\n<pre><code>const ededler = [10, 20, 30];\nconst cem = ededler.reduce((akkumulyator, cari) => akkumulyator + cari, 0);\nconsole.log(cem); // 60</code></pre>\n\n<ul>\n  <li><strong>Akkumulyator (Toplayıcı):</strong> Əvvəlki addımların topladığı yekun dəyərdir.</li>\n  <li><strong>Cari (Current):</strong> Massivdən hazırda işlənən cari elementdir.</li>\n  <li><strong>İlkin Dəyər:</strong> Funksiyadan sonra vergüllə qoyulan başlanğıc qiymətdir (cəmləmə üçün adətən <code>0</code>, hasil üçün <code>1</code>).</li>\n</ul>",
+        "codeExamples": [
+          {
+            "title": "reduce() ilə Cəmin Hesablanması",
+            "code": "const xallar = [5, 10, 15];\nconst yekun = xallar.reduce((toplam, xal) => toplam + xal, 0);\nconsole.log(\"Yekun Xal:\", yekun);",
+            "output": "Yekun Xal: 30"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-11-3-1",
+            "title": "Kolleksiya Üzrə Ümumi Cəmin Toplanması",
+            "instruction": "Siyahıdakı bütün məhsul qiymətlərini tək bir ümumi yekun məbləğə (400) qədər toplayaraq nəticəni konsolda əks etdirin.",
+            "starterCode": "const qiymetler = [100, 250, 50];\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "400",
+            "hint": "Bütün massiv elementlərini tək bir yekun dəyərə yığmaq (aqreqasiya etmək) üçün reduce() metodundan istifadə olunur.",
+            "solutionCode": "const qiymetler = [100, 250, 50];\nconst cem = qiymetler.reduce((acc, curr) => acc + curr, 0);\nconsole.log(cem);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-11-3-1",
+            "title": "Hasil Hesablarkən İlkin Dəyər Səhvi",
+            "instruction": "Ədədlər massivinin hasili (24) hesablanmalıdır, lakin hesablama alqoritmindəki qüsur səbəbindən yekun nəticə hər zaman '0' çıxır. Akkumulyatorun başlanğıc dəyərini və vurma məntiqini tənzimləyin.",
+            "buggyCode": "const reqemler = [2, 3, 4];\nconst hasil = reqemler.reduce((acc, x) => acc * x, 0);\nconsole.log(hasil);",
+            "correctCode": "const reqemler = [2, 3, 4];\nconst hasil = reqemler.reduce((acc, x) => acc * x, 1);\nconsole.log(hasil);",
+            "correctOutput": "24",
+            "explanation": "Vurma (hasil) əməliyyatında ilkin dəyər 0 deyil, 1 olmalıdır, əks halda hər şey sıfıra vurularaq sıfır alınır."
+          }
+        ]
+      },
+      {
+        "id": "topic-11-4",
+        "title": "find(), some() və every() Metodları",
+        "theory": "<h3>🔍 Digər Faydalı Massiv Metodları</h3>\n<p>Müasir JavaScript-də dövrləri tamamilə əvəz edən digər populyar metodlar:</p>\n\n<ul>\n  <li><strong><code>find(fn)</code>:</strong> Şərti ödəyən <strong>ilk tək elementi</strong> tapıb qaytarır (filter kimi massiv deyil, elementin özünü qaytarır; tapmazsa <code>undefined</code>):<br>\n  <code>[10, 25, 30].find(x => x > 20) // 25</code></li>\n  <li><strong><code>some(fn)</code>:</strong> Massivdəki ən azı bircə element şərti ödəyirsə <code>true</code>, heç biri ödəmirsə <code>false</code> qaytarır:<br>\n  <code>[-1, 5, -3].some(x => x > 0) // true (çünki 5 müsbətdir)</code></li>\n  <li><strong><code>every(fn)</code>:</strong> Yalnız və yalnız <strong>bütün elementlər</strong> şərti ödədikdə <code>true</code> qaytarır:<br>\n  <code>[2, 4, 6].every(x => x % 2 === 0) // true</code></li>\n</ul>",
+        "codeExamples": [
+          {
+            "title": "find() və every() Nümunəsi",
+            "code": "const telebeler = [\n  { ad: \"Aysel\", bal: 95 },\n  { ad: \"Tural\", bal: 80 }\n];\n\nconst tapilan = telebeler.find(t => t.bal > 90);\nconsole.log(tapilan.ad);\n\nconst hamisiKecdiler = telebeler.every(t => t.bal >= 50);\nconsole.log(\"Hamısı keçdi:\", hamisiKecdiler);",
+            "output": "Aysel\nHamısı keçdi: true"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-11-4-1",
+            "title": "Kriteriyaya Uyğun İlk Elementin Tapılması",
+            "instruction": "Ədədlər ardıcıllığında 10-dan böyük olan ən birinci ədədi müəyyən edərək konsol pəncərəsində əks etdirin.",
+            "starterCode": "const ededler = [5, 12, 8, 130];\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "12",
+            "hint": "Şərtə uyğun gələn ilk tək elementi tapmaq üçün find() metodundan istifadə edin.",
+            "solutionCode": "const ededler = [5, 12, 8, 130];\nconsole.log(ededler.find(x => x > 10));"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-11-4-1",
+            "title": "Tək Obyekt Axtarışında Metod Seçimi Xətası",
+            "instruction": "Massivdən ID-si 2 olan istifadəçi obyekti tək bir element kimi əldə edilməlidir, lakin funksiya bütöv bir massiv qaytarır. Tək elementi birbaşa əldə edən düzgün massiv metodunu tətbiq edin.",
+            "buggyCode": "const users = [{id: 1, ad: \"Əli\"}, {id: 2, ad: \"Vəli\"}];\nconst tapildi = users.filter(u => u.id === 2);\nconsole.log(tapildi.ad);",
+            "correctCode": "const users = [{id: 1, ad: \"Əli\"}, {id: 2, ad: \"Vəli\"}];\nconst tapildi = users.find(u => u.id === 2);\nconsole.log(tapildi.ad);",
+            "correctOutput": "Vəli",
+            "explanation": "filter() həmişə massiv qaytarır. Tək bir elementi tapmaq üçün find() metodundan istifadə edilməlidir."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "section-12",
+    "title": "Bölmə 12: ES6 OOP & Modullar (class, extends, import, export)",
+    "icon": "🏛️",
+    "topics": [
+      {
+        "id": "topic-12-1",
+        "title": "class Sintaksisi və constructor Metodu",
+        "theory": "<h3>🏛️ Obyekt Yönümlü Proqramlaşdırma (OOP)</h3>\n<p><strong>Klas (Class)</strong> — eyni növ obyektləri yaratmaq üçün istifadə olunan bir <strong>arxitektura qəlibidir (şablonudur)</strong>. Məsələn, bir 'Avtomobil' klası yaradıb ondan minlərlə müxtəlif maşın obyekti istehsal edə bilərik.</p>\n\n<h3>ES6 class Sintaksisi:</h3>\n<pre><code>class Masin {\n  // Konstruktor: obyekt new ilə yarananda ilk işə düşən metoddur\n  constructor(marka, reng) {\n    this.marka = marka;\n    this.reng = reng;\n  }\n\n  // Klasın metodu\n  melumat() {\n    return `${this.reng} ${this.marka}`;\n  }\n}\n\n// Klasdan yeni obyekt yaradırıq:\nconst masin1 = new Masin(\"BMW\", \"Qara\");\nconsole.log(masin1.melumat()); // \"Qara BMW\"</code></pre>\n\n<div class=\"tip-box\">\n  <strong>✨ new Açar Sözü:</strong> Klasdan yeni obyekt (instance) yaratmaq üçün mütləq qarşısında <code>new</code> yazılmalıdır.\n</div>",
+        "codeExamples": [
+          {
+            "title": "Sadə Klas Nümunəsi",
+            "code": "class Telebe {\n  constructor(ad, bal) {\n    this.ad = ad;\n    this.bal = bal;\n  }\n  kecibmi() {\n    return this.bal >= 50;\n  }\n}\n\nconst t1 = new Telebe(\"Aysel\", 85);\nconsole.log(t1.ad, t1.kecibmi());",
+            "output": "Aysel true"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-12-1-1",
+            "title": "İstifadəçi Sinfinin və Metodunun Təyini",
+            "instruction": "Ad və yaş qəbul edən konstruktora, eləcə də \"ad - yas\" formatında məlumat qaytaran <code>tanit</code> metoduna malik <code>User</code> sinfi yaradın və \"Murad\", 20 üçün nəticəni konsola verin.",
+            "starterCode": "class User {\n  // Kodunuzu buraya yazın\n}\n\nconst u = new User(\"Murad\", 20);\nconsole.log(u.tanit());\n",
+            "expectedOutput": "Murad - 20",
+            "hint": "Müasir siniflərdə xassələr constructor daxilində this üzərindən mənimsədilir, metodlar isə sinif gövdəsində elan olunur.",
+            "solutionCode": "class User {\n  constructor(ad, yas) {\n    this.ad = ad;\n    this.yas = yas;\n  }\n  tanit() {\n    return `${this.ad} - ${this.yas}`;\n  }\n}\nconst u = new User(\"Murad\", 20);\nconsole.log(u.tanit());"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-12-1-1",
+            "title": "Klas Konstruktorunun Çağırış Xətası",
+            "instruction": "Klas əsasında yeni obyekt nüsxəsi yaradılmalıdır, lakin 'TypeError: Class constructor cannot be invoked without...' baş verir. Klasın konstruktorunu düzgün başladaraq obyekti formalaşdırın.",
+            "buggyCode": "class Qutu {\n  constructor(olcu) {\n    this.olcu = olcu;\n  }\n}\nconst q = Qutu(10);\nconsole.log(q.olcu);",
+            "correctCode": "class Qutu {\n  constructor(olcu) {\n    this.olcu = olcu;\n  }\n}\nconst q = new Qutu(10);\nconsole.log(q.olcu);",
+            "correctOutput": "10",
+            "explanation": "JavaScript klaslarından yeni obyekt yaratmaq üçün mütləq 'new' açar sözü yazılmalıdır."
+          }
+        ]
+      },
+      {
+        "id": "topic-12-2",
+        "title": "İrsiyyət (Inheritance): extends və super()",
+        "theory": "<h3>🧬 İrsiyyət (Inheritance) Nədir?</h3>\n<p>İrsiyyət — mövcud olan bir əsas (valideyn) klasın xassə və metodlarını yeni bir törəmə (övlad) klasa ötürmək üsuludur. Beləliklə, eyni kodları təkrar yazmağa ehtiyac qalmır.</p>\n\n<h3><code>extends</code> və <code>super()</code>:</h3>\n<ul>\n  <li><strong><code>extends</code>:</strong> Valideyn klasdan irs almaq üçün istifadə olunur:<br>\n  <code>class Isci extends Insan { ... }</code></li>\n  <li><strong><code>super()</code>:</strong> Valideyn klasın konstruktorunu çağırmaq üçün istifadə olunur. <strong>Törəmə klas daxilində <code>this</code> istifadə etməzdən əvvəl mütləq <code>super()</code> çağırılmalıdır!</strong></li>\n</ul>",
+        "codeExamples": [
+          {
+            "title": "extends və super() Nümunəsi",
+            "code": "class Heyvan {\n  constructor(ad) {\n    this.ad = ad;\n  }\n  sesCixar() {\n    return `${this.ad} səs çıxarır`;\n  }\n}\n\nclass It extends Heyvan {\n  constructor(ad, cins) {\n    super(ad); // Valideynin ad parametrini ötürürük\n    this.cins = cins;\n  }\n}\n\nconst it1 = new It(\"Toplan\", \"Qurdbasar\");\nconsole.log(it1.sesCixar());\nconsole.log(it1.cins);",
+            "output": "Toplan səs çıxarır\nQurdbasar"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-12-2-1",
+            "title": "Sinif İrsi və Valideyn Konstruktor Çağırışı",
+            "instruction": "Mövcud <code>Isci</code> sinfindən törəyən, əlavə olaraq şöbə məlumatını qəbul edən <code>Menecer</code> sinfi tərtib edin və \"Leyla\", \"IT\" üçün şöbə adını konsolda əks etdirin.",
+            "starterCode": "class Isci {\n  constructor(ad) {\n    this.ad = ad;\n  }\n}\n\n// Menecer sinfini tərtib edin\n\nconst m = new Menecer(\"Leyla\", \"IT\");\nconsole.log(m.sobe);\n",
+            "expectedOutput": "IT",
+            "hint": "Törəmə siniflərdə extends istifadə olunur və alt sinfin konstruktorunda ilk növbədə super(ad) çağırılmalıdır.",
+            "solutionCode": "class Isci {\n  constructor(ad) {\n    this.ad = ad;\n  }\n}\n\nclass Menecer extends Isci {\n  constructor(ad, sobe) {\n    super(ad);\n    this.sobe = sobe;\n  }\n}\n\nconst m = new Menecer(\"Leyla\", \"IT\");\nconsole.log(m.sobe);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-12-2-1",
+            "title": "Valideyn Konstruktor Əlaqəsi Xətası",
+            "instruction": "Törəmə klasda valideyn klasın xassələri başladılmalıdır, lakin obyekt yaradılarkən 'ReferenceError' baş verir. Valideyn konstruktor əlaqəsini təmin edərək xətanı aradan qaldırın.",
+            "buggyCode": "class Valideyn {\n  constructor(ad) { this.ad = ad; }\n}\nclass Ovlad extends Valideyn {\n  constructor(ad, yas) {\n    this.yas = yas;\n  }\n}\nconst o = new Ovlad(\"Əli\", 10);\nconsole.log(o.yas);",
+            "correctCode": "class Valideyn {\n  constructor(ad) { this.ad = ad; }\n}\nclass Ovlad extends Valideyn {\n  constructor(ad, yas) {\n    super(ad);\n    this.yas = yas;\n  }\n}\nconst o = new Ovlad(\"Əli\", 10);\nconsole.log(o.yas);",
+            "correctOutput": "10",
+            "explanation": "extends ilə törəyən klaslarda this istifadə etməzdən əvvəl mütləq valideynin konstruktoru olan super() çağırılmalıdır."
+          }
+        ]
+      },
+      {
+        "id": "topic-12-3",
+        "title": "Statik Metodlar (static)",
+        "theory": "<h3>⚡ Statik Metodlar (static) Nədir?</h3>\n<p>Statik metodlar — klasdan yaranan ayrı-ayrı obyektlərə (nümunələrə) deyil, <strong>birbaşa klasın özünə aid olan</strong> metodlardır. Onları çağırmaq üçün obyekt yaratmağa (<code>new</code>) ehtiyac yoxdur:</p>\n\n<pre><code>class Riyaziyyat {\n  static topla(a, b) {\n    return a + b;\n  }\n}\n\n// Birbaşa klasın adından çağırırıq:\nconsole.log(Riyaziyyat.topla(10, 20)); // 30</code></pre>\n\n<div class=\"tip-box\">\n  <strong>💡 Həyat Nümunəsi:</strong> JavaScript-in daxili <code>Math.max(5, 10)</code> və ya <code>Object.keys()</code> metodları da məhz statik metodlardır.\n</div>",
+        "codeExamples": [
+          {
+            "title": "Statik Metod Nümunəsi",
+            "code": "class Komekci {\n  static salamDe(ad) {\n    return `Salam, ${ad}!`;\n  }\n}\n\nconsole.log(Komekci.salamDe(\"Samir\"));",
+            "output": "Salam, Samir!"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-12-3-1",
+            "title": "Statik Köməkçi Metodun Təyini",
+            "instruction": "Nüsxə yaratmağa ehtiyac olmadan birbaşa sinif üzərindən çağırılan və ədədin kvadratını qaytaran statik metoda malik <code>Hesab</code> sinfi tərtib edin və 6 arqumenti üçün nəticəni (36) konsola çıxarın.",
+            "starterCode": "class Hesab {\n  // Kodunuzu buraya yazın\n}\n\nconsole.log(Hesab.kvadrat(6));\n",
+            "expectedOutput": "36",
+            "hint": "Birbaşa sinif adından çağırılan metodlar static açar sözü ilə təyin edilir: static kvadrat(n) { return n * n; }",
+            "solutionCode": "class Hesab {\n  static kvadrat(n) {\n    return n * n;\n  }\n}\nconsole.log(Hesab.kvadrat(6));"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-12-3-1",
+            "title": "Statik Metodu Obyektdən Çağırmaq Səhvi",
+            "instruction": "Aşağıdakı kodda statik metod obyekt nüsxəsi üzərindən çağırıldığı üçün <code>TypeError</code> verir. Onu birbaşa klas adı ilə çağırın.",
+            "buggyCode": "class Test {\n  static salam() { return \"Salam\"; }\n}\nconst t = new Test();\nconsole.log(t.salam());",
+            "correctCode": "class Test {\n  static salam() { return \"Salam\"; }\n}\nconsole.log(Test.salam());",
+            "correctOutput": "Salam",
+            "explanation": "Statik metodlar obyekt nümunəsinə (instance) deyil, birbaşa klasın adına bağlıdır və Klas.metod() kimi çağırılmalıdır."
+          }
+        ]
+      },
+      {
+        "id": "topic-12-4",
+        "title": "ES Modulları - import və export Sintaksisi",
+        "theory": "<h3>📦 Modul Arxitekturası: Qlobal Xaosdan Təmiz Koda</h3>\n<p>Köhnə JavaScript dövründə bütün skriptlər tək bir qlobal mühitdə (<code>window</code>) icra olunurdu. HTML-də ard-arda qoşulan <code>&lt;script&gt;</code> teqlərində bir fayldakı dəyişən digər fayldakı dəyişənlə toqquşaraq onu əzirdi (Global Scope Pollution). Bu, layihə böyüdükcə idarəolunmaz xaos və xətalar yaradırdı.</p>\n\n<p><strong>ES6 (ECMAScript 2015)</strong> standartı ilə JavaScript-ə rəsmi <strong>ES Modulları (ESM)</strong> gətirildi. Bu gün React, Vue, Next.js, Vite və Node.js daxil olmaqla bütün müasir ekosistem məhz bu təməl üzərində qurulub.</p>\n\n<div class=\"tip-box\">\n  <strong>🧰 Real Həyat Bənzətməsi (Alət Qutusu):</strong><br>\n  Hər bir JavaScript faylı müstəqil, bağlı bir <strong>emalatxana və ya alət qutusudur</strong>. Emalatxananın daxilindəki hissələr (daxili dəyişənlər) gizlidir (private). Digər faylların istifadəsi üçün yalnız <code>export</code> etdiyimiz alətlər açıq (public) elan olunur. Digər fayllar isə bu alətləri <code>import</code> açar sözü ilə qutuya daxil edir.\n</div>\n\n<hr style=\"border:0; border-top:1px solid var(--border-secondary); margin:1.2rem 0;\">\n\n<h3>1. Adlandırılmış İxracat və İdxal (Named Exports & Imports)</h3>\n<p>Bir moduldan <strong>istənilən sayda</strong> dəyişən, funksiya və ya klası adı ilə ixrac edə bilərik:</p>\n\n<h4>A) Sətirdaxili İxrac (Inline Named Export):</h4>\n<pre><code>// riyaziyyat.js\nexport const PI = 3.14159;\nexport function topla(a, b) {\n  return a + b;\n}</code></pre>\n\n<h4>B) Qruplaşdırılmış İxrac (Grouped Export):</h4>\n<pre><code>const vurma = (a, b) => a * b;\nconst bolme = (a, b) => a / b;\n\n// Faylın sonunda tək sətirdə ixrac:\nexport { vurma, bolme };</code></pre>\n\n<h4>C) İdxal Edilməsi (Importing with Destructuring):</h4>\n<p>Named export-lar mütləq <strong>fiqurlu mötərizə <code>{ }</code> daxilində</strong>, eyni adla qarşılanmalıdır:</p>\n<pre><code>// app.js\nimport { topla, PI } from './riyaziyyat.js';\n\nconsole.log(topla(10, 5)); // 15\nconsole.log(PI);            // 3.14159</code></pre>\n\n<hr style=\"border:0; border-top:1px solid var(--border-secondary); margin:1.2rem 0;\">\n\n<h3>2. Standart İxracat (Default Export & Import)</h3>\n<p>Hər bir modul faylında <strong>yalnız bircə ədəd</strong> əsas (default) dəyər ixrac oluna bilər. Adətən bir fayl tək bir klas, konfiqurasiya və ya əsas komponent üçün nəzərdə tutulduqda istifadə edilir.</p>\n\n<pre><code>// Istifadeci.js\nexport default class Istifadeci {\n  constructor(ad) {\n    this.ad = ad;\n  }\n}</code></pre>\n\n<h4>Default Dəyərin İdxalı:</h4>\n<p>Default export-u idxal edərkən <strong>fiqurlu mötərizə YAZILMIR</strong> və istənilən adla qarşılana bilər:</p>\n<pre><code>// main.js\nimport User from './Istifadeci.js'; // { } yoxdur! İstədiyimiz adla çağıra bilərik\n\nconst u = new User(\"Murad\");\nconsole.log(u.ad); // \"Murad\"</code></pre>\n\n<div class=\"warning-box\">\n  <strong>⚠️ Qızıl Qayda:</strong><br>\n  • <code>export default</code> -> İdxal edərkən mötərizə <strong>olmur</strong>: <code>import Hesablayici from './hesab.js';</code><br>\n  • <code>export { topla }</code> -> İdxal edərkən mötərizə <strong>mütləqdir</strong>: <code>import { topla } from './hesab.js';</code>\n</div>\n\n<hr style=\"border:0; border-top:1px solid var(--border-secondary); margin:1.2rem 0;\">\n\n<h3>3. Ad Dəyişmə (Aliasing with <code>as</code>)</h3>\n<p>Əgər fərqli modullardan eyni adlı funksiyalar idxal olunarsa və ya adı qısaltmaq istəsək, <strong><code>as</code></strong> açar sözündən istifadə edirik:</p>\n<pre><code>// 'topla' yerinə 'cem' adı veririk:\nimport { topla as cem } from './riyaziyyat.js';\n\nconsole.log(cem(20, 30)); // 50</code></pre>\n\n<hr style=\"border:0; border-top:1px solid var(--border-secondary); margin:1.2rem 0;\">\n\n<h3>4. Bütün Modulu Obyekt Kimi İdxal Etmək (Namespace: <code>* as</code>)</h3>\n<p>Moduldakı bütün named export-ları tək bir ad sahəsinə (namespace obyektinə) yığmaq mümkündür:</p>\n<pre><code>import * as Riyaziyyat from './riyaziyyat.js';\n\nconsole.log(Riyaziyyat.PI);\nconsole.log(Riyaziyyat.topla(4, 6));</code></pre>",
+        "codeExamples": [
+          {
+            "title": "Named Exports və Adlandırma (as) Sintaksisi",
+            "code": "// 'hesab.js' modul məntiqinin simulyasiyası\nexport const VALYUTA = \"AZN\";\n\nexport function meblegFormatla(qiymet) {\n  return `${qiymet.toFixed(2)} ${VALYUTA}`;\n}\n\nexport function endirimHesabla(qiymet, faiz) {\n  return qiymet - (qiymet * faiz) / 100;\n}\n\n// Digər faylda: import { meblegFormatla, endirimHesabla as endirim } from './hesab.js';\nconst ilkinQiymet = 120;\nconst endirimli = endirimHesabla(ilkinQiymet, 25);\n\nconsole.log(\"Yekun:\", meblegFormatla(endirimli));",
+            "output": "Yekun: 90.00 AZN"
+          },
+          {
+            "title": "Default Export və Klas İxracı",
+            "code": "// 'avtomobil.js' modulu: default klas və named xassələr\nexport const MASIN_VERGI = 0.18;\n\nexport default class Avtomobil {\n  constructor(model, qiymet) {\n    this.model = model;\n    this.qiymet = qiymet;\n  }\n  yekunQiymet() {\n    return this.qiymet + (this.qiymet * MASIN_VERGI);\n  }\n}\n\n// İstifadə nümunəsi\nconst masin = new Avtomobil(\"Tesla Model 3\", 50000);\nconsole.log(masin.model);\nconsole.log(\"Vergili Qiymət:\", masin.yekunQiymet());",
+            "output": "Tesla Model 3\nVergili Qiymət: 59000"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-12-4-1",
+            "title": "Maliyyə Modulu: Adlı və Defolt İxracat",
+            "instruction": "Müasir modul prinsiplərinə uyğun olaraq valyuta sabitini, toplama funksiyasını və 18% ƏDV hesablayan defolt funksiyanı ixracata hazırlayın və konsol yoxlamasını təmin edin.",
+            "starterCode": "// 1. VALYUTA sabitini və topla funksiyasını ixrac edin\n\n\n// 2. edvHesabla funksiyasını defolt olaraq ixrac edin\n\n\nconsole.log(\"Cəm:\", topla(15, 25), VALYUTA);\nconsole.log(\"ƏDV daxil:\", edvHesabla(100), VALYUTA);\n",
+            "expectedOutput": "Cəm: 40 AZN\nƏDV daxil: 118 AZN",
+            "hint": "Adlı ixrac üçün export const / export function, əsas funksiya üçün isə export default function sintaksisindən istifadə edin.",
+            "solutionCode": "export const VALYUTA = \"AZN\";\n\nexport function topla(a, b) {\n  return a + b;\n}\n\nexport default function edvHesabla(mebleg) {\n  return mebleg * 1.18;\n}\n\nconsole.log(\"Cəm:\", topla(15, 25), VALYUTA);\nconsole.log(\"ƏDV daxil:\", edvHesabla(100), VALYUTA);"
+          },
+          {
+            "id": "ex-12-4-2",
+            "title": "Həndəsə Modulu: Dairə Sahəsinin Hesablanması",
+            "instruction": "Dairənin sahəsini hesablamaq üçün PI sabitini və müvafiq sahə funksiyasını modula ixrac edin; 5 radiuslu dairənin sahəsini (78.5) konsol ekranına çıxarın.",
+            "starterCode": "export const PI = 3.14;\n\nexport function daireSahesi(radius) {\n  // Kodunuzu buraya yazın\n}\n\nconsole.log(\"Dairənin sahəsi:\", daireSahesi(5));\n",
+            "expectedOutput": "Dairənin sahəsi: 78.5",
+            "hint": "Dairənin sahə düsturu: PI * radius * radius. Nəticəni funksiyadan return edin.",
+            "solutionCode": "export const PI = 3.14;\n\nexport function daireSahesi(radius) {\n  return PI * radius * radius;\n}\n\nconsole.log(\"Dairənin sahəsi:\", daireSahesi(5));"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-12-4-1",
+            "title": "İxrac Edilməmiş (Private) Dəyişənin Çağırılması",
+            "instruction": "Aşağıdakı modula aid kodda xaricə <code>export</code> edilməmiş daxili (private) <code>gizliAcar</code> dəyişəni çağırıldığı üçün xəta yaranır. Yalnız xaricə açıq ixrac olunmuş <code>ACIQ_TOKEN</code> dəyişənini konsola çıxararaq kodu düzəldin.",
+            "buggyCode": "const gizliAcar = \"SECRET_KEY_999\";\nexport const ACIQ_TOKEN = \"TOKEN_XYZ_2026\";\n\nconsole.log(\"Token:\", gizliAcar);",
+            "correctCode": "const gizliAcar = \"SECRET_KEY_999\";\nexport const ACIQ_TOKEN = \"TOKEN_XYZ_2026\";\n\nconsole.log(\"Token:\", ACIQ_TOKEN);",
+            "correctOutput": "Token: TOKEN_XYZ_2026",
+            "explanation": "Modullarda 'export' edilməyən dəyişənlər modulun daxilində gizli (private) qalır və xarici mühitdən əlçatmaz olur. Yalnız 'export' açar sözü ilə ictimai elan edilmiş dəyişənlər istifadə oluna bilər."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "section-13",
+    "title": "Bölmə 13: Asinxron JavaScript (Callbacks, Promises, async/await)",
+    "icon": "⏳",
+    "topics": [
+      {
+        "id": "topic-13-1",
+        "title": "Sinxron vs Asinxron və Callbacks",
+        "theory": "<h3>⏳ Sinxron vs Asinxron Proqramlaşdırma</h3>\n<p>JavaScript tək axınlı (single-threaded) dildir. Kodlar standart olaraq yuxarıdan aşağıya sətirbəsətir işləyir (<strong>sinxron</strong>). Əgər hər hansı bir əməliyyat vaxt apararsa (məsələn: serverdən 5 saniyəyə məlumat gəlməsi), bütün səhifə donardı.</p>\n\n<p>Bunun qarşısını almaq üçün <strong>Asinxron proqramlaşdırma</strong> istifadə olunur: vaxt aparan iş arxa plana ötürülür və bitdikdə xəbər verməsi üçün ona bir <strong>Callback funksiyası</strong> təhvil verilir.</p>\n\n<pre><code>console.log(\"1. Başladı\");\nsetTimeout(() => {\n  console.log(\"2. Gecikmə ilə işlədi\");\n}, 100);\nconsole.log(\"3. Bitdi\");</code></pre>\n\n<p>Nəticə ardıcıllığı: <code>1. Başladı</code> -> <code>3. Bitdi</code> -> <code>2. Gecikmə ilə işlədi</code> olacaqdır.</p>",
+        "codeExamples": [
+          {
+            "title": "setTimeout ilə Asinxron Gecikmə",
+            "code": "console.log(\"Sifariş verildi\");\nsetTimeout(() => {\n  console.log(\"Sifariş hazırdır!\");\n}, 50);\nconsole.log(\"Müştəri gözləyir...\");",
+            "output": "Sifariş verildi\nMüştəri gözləyir...\nSifariş hazırdır!"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-13-1-1",
+            "title": "Hadisə Dövriyyəsi və Gecikməli İcra",
+            "instruction": "Konsol çıxışına əvvəlcə \"A\", sonra qısa asinxron gecikmə ilə \"B\", ən sonda isə sinxron olaraq \"C\" göndərərək mühərrikin ardıcıllığı A, C, B şəklində çıxarmasını təmin edin.",
+            "starterCode": "console.log(\"A\");\nsetTimeout(() => {\n  // Kodunuzu buraya yazın\n}, 10);\nconsole.log(\"C\");\n",
+            "expectedOutput": "A\nC\nB",
+            "hint": "setTimeout təxirə salınmış callback funksiyasını Event Loop vasitəsilə növbəyə qoyur və sinxron kodlar bitdikdən sonra icra edir.",
+            "solutionCode": "console.log(\"A\");\nsetTimeout(() => {\n  console.log(\"B\");\n}, 10);\nconsole.log(\"C\");"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-13-1-1",
+            "title": "Taymer Parametrinin Ötürülmə Xətası",
+            "instruction": "Konsola mesaj 50ms gecikmə ilə çıxmalıdır, lakin təyin olunan əmr gecikmə gözləmədən dərhal icra olunur. Gecikmə taymerinin parametr ötürülmə sintaksisini düzəldin.",
+            "buggyCode": "setTimeout(console.log(\"İşlədi\"), 10);",
+            "correctCode": "setTimeout(() => console.log(\"İşlədi\"), 10);",
+            "correctOutput": "İşlədi",
+            "explanation": "setTimeout-a funksiyanın icra nəticəsi deyil, gecikmədən sonra çağırılacaq funksiyanın özü (callback) ötürülməlidir."
+          }
+        ]
+      },
+      {
+        "id": "topic-13-2",
+        "title": "Promise (Vəd) Obyekti: resolve, reject, .then()",
+        "theory": "<h3>🤝 Promise (Vəd) Nədir?</h3>\n<p>Köhnə callback funksiyaları mürəkkəbləşdikdə \"Callback Hell\" (idarəolunmaz xaos) yaranırdı. ES6-da bunun üçün <strong>Promise (Vəd)</strong> obyekti təqdim olundu.</p>\n\n<p>Promise — gələcəkdə tamamlanacaq bir əməliyyatın nəticəsini təmsil edir və 3 vəziyyətdə ola bilər:</p>\n<ul>\n  <li><strong>Pending (Gözləyir):</strong> Əməliyyat hələ davam edir.</li>\n  <li><strong>Fulfilled (Həll olundu / Uğur):</strong> <code>resolve(nəticə)</code> çağırılıb və nəticə hazırdır.</li>\n  <li><strong>Rejected (Rədd edildi / Xəta):</strong> <code>reject(xəta)</code> çağırılıb.</li>\n</ul>\n\n<p>Promise-in uğurlu nəticəsini əldə etmək üçün <strong><code>.then()</code></strong>, xətanı tutmaq üçün isə <strong><code>.catch()</code></strong> zəncirindən istifadə olunur:</p>\n<pre><code>const soz = new Promise((resolve) => {\n  resolve(\"Məlumat gəldi!\");\n});\nsoz.then(cavab => console.log(cavab));</code></pre>",
+        "codeExamples": [
+          {
+            "title": "Promise Nümunəsi",
+            "code": "const soz = new Promise((resolve) => {\n  resolve(\"Uğurla tamamlandı!\");\n});\n\nsoz.then(netice => {\n  console.log(netice);\n});",
+            "output": "Uğurla tamamlandı!"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-13-2-1",
+            "title": "Vədin (Promise) Nəticəsinin Əldə Olunması",
+            "instruction": "Uğurla tamamlanan asinxron vədin nəticəsini qəbul edərək konsol pəncərəsində \"Hazırdır\" mesajının əks olunmasını təmin edin.",
+            "starterCode": "const v = Promise.resolve(\"Hazırdır\");\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Hazırdır",
+            "hint": "Promise obyektinin nəticəsini dinləmək və emal etmək üçün .then(netice => { ... }) zəncirindən istifadə olunur.",
+            "solutionCode": "const v = Promise.resolve(\"Hazırdır\");\nv.then(netice => {\n  console.log(netice);\n});"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-13-2-1",
+            "title": ".then() İstifadəsinin Unudulması",
+            "instruction": "Aşağıdakı proqramçı Promise obyektinin nəticəsini .then() ilə gözləmədən birbaşa çap etməyə çalışıb və '[object Promise]' alıb. Kodu .then() ilə düzəldin.",
+            "buggyCode": "const v = Promise.resolve(\"Salam\");\nconsole.log(v);",
+            "correctCode": "const v = Promise.resolve(\"Salam\");\nv.then(netice => console.log(netice));",
+            "correctOutput": "Salam",
+            "explanation": "Promise-in daxilindəki həll olunmuş dəyəri əldə etmək üçün mütləq .then() metodundan istifadə edilməlidir."
+          }
+        ]
+      },
+      {
+        "id": "topic-13-3",
+        "title": "Müasir Asinxron Sintaksis: async və await",
+        "theory": "<h3>🚀 Müasir Asinxron Kod: async və await</h3>\n<p>ES2017 (ES8) versiyasında təqdim olunan <strong>async/await</strong> — asinxron kodları sanki adi sinxron kod kimi sətirbəsətir, təmiz və oxunaqlı yazmağa imkan verən inqilabi sintaksisdir:</p>\n\n<pre><code>async function melumatAl() {\n  const cavab = await servereSorgu();\n  console.log(cavab);\n}</code></pre>\n\n<h3>Qızıl Qaydalar:</h3>\n<ul>\n  <li><strong><code>async</code>:</strong> Yalnız funksiyanın qarşısına qoyulur və həmin funksiyanın avtomatik olaraq Promise qaytarmasını təmin edir.</li>\n  <li><strong><code>await</code>:</strong> Yalnız <code>async</code> funksiyanın <strong>daxilində</strong> işlədilə bilər! O, Promise-in nəticəsi gələnə qədər həmin sətirdə gözləyir və cavabı birbaşa dəyişənə mənimsədir.</li>\n  <li>Xətaları tutmaq üçün mürəkkəb zəncirlər əvəzinə standart <strong><code>try...catch</code></strong> blokundan istifadə olunur!</li>\n</ul>",
+        "codeExamples": [
+          {
+            "title": "async/await Nümunəsi",
+            "code": "async function test() {\n  const soz = Promise.resolve(\"Məlumat gəldi\");\n  const netice = await soz; // Nəticəni gözləyirik\n  console.log(netice);\n}\n\ntest();",
+            "output": "Məlumat gəldi"
+          }
+        ],
+        "exercises": [
+          {
+            "id": "ex-13-3-1",
+            "title": "Asinxron Gözləmə (async/await) ilə İnteqrasiya",
+            "instruction": "Asinxron əməliyyatın tamamlanmasını sinxron tərzdə gözləyərək əldə olunan dəyəri konsola çıxaran <code>basla</code> funksiyası tərtib edin və icra edin.",
+            "starterCode": "async function basla() {\n  // Kodunuzu buraya yazın\n}\nbasla();\n",
+            "expectedOutput": "Uğurlu icra",
+            "hint": "async funksiya daxilində Promise nəticəsini gözləmək üçün await açar sözündən istifadə edin və nəticəni dəyişəndə saxlayaraq çıxışa verin.",
+            "solutionCode": "async function basla() {\n  const cavab = await Promise.resolve(\"Uğurlu icra\");\n  console.log(cavab);\n}\nbasla();"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-13-3-1",
+            "title": "Qeyri-async Funksiyada await Xətası",
+            "instruction": "Aşağıdakı funksiyanın qarşısında <code>async</code> yazılmadığı üçün daxildəki <code>await</code> sintaksis xətası verir. Funksiyanı <code>async</code> edin.",
+            "buggyCode": "function yukle() {\n  const data = await Promise.resolve(\"Yükləndi\");\n  console.log(data);\n}\nyukle();",
+            "correctCode": "async function yukle() {\n  const data = await Promise.resolve(\"Yükləndi\");\n  console.log(data);\n}\nyukle();",
+            "correctOutput": "Yükləndi",
+            "explanation": "await açar sözü yalnız async elan edilmiş funksiyaların daxilində istifadə edilə bilər."
+          }
+        ]
+      }
+    ]
+  }
+]

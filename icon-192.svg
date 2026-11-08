@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bgGrad192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#070B14"/>
+    </linearGradient>
+    <linearGradient id="jsGrad192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF066"/>
+      <stop offset="100%" stop-color="#F7DF1E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="192" height="192" rx="38" fill="url(#bgGrad192)"/>
+  <rect x="6" y="6" width="180" height="180" rx="32" fill="none" stroke="rgba(247, 223, 30, 0.25)" stroke-width="2"/>
+
+  <!-- JS Badge -->
+  <g transform="translate(36, 36)">
+    <rect width="120" height="120" rx="22" fill="url(#jsGrad192)"/>
+    <text x="60" y="81" font-family="'JetBrains Mono', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="62" font-weight="900" text-anchor="middle" fill="#070B14" letter-spacing="-2">JS</text>
+    <rect x="30" y="93" width="60" height="5" rx="2.5" fill="#070B14" opacity="0.85"/>
+  </g>
+</svg>

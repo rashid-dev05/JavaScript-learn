@@ -1,0 +1,932 @@
+{
+  "section-1": {
+    "title": "Bölmə 1: JS-ə Giriş & console.log()",
+    "topics": [
+      {
+        "id": "topic-1-1",
+        "title": "JavaScript nədir və Veb Dünyası",
+        "exercises": [
+          {
+            "id": "ex-1-1-1",
+            "type": "syntax",
+            "disableHardcodeCheck": true,
+            "title": "Konsol Çıxışının Təmin Edilməsi",
+            "instruction": "İstifadəçini proqramlaşdırma mühitində salamlamaq üçün standart çıxış axınına dəqiq olaraq <code>Salam, JavaScript!</code> mətnini ötürün və konsol ekranında əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Salam, JavaScript!",
+            "hint": "JavaScript-də məlumatı brauzer konsoluna çıxarmaq üçün console.log() əmrindən istifadə olunur. Mətn sətirləri dırnaq içərisində ötürülməlidir.",
+            "solutionCode": "console.log(\"Salam, JavaScript!\");"
+          },
+          {
+            "id": "ex-1-1-2",
+            "type": "syntax",
+            "disableHardcodeCheck": true,
+            "title": "Öyrənmə Statusunun Bildirilməsi",
+            "instruction": "Tədris platformasında cari fəaliyyət statusunuzu bildirmək tələb olunur. Konsol çıxışına dəqiq olaraq <code>Mən JavaScript öyrənirəm!</code> bildirişini göndərin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Mən JavaScript öyrənirəm!",
+            "hint": "Konsol pəncərəsində tələb olunan mətni əks etdirmək üçün console.log() daxilinə cümləni simvolbəsimvol dəqiq ötürün.",
+            "solutionCode": "console.log(\"Mən JavaScript öyrənirəm!\");"
+          },
+          {
+            "id": "ex-1-1-3",
+            "type": "syntax",
+            "disableHardcodeCheck": true,
+            "title": "Ardıcıl Mərhələlərin Çıxarılması",
+            "instruction": "Proqramın icra addımlarını ardıcıl şəkildə izləmək tələb olunur. Birinci sətirdə <code>Addım 1</code>, növbəti sətirdə isə <code>Addım 2</code> status mesajlarının konsol ekranında əks olunmasını təmin edin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Addım 1\nAddım 2",
+            "hint": "Hər bir console.log() çağırışı çıxışın sonuna avtomatik yeni sətir əlavə edir. İki ardıcıl çıxış əmri verməklə məlumatları alt-alta yazdıra bilərsiniz.",
+            "solutionCode": "console.log(\"Addım 1\");\nconsole.log(\"Addım 2\");"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-1-1",
+            "type": "bugfix",
+            "disableHardcodeCheck": true,
+            "title": "Sintaksis Xətasının Sazlanması",
+            "instruction": "Proqramçı brauzer konsoluna 'Uğurlar!' bildirişini yazdırmaq istəyir, lakin skript icra olunarkən brauzerdə 'SyntaxError' baş verir və proqram dayanır. Kodu təhlil edin, sintaksis xətasını aradan qaldırın və hədəf mesajın konsola problemsiz çıxmasını təmin edin.",
+            "description": "Proqramçı brauzer konsoluna 'Uğurlar!' bildirişini yazdırmaq istəyir, lakin skript icra olunarkən brauzerdə 'SyntaxError' baş verir və proqram dayanır. Kodu təhlil edin, sintaksis xətasını aradan qaldırın və hədəf mesajın konsola problemsiz çıxmasını təmin edin.",
+            "buggyCode": "console.log(\"Uğurlar!\"",
+            "correctCode": "console.log(\"Uğurlar!\");",
+            "correctOutput": "Uğurlar!",
+            "expectedOutput": "Uğurlar!",
+            "hint": "JavaScript-də funksiya çağırışlarının sintaksisinə və açılan mötərizələrin necə tamamlandığına diqqət yetirin.",
+            "explanation": "console.log() çağırışında açılan dəyirmi mötərizə '(' mütləq uyğun bağlanan mötərizə ')' ilə bağlanmalıdır. Bağlanan mötərizə olmadıqda mühərrik əmrin bitdiyini müəyyən edə bilmir və SyntaxError xətası qaytarır."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-1-1",
+          "type": "bugfix",
+          "disableHardcodeCheck": true,
+          "title": "Sintaksis Xətasının Sazlanması",
+          "description": "Proqramçı brauzer konsoluna 'Uğurlar!' bildirişini yazdırmaq istəyir, lakin skript icra olunarkən brauzerdə 'SyntaxError' baş verir və proqram dayanır. Kodu təhlil edin, sintaksis xətasını aradan qaldırın və hədəf mesajın konsola problemsiz çıxmasını təmin edin.",
+          "instruction": "Proqramçı brauzer konsoluna 'Uğurlar!' bildirişini yazdırmaq istəyir, lakin skript icra olunarkən brauzerdə 'SyntaxError' baş verir və proqram dayanır. Kodu təhlil edin, sintaksis xətasını aradan qaldırın və hədəf mesajın konsola problemsiz çıxmasını təmin edin.",
+          "buggyCode": "console.log(\"Uğurlar!\"",
+          "correctCode": "console.log(\"Uğurlar!\");",
+          "expectedOutput": "Uğurlar!",
+          "correctOutput": "Uğurlar!",
+          "hint": "JavaScript-də funksiya çağırışlarının sintaksisinə və açılan mötərizələrin necə tamamlandığına diqqət yetirin.",
+          "explanation": "console.log() çağırışında açılan dəyirmi mötərizə '(' mütləq uyğun bağlanan mötərizə ')' ilə bağlanmalıdır. Bağlanan mötərizə olmadıqda mühərrik əmrin bitdiyini müəyyən edə bilmir və SyntaxError xətası qaytarır."
+        }
+      },
+      {
+        "id": "topic-1-2",
+        "title": "console.log(), Çıxış Növləri və Şərhlər",
+        "exercises": [
+          {
+            "id": "ex-1-2-1",
+            "type": "syntax",
+            "disableHardcodeCheck": true,
+            "title": "Məlumatların Konsolda Əks Etdirilməsi",
+            "instruction": "İstifadəçinin yaş məlumatını konsola çıxarmaq tələb olunur. Mətn başlığı ilə rəqəm dəyərini tək bir əmrlə elə ötürün ki, konsol ekranında <code>Yaş: 25</code> nəticəsi əks olunsun.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Yaş: 25",
+            "hint": "JavaScript-də console.log() funksiyasına bir neçə parametri vergüllə ötürdükdə, mühərrik onları avtomatik olaraq bir boşluqla birləşdirir.",
+            "solutionCode": "console.log(\"Yaş:\", 25);"
+          },
+          {
+            "id": "ex-1-2-2",
+            "title": "Riyazi İfadələrin Qiymətləndirilməsi",
+            "instruction": "40 və 60 ədədlərinin riyazi cəmini hesablayaraq yekun qiymətin (100) birbaşa konsol çıxışında əks olunmasını təmin edin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "100",
+            "hint": "Konsol çıxış funksiyası daxilində hesablamalar aparıla bilər; dırnaqsız yazılan riyazi ifadələr əvvəlcə hesablanır, sonra isə nəticə ekrana verilir.",
+            "solutionCode": "console.log(40 + 60);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-1-2-1",
+            "type": "bugfix",
+            "disableHardcodeCheck": true,
+            "title": "Şərh Sintaksisinin Sazlanması",
+            "instruction": "Proqramçı kod blokuna izahat qeydi əlavə edərək konsola 'Düzəldi!' bildirişini çıxarmaq istəyir, lakin skript icra olunarkən 'SyntaxError: Invalid or unexpected token' xətası baş verir. Kodu araşdırın, sintaksis xətasını aradan qaldırın və hədəf mesajın konsola problemsiz çıxmasını təmin edin.",
+            "description": "Proqramçı kod blokuna izahat qeydi əlavə edərək konsola 'Düzəldi!' bildirişini çıxarmaq istəyir, lakin skript icra olunarkən 'SyntaxError: Invalid or unexpected token' xətası baş verir. Kodu araşdırın, sintaksis xətasını aradan qaldırın və hədəf mesajın konsola problemsiz çıxmasını təmin edin.",
+            "buggyCode": "# Bu bir şərhdir\nconsole.log(\"Düzəldi!\");",
+            "correctCode": "// Bu bir şərhdir\nconsole.log(\"Düzəldi!\");",
+            "correctOutput": "Düzəldi!",
+            "expectedOutput": "Düzəldi!",
+            "hint": "JavaScript-də birsətirli şərhlərin (comments) hansı simvollarla başladığını nəzərdən keçirin.",
+            "explanation": "JavaScript-də birsətirli şərhlər # simvolu ilə deyil, qoşa sleş // ilə yazılır."
+          }
+        ]
+      },
+      {
+        "id": "topic-1-3",
+        "title": "Böyük-Kiçik Hərf Həssaslığı (Case Sensitivity)",
+        "exercises": [
+          {
+            "id": "ex-1-3-1",
+            "type": "syntax",
+            "disableHardcodeCheck": true,
+            "title": "Hərf Registrinə Həssaslıq və Sintaksis",
+            "instruction": "JavaScript mühərrikinin registrlərə həssas olduğunu nəzərə alaraq, konsola dəqiq şəkildə <code>JavaScript dəqiqdir</code> mətnini ötürün.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "JavaScript dəqiqdir",
+            "hint": "JavaScript-də əmrlər hərf registrinə həssasdır (case-sensitive). console.log əmrini tamamilə kiçik hərflərlə yazmağa diqqət yetirin.",
+            "solutionCode": "console.log(\"JavaScript dəqiqdir\");"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-1-3-1",
+            "type": "bugfix",
+            "disableHardcodeCheck": true,
+            "title": "Konsol Əmrinin Tanınmaması Xətası",
+            "instruction": "Proqramçı ekranda 'Salam Dünya' mesajını əks etdirmək istəyir, lakin icra zamanı 'ReferenceError: Console is not defined' və ya 'TypeError' baş verir və icra dayanır. Kodu təhlil edin, mühərrikin əmri düzgün tanımasını təmin edin və hədəf mətni çap edin.",
+            "description": "Proqramçı ekranda 'Salam Dünya' mesajını əks etdirmək istəyir, lakin icra zamanı 'ReferenceError: Console is not defined' və ya 'TypeError' baş verir və icra dayanır. Kodu təhlil edin, mühərrikin əmri düzgün tanımasını təmin edin və hədəf mətni çap edin.",
+            "buggyCode": "Console.Log(\"Salam Dünya\");",
+            "correctCode": "console.log(\"Salam Dünya\");",
+            "correctOutput": "Salam Dünya",
+            "expectedOutput": "Salam Dünya",
+            "hint": "JavaScript registrə həssas (case-sensitive) dildir. Standart obyekt və metod adlarının kiçik-böyük hərf qaydalarına diqqət yetirin.",
+            "explanation": "JavaScript registrə həssas dildir: qlobal konsol obyekti və onun metodu kiçik hərflərlə 'console.log()' şəklində yazılmalıdır."
+          }
+        ]
+      }
+    ]
+  },
+  "section-2": {
+    "title": "Bölmə 2: Dəyişənlər (let, const, var) və Primitiv Tiplər",
+    "topics": [
+      {
+        "id": "topic-2-1",
+        "title": "Dəyişənlərin Elanı: let və const (ES6)",
+        "exercises": [
+          {
+            "id": "ex-2-1-1",
+            "title": "Dinamik Balans Göstəricisinin Təyini",
+            "instruction": "İstifadəçinin cari hesab qalığını saxlamaq üçün <code>balans</code> adlı dəyişən təyin edin, ona 150 ilkin dəyərini mənimsədin və bu dəyəri konsolda əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "150",
+            "hint": "Dəyəri sonradan dəyişə bilən dəyişənlər üçün let təyinatından istifadə edin və dəyişənin adını çıxış funksiyasına ötürün.",
+            "solutionCode": "let balans = 150;\nconsole.log(balans);"
+          },
+          {
+            "id": "ex-2-1-2",
+            "title": "Dəyişməz Şəhər Sabitinin Təyini",
+            "instruction": "Sistem konfiqurasiyasında dəyişməz paytaxt məlumatını saxlamaq üçün <code>seher</code> adlı sabit təyin edin, ona <code>\"Bakı\"</code> mətnini mənimsədin və nəticəni konsola çıxarın.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Bakı",
+            "hint": "Proqram icrası boyunca dəyəri sabit qalan kəmiyyətlər üçün const açar sözündən istifadə olunur.",
+            "solutionCode": "const seher = \"Bakı\";\nconsole.log(seher);"
+          },
+          {
+            "id": "ex-2-1-3",
+            "title": "Tərəqqi Səviyyəsinin Yenilənməsi",
+            "instruction": "İlkin olaraq 1 səviyyəsində olan istifadəçi göstəricisini növbəti mərhələyə keçirərək 2 olaraq yeniləyin və son səviyyəni konsola çıxarın.",
+            "starterCode": "let seviyye = 1;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "2",
+            "hint": "Artıq elan edilmiş let dəyişəninin dəyərini yeniləmək üçün təkrar let yazılmır, birbaşa mənimsətmə operatorundan istifadə olunur.",
+            "solutionCode": "let seviyye = 1;\nseviyye = 2;\nconsole.log(seviyye);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-2-1-1",
+            "title": "Sabitə Yenidən Dəyər Mənimsədilməsi",
+            "instruction": "Proqramçı başlanğıc xalını təyin edib sonradan onu 50-yə yeniləyərək ekrana çıxarmaq istəyir, lakin icra zamanı 'TypeError: Assignment to constant variable' xətası baş verir və proqram dayanır. Kodu tədqiq edin, dəyişənin elanını və istifadəsini yoxlayaraq xətanı aradan qaldırın və konsola 50 çıxmasını təmin edin.",
+            "description": "Proqramçı başlanğıc xalını təyin edib sonradan onu 50-yə yeniləyərək ekrana çıxarmaq istəyir, lakin icra zamanı 'TypeError: Assignment to constant variable' xətası baş verir və proqram dayanır. Kodu tədqiq edin, dəyişənin elanını və istifadəsini yoxlayaraq xətanı aradan qaldırın və konsola 50 çıxmasını təmin edin.",
+            "buggyCode": "const xal = 0;\nxal = 50;\nconsole.log(xal);",
+            "correctCode": "let xal = 0;\nxal = 50;\nconsole.log(xal);",
+            "correctOutput": "50",
+            "expectedOutput": "50",
+            "explanation": "const sabiti yenidən mənimsədilə bilməz. Əgər dəyər dəyişəcəksə, dəyişən let ilə elan edilməlidir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-2-1-1",
+          "title": "Sabitə Yenidən Dəyər Mənimsədilməsi",
+          "instruction": "Proqramçı başlanğıc xalını təyin edib sonradan onu 50-yə yeniləyərək ekrana çıxarmaq istəyir, lakin icra zamanı 'TypeError: Assignment to constant variable' xətası baş verir və proqram dayanır. Kodu tədqiq edin, dəyişənin elanını və istifadəsini yoxlayaraq xətanı aradan qaldırın və konsola 50 çıxmasını təmin edin.",
+          "description": "Proqramçı başlanğıc xalını təyin edib sonradan onu 50-yə yeniləyərək ekrana çıxarmaq istəyir, lakin icra zamanı 'TypeError: Assignment to constant variable' xətası baş verir və proqram dayanır. Kodu tədqiq edin, dəyişənin elanını və istifadəsini yoxlayaraq xətanı aradan qaldırın və konsola 50 çıxmasını təmin edin.",
+          "buggyCode": "const xal = 0;\nxal = 50;\nconsole.log(xal);",
+          "correctCode": "let xal = 0;\nxal = 50;\nconsole.log(xal);",
+          "correctOutput": "50",
+          "expectedOutput": "50",
+          "explanation": "const sabiti yenidən mənimsədilə bilməz. Əgər dəyər dəyişəcəksə, dəyişən let ilə elan edilməlidir."
+        }
+      },
+      {
+        "id": "topic-2-2",
+        "title": "Primitiv Məlumat Tipləri: String, Number, Boolean",
+        "exercises": [
+          {
+            "id": "ex-2-2-1",
+            "title": "İstifadəçi Profil Məlumatlarının Birləşdirilməsi",
+            "instruction": "Sistem istifadəçisinin adı (\"Rəşad\"), yaşı (28) və aktivlik statusu (true) üçün müvafiq <code>ad</code>, <code>yas</code> və <code>aktivdir</code> dəyişənləri təyin edin. Bütün məlumatları tək bir çıxışla konsol ekranında <code>Rəşad 28 true</code> formatında əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Rəşad 28 true",
+            "hint": "Fərqli tipli (string, number, boolean) dəyişənləri tək bir console.log(ad, yas, aktivdir) çağırışı ilə yanaşı çıxara bilərsiniz.",
+            "solutionCode": "const ad = \"Rəşad\";\nconst yas = 28;\nconst aktivdir = true;\nconsole.log(ad, yas, aktivdir);"
+          },
+          {
+            "id": "ex-2-2-2",
+            "title": "Kəsr Ədədlərlə Qiymətin Saxlanması",
+            "instruction": "Məhsulun satış qiymətini saxlamaq üçün <code>qiymet</code> dəyişəni təyin edin, ona 99.9 dəyərini verin və nəticəni konsol ekranında əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "99.9",
+            "hint": "JavaScript-də onluq kəsr ədədlər nöqtə (.) simvolu ilə yazılır.",
+            "solutionCode": "const qiymet = 99.9;\nconsole.log(qiymet);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-2-2-1",
+            "title": "Mətn Dəyərinin Düzgün Qeyd Edilməməsi",
+            "instruction": "Proqramçı mesaj kimi 'Salam' sözünü konsola çıxarmaq istəyir, lakin simvolların düzgün formatlaşdırılmaması səbəbindən 'ReferenceError: Salam is not defined' xətası baş verir. Kodu araşdırın, məlumat tipinin mühərrik tərəfindən düzgün interpretasiya edilməsini təmin edərək xətanı aradan qaldırın.",
+            "description": "Proqramçı mesaj kimi 'Salam' sözünü konsola çıxarmaq istəyir, lakin simvolların düzgün formatlaşdırılmaması səbəbindən 'ReferenceError: Salam is not defined' xətası baş verir. Kodu araşdırın, məlumat tipinin mühərrik tərəfindən düzgün interpretasiya edilməsini təmin edərək xətanı aradan qaldırın.",
+            "buggyCode": "let mesaj = Salam;\nconsole.log(mesaj);",
+            "correctCode": "let mesaj = \"Salam\";\nconsole.log(mesaj);",
+            "correctOutput": "Salam",
+            "expectedOutput": "Salam",
+            "explanation": "Mətn tipli məlumatlar mütləq qoşa və ya tək dırnaq içərisində yazılmalıdır."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-2-2-1",
+          "title": "Mətn Dəyərinin Düzgün Qeyd Edilməməsi",
+          "instruction": "Proqramçı mesaj kimi 'Salam' sözünü konsola çıxarmaq istəyir, lakin simvolların düzgün formatlaşdırılmaması səbəbindən 'ReferenceError: Salam is not defined' xətası baş verir. Kodu araşdırın, məlumat tipinin mühərrik tərəfindən düzgün interpretasiya edilməsini təmin edərək xətanı aradan qaldırın.",
+          "description": "Proqramçı mesaj kimi 'Salam' sözünü konsola çıxarmaq istəyir, lakin simvolların düzgün formatlaşdırılmaması səbəbindən 'ReferenceError: Salam is not defined' xətası baş verir. Kodu araşdırın, məlumat tipinin mühərrik tərəfindən düzgün interpretasiya edilməsini təmin edərək xətanı aradan qaldırın.",
+          "buggyCode": "let mesaj = Salam;\nconsole.log(mesaj);",
+          "correctCode": "let mesaj = \"Salam\";\nconsole.log(mesaj);",
+          "correctOutput": "Salam",
+          "expectedOutput": "Salam",
+          "explanation": "Mətn tipli məlumatlar mütləq qoşa və ya tək dırnaq içərisində yazılmalıdır."
+        }
+      },
+      {
+        "id": "topic-2-3",
+        "title": "undefined və null Arasındakı Fərq",
+        "exercises": [
+          {
+            "id": "ex-2-3-1",
+            "title": "Təyinat Olunmamış Dəyişən Vəziyyəti",
+            "instruction": "İlkin dəyər mənimsədilməmiş <code>test</code> dəyişəninin JavaScript mühərriki tərəfindən avtomatik aldığı standart dəyəri (undefined) konsol ekranında nümayiş etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "undefined",
+            "hint": "Dəyər mənimsədilmədən elan edilən let dəyişəni avtomatik olaraq undefined qiymətinə malik olur.",
+            "solutionCode": "let test;\nconsole.log(test);"
+          },
+          {
+            "id": "ex-2-3-2",
+            "title": "Boş Dəyərin Qəsdən Təyin Edilməsi",
+            "instruction": "Sistemdə məlumatın hazırda mövcud olmadığını qəsdən bildirmək üçün <code>cavab</code> dəyişəninə boşluq dəyərini (null) mənimsədin və bu qiyməti konsolda əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "null",
+            "hint": "JavaScript-də obyektin və ya dəyərin qəsdən boş olduğunu bildirmək üçün null primitiv dəyərindən istifadə olunur.",
+            "solutionCode": "let cavab = null;\nconsole.log(cavab);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-2-3-1",
+            "title": "Null İdentifikatorunun Sazlanması",
+            "instruction": "Proqramçı boş dəyəri təmsil edən dəyişən elan edib konsola çıxarmaq istəyir, lakin sistem 'ReferenceError: Null is not defined' xətası verir və icra dayanır. Kodu tədqiq edin, dilin registr qaydalarına uyğun olaraq xətanı aradan qaldırın və konsola null çıxarın.",
+            "description": "Proqramçı boş dəyəri təmsil edən dəyişən elan edib konsola çıxarmaq istəyir, lakin sistem 'ReferenceError: Null is not defined' xətası verir və icra dayanır. Kodu tədqiq edin, dilin registr qaydalarına uyğun olaraq xətanı aradan qaldırın və konsola null çıxarın.",
+            "buggyCode": "let secim = Null;\nconsole.log(secim);",
+            "correctCode": "let secim = null;\nconsole.log(secim);",
+            "correctOutput": "null",
+            "expectedOutput": "null",
+            "explanation": "JavaScript-də null açar sözü yalnız kiçik hərflərlə yazılır."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-2-3-1",
+          "title": "Null İdentifikatorunun Sazlanması",
+          "instruction": "Proqramçı boş dəyəri təmsil edən dəyişən elan edib konsola çıxarmaq istəyir, lakin sistem 'ReferenceError: Null is not defined' xətası verir və icra dayanır. Kodu tədqiq edin, dilin registr qaydalarına uyğun olaraq xətanı aradan qaldırın və konsola null çıxarın.",
+          "description": "Proqramçı boş dəyəri təmsil edən dəyişən elan edib konsola çıxarmaq istəyir, lakin sistem 'ReferenceError: Null is not defined' xətası verir və icra dayanır. Kodu tədqiq edin, dilin registr qaydalarına uyğun olaraq xətanı aradan qaldırın və konsola null çıxarın.",
+          "buggyCode": "let secim = Null;\nconsole.log(secim);",
+          "correctCode": "let secim = null;\nconsole.log(secim);",
+          "correctOutput": "null",
+          "expectedOutput": "null",
+          "explanation": "JavaScript-də null açar sözü yalnız kiçik hərflərlə yazılır."
+        }
+      },
+      {
+        "id": "topic-2-4",
+        "title": "typeof Operatoru və Tip Çevrilmələri",
+        "exercises": [
+          {
+            "id": "ex-2-4-1",
+            "title": "Məlumat Tipinin Təyini",
+            "instruction": "100 kəmiyyətinin JavaScript tip sistemində hansı məlumat növünə aid olduğunu təyin edərək nəticəni konsolda əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "number",
+            "hint": "Dəyərin və ya dəyişənin tipini yoxlamaq üçün typeof operatorundan istifadə olunur.",
+            "solutionCode": "console.log(typeof 100);"
+          },
+          {
+            "id": "ex-2-4-2",
+            "title": "Sətir Tipindən Ədədə Konvertasiya",
+            "instruction": "Mətn şəklində saxlanılan <code>str</code> dəyişənini riyazi ədədə çevirərək üzərinə 10 əlavə edin və yekun nəticənin (50) konsol ekranında əks olunmasını təmin edin.",
+            "starterCode": "const str = \"40\";\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "50",
+            "hint": "Mətni ədədə çevirmək üçün qlobal Number() funksiyasından istifadə edə və riyazi toplama apara bilərsiniz.",
+            "solutionCode": "const str = \"40\";\nconsole.log(Number(str) + 10);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-2-4-1",
+            "title": "Tip Uyğunsuzluğunun Sazlanması",
+            "instruction": "Proqramçı iki ədədin riyazi cəmini toplayıb konsola 10 çıxarmaq istəyir, lakin tip uyğunsuzluğu səbəbindən konsolda gözlənilməz '55' mətni alınır. Kodu araşdırın, tiplərin uyğunsuzluğunu aradan qaldırın və düzgün riyazi cəmin (10) hesablanmasını təmin edin.",
+            "description": "Proqramçı iki ədədin riyazi cəmini toplayıb konsola 10 çıxarmaq istəyir, lakin tip uyğunsuzluğu səbəbindən konsolda gözlənilməz '55' mətni alınır. Kodu araşdırın, tiplərin uyğunsuzluğunu aradan qaldırın və düzgün riyazi cəmin (10) hesablanmasını təmin edin.",
+            "buggyCode": "let a = \"5\";\nlet b = 5;\nconsole.log(a + b);",
+            "correctCode": "let a = \"5\";\nlet b = 5;\nconsole.log(Number(a) + b);",
+            "correctOutput": "10",
+            "expectedOutput": "10",
+            "explanation": "Mətn tipli ədəd riyazi toplanmazdan əvvəl Number() funksiyası ilə ədəd tipinə çevrilməlidir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-2-4-1",
+          "title": "Tip Uyğunsuzluğunun Sazlanması",
+          "instruction": "Proqramçı iki ədədin riyazi cəmini toplayıb konsola 10 çıxarmaq istəyir, lakin tip uyğunsuzluğu səbəbindən konsolda gözlənilməz '55' mətni alınır. Kodu araşdırın, tiplərin uyğunsuzluğunu aradan qaldırın və düzgün riyazi cəmin (10) hesablanmasını təmin edin.",
+          "description": "Proqramçı iki ədədin riyazi cəmini toplayıb konsola 10 çıxarmaq istəyir, lakin tip uyğunsuzluğu səbəbindən konsolda gözlənilməz '55' mətni alınır. Kodu araşdırın, tiplərin uyğunsuzluğunu aradan qaldırın və düzgün riyazi cəmin (10) hesablanmasını təmin edin.",
+          "buggyCode": "let a = \"5\";\nlet b = 5;\nconsole.log(a + b);",
+          "correctCode": "let a = \"5\";\nlet b = 5;\nconsole.log(Number(a) + b);",
+          "correctOutput": "10",
+          "expectedOutput": "10",
+          "explanation": "Mətn tipli ədəd riyazi toplanmazdan əvvəl Number() funksiyası ilə ədəd tipinə çevrilməlidir."
+        }
+      },
+      {
+        "id": "topic-2-5",
+        "title": "Xüsusi Ədədi Qiymətlər (NaN, Infinity), Tip Çevrilmələri və IEEE 754",
+        "exercises": [
+          {
+            "id": "ex-2-5-1",
+            "title": "Dəqiq NaN Təyini və Təhlükəsiz Yoxlanış",
+            "instruction": "İstifadəçidən daxil olan <code>gosterici</code> dəyərinin (<code>\"Bakı-2026\"</code>) <code>Number()</code> funksiyası ilə ədədə çevrilməsi zamanı yaranan nəticəni <code>deyer</code> dəyişəninə mənimsədin.<br><br>Ardınca:<br>1. Birinci sətirdə <code>deyer === deyer</code> müqayisəsinin nəticəsini konsola çıxarın.<br>2. İkinci sətirdə <code>Number.isNaN(deyer)</code> ilə dəyərin həqiqətən <code>NaN</code> olduğunu yoxlayaraq konsola çıxarın.<br>3. Üçüncü sətirdə <code>Object.is(deyer, NaN)</code> ilə dəqiq bərabərlik nəticəsini konsola çıxarın.",
+            "starterCode": "const gosterici = \"Bakı-2026\";\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "false\ntrue\ntrue",
+            "hint": "NaN JavaScript-də özü-özünə bərabər olmayan yeganə dəyərdir (deyer === deyer false verir). Onu təhlükəsiz yoxlamaq üçün Number.isNaN() və ya Object.is() metodlarından istifadə olunur.",
+            "solutionCode": "const gosterici = \"Bakı-2026\";\nconst deyer = Number(gosterici);\nconsole.log(deyer === deyer);\nconsole.log(Number.isNaN(deyer));\nconsole.log(Object.is(deyer, NaN));"
+          },
+          {
+            "id": "ex-2-5-2",
+            "title": "CSS Ölçü Vahidlərindən Ədədin Çıxarılması və Yuvarlaqlaşdırma",
+            "instruction": "Veb səhifədən oxunmuş <code>olcu</code> dəyişənində <code>\"120.456px\"</code> mətni saxlanılır.<br><br>1. Bu mətndən kəsr ədədi (<code>parseFloat</code> istifadə edərək) çıxarın və <code>eded</code> dəyişəninə mənimsədin.<br>2. <code>eded</code> qiymətini 1 onluq rəqəmə qədər yuvarlaqlaşdırıb (<code>.toFixed(1)</code>) yenidən <code>Number</code> tipinə çevirərək konsola çıxarın.<br>3. Nəticənin sonlu ədəd olduğunu <code>Number.isFinite()</code> vasitəsilə yoxlayaraq növbəti sətirdə konsola çıxarın.",
+            "starterCode": "const olcu = \"120.456px\";\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "120.5\ntrue",
+            "hint": "parseFloat() mətndən rəqəm hissəsini oxuyub 'px' şəkilçisini kənara qoyur. .toFixed(1) nəticəni string qaytardığı üçün onu Number() ilə yenidən ədədə çevirin.",
+            "solutionCode": "const olcu = \"120.456px\";\nconst eded = parseFloat(olcu);\nconst yuvarlaq = Number(eded.toFixed(1));\nconsole.log(yuvarlaq);\nconsole.log(Number.isFinite(yuvarlaq));"
+          },
+          {
+            "id": "ex-2-5-3",
+            "title": "IEEE 754 Kəsr Dəqiqliyi və Epsilon Müqayisəsi",
+            "instruction": "Maliyyə əməliyyatında <code>0.1</code> və <code>0.2</code> manatlıq iki məbləğin cəmi hesablanır (<code>const cem = 0.1 + 0.2;</code>).<br><br>Birbaşa <code>cem === 0.3</code> müqayisəsi IEEE 754 standartına görə <code>false</code> verdiyi üçün:<br>1. İki ədəd arasındakı fərqin mütləq qiymətini (<code>Math.abs(cem - 0.3)</code>) <code>Number.EPSILON</code> ilə müqayisə edin və nəticəni (<code>true</code>) konsola çıxarın.<br>2. Növbəti sətirdə <code>cem.toFixed(2)</code> nəticəsini konsola çıxarın.",
+            "starterCode": "const cem = 0.1 + 0.2;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "true\n0.30",
+            "hint": "İkilik sistemdə onluq kəsrlər tam dəqiq saxlanılmadığından, bərabərliyi yoxlamaq üçün fərqin Number.EPSILON-dan kiçik olmasını (< Number.EPSILON) yoxlayırıq.",
+            "solutionCode": "const cem = 0.1 + 0.2;\nconst deqiqdir = Math.abs(cem - 0.3) < Number.EPSILON;\nconsole.log(deqiqdir);\nconsole.log(cem.toFixed(2));"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-2-5-1",
+            "type": "bugfix",
+            "disableHardcodeCheck": true,
+            "title": "Qlobal isNaN() Məcburi Tip Çevrilməsi Xətası",
+            "instruction": "Proqramçı funksiyaya daxil olan dəyərin sırf NaN olub-olmadığını yoxlamaq istəyir. Lakin istifadəçi \"JavaScript\" mətni daxil etdikdə, qlobal isNaN() mətni məcburi ədədə çevirərək true qaytarır və yoxlama səhv işləyir. Kodu elə sazlayın ki, sırf dəyərin tipi də nəzərə alınsın, \"JavaScript\" üçün false, həqiqi NaN olduqda isə true qayıtsın.",
+            "description": "Proqramçı funksiyaya daxil olan dəyərin sırf NaN olub-olmadığını yoxlamaq istəyir. Lakin istifadəçi \"JavaScript\" mətni daxil etdikdə, qlobal isNaN() mətni məcburi ədədə çevirərək true qaytarır və yoxlama səhv işləyir. Kodu elə sazlayın ki, sırf dəyərin tipi də nəzərə alınsın, \"JavaScript\" üçün false, həqiqi NaN olduqda isə true qayıtsın.",
+            "buggyCode": "const parametr = \"JavaScript\";\n// XƏTA: Qlobal isNaN mətni Number(\"JavaScript\") -> NaN edərək səhvən true qaytarır\nconst netice = isNaN(parametr);\nconsole.log(netice);",
+            "correctCode": "const parametr = \"JavaScript\";\nconst netice = Number.isNaN(parametr);\nconsole.log(netice);",
+            "correctOutput": "false",
+            "expectedOutput": "false",
+            "explanation": "Qlobal isNaN() ötürülən arqumenti əvvəlcə Number() ilə ədədə çevirir (isNaN(\"JavaScript\") -> isNaN(NaN) -> true). Lakin ES6 Number.isNaN() metodu heç bir tip çevrilməsi aparmır və dəyər ədəd tipi deyilsə, dərhal false qaytarır.",
+            "hint": "Qlobal isNaN() əvəzinə ES6 standartı olan Number.isNaN() metodundan istifadə edin."
+          },
+          {
+            "id": "bug-2-5-2",
+            "type": "bugfix",
+            "disableHardcodeCheck": true,
+            "title": "CSS Ölçü Vahidində Number() Tələsi və Infinity",
+            "instruction": "Proqramçı düymənin enini (\"160px\") oxuyub onu 4 bərabər sütuna bölmək istəyir. Lakin Number(\"160px\") istifadə edildiyi üçün nəticə NaN olur və hesablama pozulur. Kodu elə düzəldin ki, parseInt ilə rəqəm düzgün oxunsun və hər sütunun ölçüsü (40) konsola çıxsın.",
+            "description": "Proqramçı düymənin enini (\"160px\") oxuyub onu 4 bərabər sütuna bölmək istəyir. Lakin Number(\"160px\") istifadə edildiyi üçün nəticə NaN olur və hesablama pozulur. Kodu elə düzəldin ki, parseInt ilə rəqəm düzgün oxunsun və hər sütunun ölçüsü (40) konsola çıxsın.",
+            "buggyCode": "const eni = \"160px\";\nconst sutunSayi = 4;\n// XƏTA: Number(\"160px\") simvol olduğu üçün NaN qaytarır\nconst umumiEn = Number(eni);\nconst sutunEni = umumiEn / sutunSayi;\nconsole.log(sutunEni);",
+            "correctCode": "const eni = \"160px\";\nconst sutunSayi = 4;\nconst umumiEn = parseInt(eni, 10);\nconst sutunEni = umumiEn / sutunSayi;\nconsole.log(sutunEni);",
+            "correctOutput": "40",
+            "expectedOutput": "40",
+            "explanation": "Number() funksiyası sətir daxilində qeyri-rəqəm simvollar (məs: 'px') gördükdə bütöv sətiri NaN-a çevirir. Halbuki parseInt(eni, 10) sətirdəki rəqəm hissəsini oxuyub 'px' hissəsini kənara qoyur və 160 qaytarır.",
+            "hint": "Number() əvəzinə sətirdən ədədi çıxarmaq üçün parseInt(str, 10) funksiyasından istifadə edin."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-2-5-1",
+          "type": "bugfix",
+          "disableHardcodeCheck": true,
+          "title": "Qlobal isNaN() Məcburi Tip Çevrilməsi Xətası",
+          "instruction": "Proqramçı funksiyaya daxil olan dəyərin sırf NaN olub-olmadığını yoxlamaq istəyir. Lakin istifadəçi \"JavaScript\" mətni daxil etdikdə, qlobal isNaN() mətni məcburi ədədə çevirərək true qaytarır və yoxlama səhv işləyir. Kodu elə sazlayın ki, sırf dəyərin tipi də nəzərə alınsın, \"JavaScript\" üçün false, həqiqi NaN olduqda isə true qayıtsın.",
+          "description": "Proqramçı funksiyaya daxil olan dəyərin sırf NaN olub-olmadığını yoxlamaq istəyir. Lakin istifadəçi \"JavaScript\" mətni daxil etdikdə, qlobal isNaN() mətni məcburi ədədə çevirərək true qaytarır və yoxlama səhv işləyir. Kodu elə sazlayın ki, sırf dəyərin tipi də nəzərə alınsın, \"JavaScript\" üçün false, həqiqi NaN olduqda isə true qayıtsın.",
+          "buggyCode": "const parametr = \"JavaScript\";\nconst netice = isNaN(parametr);\nconsole.log(netice);",
+          "correctCode": "const parametr = \"JavaScript\";\nconst netice = Number.isNaN(parametr);\nconsole.log(netice);",
+          "correctOutput": "false",
+          "expectedOutput": "false",
+          "explanation": "Qlobal isNaN() ötürülən arqumenti əvvəlcə Number() ilə ədədə çevirir (isNaN(\"JavaScript\") -> isNaN(NaN) -> true). Lakin ES6 Number.isNaN() metodu heç bir tip çevrilməsi aparmır və dəyər ədəd tipi deyilsə, dərhal false qaytarır.",
+          "hint": "Qlobal isNaN() əvəzinə ES6 standartı olan Number.isNaN() metodundan istifadə edin."
+        }
+      }
+    ]
+  },
+  "section-3": {
+    "title": "Bölmə 3: Operatorlar (===, !==, arifmetik, məntiqi)",
+    "topics": [
+      {
+        "id": "topic-3-1",
+        "title": "Arifmetik Operatorlar (+, -, *, /, %, **, ++, --)",
+        "exercises": [
+          {
+            "id": "ex-3-1-1",
+            "title": "Bölmədən Alınan Qalığın Hesablanması",
+            "instruction": "25 ədədinin 4 bərabər hissəyə bölünməsindən sonra yerdə qalan kəsrsiz tam qalığı hesablayaraq nəticəni konsol ekranında əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "1",
+            "hint": "Qalıq tapmaq üçün JavaScript-də faiz (%) işarəsi olan qalıq (modulus) operatorundan istifadə olunur.",
+            "solutionCode": "console.log(25 % 4);"
+          },
+          {
+            "id": "ex-3-1-2",
+            "title": "Ədədin Qüvvətinin Hesablanması",
+            "instruction": "2 əsasının 5-ci dərəcədən qüvvətini riyazi olaraq hesablayın və əldə olunan nəticəni (32) konsola çıxarın.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "32",
+            "hint": "Qüvvətə yüksəltmə üçün JavaScript-də ** (exponentiation) operatorundan istifadə olunur.",
+            "solutionCode": "console.log(2 ** 5);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-3-1-1",
+            "title": "Qüvvət Əməliyyatının Sazlanması",
+            "instruction": "Proqramçı 2-nin 3-cü dərəcədən qüvvətini hesablayıb ekrana 8 çıxarmaq istəyir, lakin operator seçimi səbəbindən konsola gözlənilməz 1 nəticəsi çıxır. Kodu tədqiq edin, JavaScript-in qüvvət operatorunu düzgün tətbiq edərək hədəf nəticəni (8) əldə edin.",
+            "description": "Proqramçı 2-nin 3-cü dərəcədən qüvvətini hesablayıb ekrana 8 çıxarmaq istəyir, lakin operator seçimi səbəbindən konsola gözlənilməz 1 nəticəsi çıxır. Kodu tədqiq edin, JavaScript-in qüvvət operatorunu düzgün tətbiq edərək hədəf nəticəni (8) əldə edin.",
+            "buggyCode": "console.log(2 ^ 3);",
+            "correctCode": "console.log(2 ** 3);",
+            "correctOutput": "8",
+            "expectedOutput": "8",
+            "explanation": "JavaScript-də qüvvətə yüksəltmə operatoru ** işarəsidir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-3-1-1",
+          "title": "Qüvvət Əməliyyatının Sazlanması",
+          "instruction": "Proqramçı 2-nin 3-cü dərəcədən qüvvətini hesablayıb ekrana 8 çıxarmaq istəyir, lakin operator seçimi səbəbindən konsola gözlənilməz 1 nəticəsi çıxır. Kodu tədqiq edin, JavaScript-in qüvvət operatorunu düzgün tətbiq edərək hədəf nəticəni (8) əldə edin.",
+          "description": "Proqramçı 2-nin 3-cü dərəcədən qüvvətini hesablayıb ekrana 8 çıxarmaq istəyir, lakin operator seçimi səbəbindən konsola gözlənilməz 1 nəticəsi çıxır. Kodu tədqiq edin, JavaScript-in qüvvət operatorunu düzgün tətbiq edərək hədəf nəticəni (8) əldə edin.",
+          "buggyCode": "console.log(2 ^ 3);",
+          "correctCode": "console.log(2 ** 3);",
+          "correctOutput": "8",
+          "expectedOutput": "8",
+          "explanation": "JavaScript-də qüvvətə yüksəltmə operatoru ** işarəsidir."
+        }
+      },
+      {
+        "id": "topic-3-2",
+        "title": "Mənimsətmə Operatorları (+=, -=, *=, /=)",
+        "exercises": [
+          {
+            "id": "ex-3-2-1",
+            "title": "Hesab Balansının Artırılması",
+            "instruction": "Mövcud 200 vahidlik <code>balans</code> göstəricisinin üzərinə əlavə 50 vahid məbləğ toplayaraq yeni balansı (250) konsol ekranında əks etdirin.",
+            "starterCode": "let balans = 200;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "250",
+            "hint": "Dəyişənin dəyərini mövcud qiymətin üzərinə artırmaq üçün qısaldılmış += toplama mənimsətmə operatorundan istifadə edə bilərsiniz.",
+            "solutionCode": "let balans = 200;\nbalans += 50;\nconsole.log(balans);"
+          },
+          {
+            "id": "ex-3-2-2",
+            "title": "İnkremensiya ilə Vahid Artım",
+            "instruction": "İlkin göstəricisi 10 olan <code>say</code> dəyişənini bir vahid artıraraq yekun qiyməti konsolda əks etdirin.",
+            "starterCode": "let say = 10;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "11",
+            "hint": "Dəyişənin dəyərini tək bir vahid artırmaq üçün unar inkrement (++) operatorundan istifadə olunur.",
+            "solutionCode": "let say = 10;\nsay++;\nconsole.log(say);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-3-2-1",
+            "title": "Mənimsətmə Operatorunun Sazlanması",
+            "instruction": "Proqramçı ilkin dəyəri (20) 10 vahid artıraraq konsola 30 çıxarmaq istəyir, lakin mənimsətmədəki sintaktik qüsur səbəbindən dəyər artmır və konsola 10 çıxır. Kodu araşdırın, qısa mənimsətmə operatorunun sintaksisini düzəldin və hədəf 30 nəticəsini alın.",
+            "description": "Proqramçı ilkin dəyəri (20) 10 vahid artıraraq konsola 30 çıxarmaq istəyir, lakin mənimsətmədəki sintaktik qüsur səbəbindən dəyər artmır və konsola 10 çıxır. Kodu araşdırın, qısa mənimsətmə operatorunun sintaksisini düzəldin və hədəf 30 nəticəsini alın.",
+            "buggyCode": "let x = 20;\nx =+ 10;\nconsole.log(x);",
+            "correctCode": "let x = 20;\nx += 10;\nconsole.log(x);",
+            "correctOutput": "30",
+            "expectedOutput": "30",
+            "explanation": "Dəyəri artırmaq üçün operator mənimsətmədən əvvəl gəlməlidir: += (bərabərdən əvvəl plus)."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-3-2-1",
+          "title": "Mənimsətmə Operatorunun Sazlanması",
+          "instruction": "Proqramçı ilkin dəyəri (20) 10 vahid artıraraq konsola 30 çıxarmaq istəyir, lakin mənimsətmədəki sintaktik qüsur səbəbindən dəyər artmır və konsola 10 çıxır. Kodu araşdırın, qısa mənimsətmə operatorunun sintaksisini düzəldin və hədəf 30 nəticəsini alın.",
+          "description": "Proqramçı ilkin dəyəri (20) 10 vahid artıraraq konsola 30 çıxarmaq istəyir, lakin mənimsətmədəki sintaktik qüsur səbəbindən dəyər artmır və konsola 10 çıxır. Kodu araşdırın, qısa mənimsətmə operatorunun sintaksisini düzəldin və hədəf 30 nəticəsini alın.",
+          "buggyCode": "let x = 20;\nx =+ 10;\nconsole.log(x);",
+          "correctCode": "let x = 20;\nx += 10;\nconsole.log(x);",
+          "correctOutput": "30",
+          "expectedOutput": "30",
+          "explanation": "Dəyəri artırmaq üçün operator mənimsətmədən əvvəl gəlməlidir: += (bərabərdən əvvəl plus)."
+        }
+      },
+      {
+        "id": "topic-3-3",
+        "title": "Ciddi Bərabərlik (===) vs Boş Bərabərlik (==)",
+        "exercises": [
+          {
+            "id": "ex-3-3-1",
+            "title": "Dəqiq Tip və Dəyər Müqayisəsi",
+            "instruction": "100 ədədi ilə \"100\" mətninin həm dəyər, həm də tip baxımından tam eyni olub-olmadığını yoxlayaraq məntiqi nəticəni konsol ekranında çıxarın.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "false",
+            "hint": "Tiplərin avtomatik çevrilməsinin qarşısını alaraq dəqiq müqayisə aparmaq üçün ciddi bərabərlik (===) operatorundan istifadə edilir.",
+            "solutionCode": "console.log(100 === \"100\");"
+          },
+          {
+            "id": "ex-3-3-2",
+            "title": "Hədd Göstəricisinin Müqayisəsi",
+            "instruction": "18 yaş göstəricisinin tələb olunan minimum 18 yaş tələbinə uyğun gəlib-gəlmədiyini (böyük və ya bərabər) müqayisə edərək məntiqi nəticəni konsolda əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "true",
+            "hint": "Kəmiyyətin digərindən böyük və ya ona bərabər olduğunu yoxlamaq üçün >= müqayisə operatoru tətbiq olunur.",
+            "solutionCode": "console.log(18 >= 18);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-3-3-1",
+            "title": "Müqayisə Əməliyyatının Bərpası",
+            "instruction": "Proqramçı iki dəyişənin bərabərliyini yoxlayaraq müqayisə nəticəsini (false) konsola çıxarmaq istəyir, lakin operator qüsuru səbəbindən müqayisə əvəzinə mənimsətmə baş verir və konsola 20 çıxır. Kodu tədqiq edin, müqayisə məntiqini bərpa edin və gözlənilən Boolean nəticəsini əldə edin.",
+            "description": "Proqramçı iki dəyişənin bərabərliyini yoxlayaraq müqayisə nəticəsini (false) konsola çıxarmaq istəyir, lakin operator qüsuru səbəbindən müqayisə əvəzinə mənimsətmə baş verir və konsola 20 çıxır. Kodu tədqiq edin, müqayisə məntiqini bərpa edin və gözlənilən Boolean nəticəsini əldə edin.",
+            "buggyCode": "let a = 10;\nlet b = 20;\nconsole.log(a = b);",
+            "correctCode": "let a = 10;\nlet b = 20;\nconsole.log(a === b);",
+            "correctOutput": "false",
+            "expectedOutput": "false",
+            "explanation": "Müqayisə üçün tək bərabərlik (=) istifadə edilə bilməz, ciddi müqayisə üçün === istifadə edilməlidir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-3-3-1",
+          "title": "Müqayisə Əməliyyatının Bərpası",
+          "instruction": "Proqramçı iki dəyişənin bərabərliyini yoxlayaraq müqayisə nəticəsini (false) konsola çıxarmaq istəyir, lakin operator qüsuru səbəbindən müqayisə əvəzinə mənimsətmə baş verir və konsola 20 çıxır. Kodu tədqiq edin, müqayisə məntiqini bərpa edin və gözlənilən Boolean nəticəsini əldə edin.",
+          "description": "Proqramçı iki dəyişənin bərabərliyini yoxlayaraq müqayisə nəticəsini (false) konsola çıxarmaq istəyir, lakin operator qüsuru səbəbindən müqayisə əvəzinə mənimsətmə baş verir və konsola 20 çıxır. Kodu tədqiq edin, müqayisə məntiqini bərpa edin və gözlənilən Boolean nəticəsini əldə edin.",
+          "buggyCode": "let a = 10;\nlet b = 20;\nconsole.log(a = b);",
+          "correctCode": "let a = 10;\nlet b = 20;\nconsole.log(a === b);",
+          "correctOutput": "false",
+          "expectedOutput": "false",
+          "explanation": "Müqayisə üçün tək bərabərlik (=) istifadə edilə bilməz, ciddi müqayisə üçün === istifadə edilməlidir."
+        }
+      },
+      {
+        "id": "topic-3-4",
+        "title": "Məntiqi Operatorlar (&&, ||, !)",
+        "exercises": [
+          {
+            "id": "ex-3-4-1",
+            "title": "Məntiqi Konyunksiya Qiymətləndirilməsi",
+            "instruction": "İki məntiqi vəziyyətdən birincisinin doğru (true), ikincisinin isə yalan (false) olduğu halda hər iki şərtin eyni vaxtda ödənməsi tələbini qiymətləndirərək konsol çıxışına ötürün.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "false",
+            "hint": "Məntiqi VƏ (&&) operatoru yalnız hər iki tərəf doğru olduqda true, tərəflərdən biri belə yalan olduqda false qaytarır.",
+            "solutionCode": "console.log(true && false);"
+          },
+          {
+            "id": "ex-3-4-2",
+            "title": "Məntiqi İnkar Əməliyyatı",
+            "instruction": "Yalan (false) məntiqi vəziyyətini əksinə çevirərək (inversiya edərək) yaranan həqiqi qiyməti konsolda əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "true",
+            "hint": "Məntiqi inkar üçün nida (!) operatorundan istifadə olunur; o, true dəyərini false-a, false dəyərini isə true-ya çevirir.",
+            "solutionCode": "console.log(!false);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-3-4-1",
+            "title": "Məntiqi VƏ Operatorunun Sazlanması",
+            "instruction": "Proqramçı iki məntiqi dəyəri birləşdirərək ümumi nəticəni konsola çıxarmaq istəyir, lakin skript icra olunarkən 'SyntaxError: Unexpected identifier' xətası ilə dayanır. Kodu araşdırın, JavaScript standart məntiqi operatorunu tətbiq edərək xətanı aradan qaldırın və konsola true çıxarın.",
+            "description": "Proqramçı iki məntiqi dəyəri birləşdirərək ümumi nəticəni konsola çıxarmaq istəyir, lakin skript icra olunarkən 'SyntaxError: Unexpected identifier' xətası ilə dayanır. Kodu araşdırın, JavaScript standart məntiqi operatorunu tətbiq edərək xətanı aradan qaldırın və konsola true çıxarın.",
+            "buggyCode": "let a = true;\nlet b = true;\nconsole.log(a and b);",
+            "correctCode": "let a = true;\nlet b = true;\nconsole.log(a && b);",
+            "correctOutput": "true",
+            "expectedOutput": "true",
+            "explanation": "JavaScript-də məntiqi VƏ operatoru 'and' deyil, '&&' simvoludur."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-3-4-1",
+          "title": "Məntiqi VƏ Operatorunun Sazlanması",
+          "instruction": "Proqramçı iki məntiqi dəyəri birləşdirərək ümumi nəticəni konsola çıxarmaq istəyir, lakin skript icra olunarkən 'SyntaxError: Unexpected identifier' xətası ilə dayanır. Kodu araşdırın, JavaScript standart məntiqi operatorunu tətbiq edərək xətanı aradan qaldırın və konsola true çıxarın.",
+          "description": "Proqramçı iki məntiqi dəyəri birləşdirərək ümumi nəticəni konsola çıxarmaq istəyir, lakin skript icra olunarkən 'SyntaxError: Unexpected identifier' xətası ilə dayanır. Kodu araşdırın, JavaScript standart məntiqi operatorunu tətbiq edərək xətanı aradan qaldırın və konsola true çıxarın.",
+          "buggyCode": "let a = true;\nlet b = true;\nconsole.log(a and b);",
+          "correctCode": "let a = true;\nlet b = true;\nconsole.log(a && b);",
+          "correctOutput": "true",
+          "expectedOutput": "true",
+          "explanation": "JavaScript-də məntiqi VƏ operatoru 'and' deyil, '&&' simvoludur."
+        }
+      }
+    ]
+  },
+  "section-4": {
+    "title": "Bölmə 4: Şərt İfadələri (if-else, ternary, switch-case)",
+    "topics": [
+      {
+        "id": "topic-4-1",
+        "title": "if, else if və else Strukturu",
+        "exercises": [
+          {
+            "id": "ex-4-1-1",
+            "title": "Yetkinlik İcazəsinin Yoxlanması",
+            "instruction": "Sistemdə qeydiyyatdan keçən istifadəçinin yaşı <code>yas</code> dəyişənində saxlanılır. Yaş həddi minimum 18 və daha yuxarı olduqda konsola <code>İcazə verildi</code> bildirişini çıxarın.",
+            "starterCode": "const yas = 20;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "İcazə verildi",
+            "hint": "Şərt yoxlaması üçün if blokundan istifadə edin və şərt ödəndikdə tələb olunan mətni çıxışa verin.",
+            "solutionCode": "const yas = 20;\nif (yas >= 18) {\n  console.log(\"İcazə verildi\");\n}"
+          },
+          {
+            "id": "ex-4-1-2",
+            "title": "Ədədin Paritet Təyini (Cüt və ya Tək)",
+            "instruction": "Verilmiş <code>eded</code> qiymətinin cüt və ya tək olduğunu riyazi olaraq müəyyənləşdirin; ədəd 2-yə qalıqsız bölünürsə konsola <code>Cüt</code>, əks halda <code>Tək</code> mesajını yazdırın.",
+            "starterCode": "const eded = 7;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Tək",
+            "hint": "Ədədin 2-yə bölünməsindən qalan qalığı (eded % 2 === 0) yoxlamaq üçün if-else strukturundan istifadə edin.",
+            "solutionCode": "const eded = 7;\nif (eded % 2 === 0) {\n  console.log(\"Cüt\");\n} else {\n  console.log(\"Tək\");\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-4-1-1",
+            "title": "Budaqlanan Şərt Sintaksisinin Sazlanması",
+            "instruction": "Proqramçı saat dəyərinə uyğun salamlama mesajını ('Hər vaxtınız xeyir') konsola çıxarmaq istəyir, lakin skriptdə 'SyntaxError: Unexpected token' xətası baş verir və icra dayanır. Kodu araşdırın, JavaScript-in çoxşaxəli şərt sintaksisini tənzimləyərək xətanı aradan qaldırın.",
+            "description": "Proqramçı saat dəyərinə uyğun salamlama mesajını ('Hər vaxtınız xeyir') konsola çıxarmaq istəyir, lakin skriptdə 'SyntaxError: Unexpected token' xətası baş verir və icra dayanır. Kodu araşdırın, JavaScript-in çoxşaxəli şərt sintaksisini tənzimləyərək xətanı aradan qaldırın.",
+            "buggyCode": "let saat = 14;\nif (saat < 12) {\n  console.log(\"Sabahınız xeyir\");\n} elif (saat < 18) {\n  console.log(\"Hər vaxtınız xeyir\");\n}",
+            "correctCode": "let saat = 14;\nif (saat < 12) {\n  console.log(\"Sabahınız xeyir\");\n} else if (saat < 18) {\n  console.log(\"Hər vaxtınız xeyir\");\n}",
+            "correctOutput": "Hər vaxtınız xeyir",
+            "expectedOutput": "Hər vaxtınız xeyir",
+            "explanation": "JavaScript-də 'elif' sözü yoxdur, onun yerinə iki ayrı sözlə 'else if' yazılmalıdır."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-4-1-1",
+          "title": "Budaqlanan Şərt Sintaksisinin Sazlanması",
+          "instruction": "Proqramçı saat dəyərinə uyğun salamlama mesajını ('Hər vaxtınız xeyir') konsola çıxarmaq istəyir, lakin skriptdə 'SyntaxError: Unexpected token' xətası baş verir və icra dayanır. Kodu araşdırın, JavaScript-in çoxşaxəli şərt sintaksisini tənzimləyərək xətanı aradan qaldırın.",
+          "description": "Proqramçı saat dəyərinə uyğun salamlama mesajını ('Hər vaxtınız xeyir') konsola çıxarmaq istəyir, lakin skriptdə 'SyntaxError: Unexpected token' xətası baş verir və icra dayanır. Kodu araşdırın, JavaScript-in çoxşaxəli şərt sintaksisini tənzimləyərək xətanı aradan qaldırın.",
+          "buggyCode": "let saat = 14;\nif (saat < 12) {\n  console.log(\"Sabahınız xeyir\");\n} elif (saat < 18) {\n  console.log(\"Hər vaxtınız xeyir\");\n}",
+          "correctCode": "let saat = 14;\nif (saat < 12) {\n  console.log(\"Sabahınız xeyir\");\n} else if (saat < 18) {\n  console.log(\"Hər vaxtınız xeyir\");\n}",
+          "correctOutput": "Hər vaxtınız xeyir",
+          "expectedOutput": "Hər vaxtınız xeyir",
+          "explanation": "JavaScript-də 'elif' sözü yoxdur, onun yerinə iki ayrı sözlə 'else if' yazılmalıdır."
+        }
+      },
+      {
+        "id": "topic-4-2",
+        "title": "Üçlü Şərt Operatoru (Ternary Operator)",
+        "exercises": [
+          {
+            "id": "ex-4-2-1",
+            "title": "Qısa Şərt Operatoru ilə Status Təyini",
+            "instruction": "İstifadəçinin 18 yaş tələbinə uyğunluğunu tək sətirlik yığcam şərt ifadəsi ilə yoxlayın: yaş uyğundursa <code>Bəli</code>, uyğun deyilsə <code>Xeyr</code> cavabını konsolda əks etdirin.",
+            "starterCode": "const yas = 16;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Xeyr",
+            "hint": "Qısa şərt yoxlanışı üçün ternary (şərt ? doğru : yalan) operatorundan istifadə edin.",
+            "solutionCode": "const yas = 16;\nconst cavab = yas >= 18 ? \"Bəli\" : \"Xeyr\";\nconsole.log(cavab);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-4-2-1",
+            "title": "Üçlü Şərt Sintaksisinin Sazlanması",
+            "instruction": "Proqramçı ternary operatoru vasitəsilə istifadəçiyə 'Xoş gəldiniz' bildirişini təqdim etmək istəyir, lakin skriptdə 'SyntaxError' baş verir və kod işləmir. Kodu tədqiq edin, ternary operatorunun strukturunu bərpa edərək hədəf bildirişi konsola çıxarın.",
+            "description": "Proqramçı ternary operatoru vasitəsilə istifadəçiyə 'Xoş gəldiniz' bildirişini təqdim etmək istəyir, lakin skriptdə 'SyntaxError' baş verir və kod işləmir. Kodu tədqiq edin, ternary operatorunun strukturunu bərpa edərək hədəf bildirişi konsola çıxarın.",
+            "buggyCode": "let daxilOlub = true;\nlet mesaj = daxilOlub ? \"Xoş gəldiniz\", \"Zəhmət olmasa daxil olun\";\nconsole.log(mesaj);",
+            "correctCode": "let daxilOlub = true;\nlet mesaj = daxilOlub ? \"Xoş gəldiniz\" : \"Zəhmət olmasa daxil olun\";\nconsole.log(mesaj);",
+            "correctOutput": "Xoş gəldiniz",
+            "expectedOutput": "Xoş gəldiniz",
+            "explanation": "Üçlü (ternary) operatorun sintaksisi 'şərt ? ifadə1 : ifadə2' kimidir (arada iki nöqtə olmalıdır)."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-4-2-1",
+          "title": "Üçlü Şərt Sintaksisinin Sazlanması",
+          "instruction": "Proqramçı ternary operatoru vasitəsilə istifadəçiyə 'Xoş gəldiniz' bildirişini təqdim etmək istəyir, lakin skriptdə 'SyntaxError' baş verir və kod işləmir. Kodu tədqiq edin, ternary operatorunun strukturunu bərpa edərək hədəf bildirişi konsola çıxarın.",
+          "description": "Proqramçı ternary operatoru vasitəsilə istifadəçiyə 'Xoş gəldiniz' bildirişini təqdim etmək istəyir, lakin skriptdə 'SyntaxError' baş verir və kod işləmir. Kodu tədqiq edin, ternary operatorunun strukturunu bərpa edərək hədəf bildirişi konsola çıxarın.",
+          "buggyCode": "let daxilOlub = true;\nlet mesaj = daxilOlub ? \"Xoş gəldiniz\", \"Zəhmət olmasa daxil olun\";\nconsole.log(mesaj);",
+          "correctCode": "let daxilOlub = true;\nlet mesaj = daxilOlub ? \"Xoş gəldiniz\" : \"Zəhmət olmasa daxil olun\";\nconsole.log(mesaj);",
+          "correctOutput": "Xoş gəldiniz",
+          "expectedOutput": "Xoş gəldiniz",
+          "explanation": "Üçlü (ternary) operatorun sintaksisi 'şərt ? ifadə1 : ifadə2' kimidir (arada iki nöqtə olmalıdır)."
+        }
+      },
+      {
+        "id": "topic-4-3",
+        "title": "switch...case İfadəsi",
+        "exercises": [
+          {
+            "id": "ex-4-3-1",
+            "title": "İşıqfor Hərəkət Siqnalının Seçilməsi",
+            "instruction": "Nəqliyyat sistemində svetoforun cari rənginə (<code>reng</code>) uyğun hərəkət qərarını seçin: qırmızı rəngdə <code>Dayan</code>, yaşıl rəngdə isə <code>Keç</code> komandasını konsola verin.",
+            "starterCode": "const reng = \"qirmizi\";\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Dayan",
+            "hint": "Dəqiq dəyər uyğunluqlarını çoxvariantlı yoxlamaq üçün switch-case strukturundan və break əmrlərindən istifadə edin.",
+            "solutionCode": "const reng = \"qirmizi\";\nswitch (reng) {\n  case \"qirmizi\":\n    console.log(\"Dayan\");\n    break;\n  case \"yasil\":\n    console.log(\"Keç\");\n    break;\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-4-3-1",
+            "title": "Switch İdarəetmə Axınının Sazlanması",
+            "instruction": "Proqramçı switch konstruksiyası ilə həftənin 1-ci gününə uyğun olaraq yalnız 'Bazar ertəsi' mətni çap etmək istəyir, lakin icra zamanı sonrakı bloklara axın səbəbindən əlavə sətirlər də çap olunur. Kodu araşdırın, axını düzgün idarə edərək yalnız nəzərdə tutulan günün çıxmasını təmin edin.",
+            "description": "Proqramçı switch konstruksiyası ilə həftənin 1-ci gününə uyğun olaraq yalnız 'Bazar ertəsi' mətni çap etmək istəyir, lakin icra zamanı sonrakı bloklara axın səbəbindən əlavə sətirlər də çap olunur. Kodu araşdırın, axını düzgün idarə edərək yalnız nəzərdə tutulan günün çıxmasını təmin edin.",
+            "buggyCode": "let gun = 1;\nswitch(gun) {\n  case 1:\n    console.log(\"Bazar ertəsi\");\n  case 2:\n    console.log(\"Çərşənbə axşamı\");\n    break;\n}",
+            "correctCode": "let gun = 1;\nswitch(gun) {\n  case 1:\n    console.log(\"Bazar ertəsi\");\n    break;\n  case 2:\n    console.log(\"Çərşənbə axşamı\");\n    break;\n}",
+            "correctOutput": "Bazar ertəsi",
+            "expectedOutput": "Bazar ertəsi",
+            "explanation": "Case blokunun sonuna break qoyulmadıqda, JavaScript növbəti case-in kodunu da icra edir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-4-3-1",
+          "title": "Switch İdarəetmə Axınının Sazlanması",
+          "instruction": "Proqramçı switch konstruksiyası ilə həftənin 1-ci gününə uyğun olaraq yalnız 'Bazar ertəsi' mətni çap etmək istəyir, lakin icra zamanı sonrakı bloklara axın səbəbindən əlavə sətirlər də çap olunur. Kodu araşdırın, axını düzgün idarə edərək yalnız nəzərdə tutulan günün çıxmasını təmin edin.",
+          "description": "Proqramçı switch konstruksiyası ilə həftənin 1-ci gününə uyğun olaraq yalnız 'Bazar ertəsi' mətni çap etmək istəyir, lakin icra zamanı sonrakı bloklara axın səbəbindən əlavə sətirlər də çap olunur. Kodu araşdırın, axını düzgün idarə edərək yalnız nəzərdə tutulan günün çıxmasını təmin edin.",
+          "buggyCode": "let gun = 1;\nswitch(gun) {\n  case 1:\n    console.log(\"Bazar ertəsi\");\n  case 2:\n    console.log(\"Çərşənbə axşamı\");\n    break;\n}",
+          "correctCode": "let gun = 1;\nswitch(gun) {\n  case 1:\n    console.log(\"Bazar ertəsi\");\n    break;\n  case 2:\n    console.log(\"Çərşənbə axşamı\");\n    break;\n}",
+          "correctOutput": "Bazar ertəsi",
+          "expectedOutput": "Bazar ertəsi",
+          "explanation": "Case blokunun sonuna break qoyulmadıqda, JavaScript növbəti case-in kodunu da icra edir."
+        }
+      }
+    ]
+  },
+  "section-5": {
+    "title": "Bölmə 5: Dövrlər (for, while, for...of, for...in)",
+    "topics": [
+      {
+        "id": "topic-5-1",
+        "title": "Klassik for Dövrü",
+        "exercises": [
+          {
+            "id": "ex-5-1-1",
+            "title": "Ardıcıl Tam Ədədlərin Nümayişi",
+            "instruction": "1-dən 5-ə qədər (5 daxil olmaqla) bütün tam ədədləri artan sıra ilə konsol pəncərəsində alt-alta əks etdirin.",
+            "starterCode": "// Kodunuzu buraya yazın\n",
+            "expectedOutput": "1\n2\n3\n4\n5",
+            "hint": "Müəyyən sayda təkrarlanan əməliyyatlar üçün for dövründən istifadə edin və hər addımda cari sayğac dəyərini çıxışa ötürün.",
+            "solutionCode": "for (let i = 1; i <= 5; i++) {\n  console.log(i);\n}"
+          },
+          {
+            "id": "ex-5-1-2",
+            "title": "Ədədi İntervalın Cəmlənməsi",
+            "instruction": "1-dən 4-ə qədər olan tam ədədlərin (1 + 2 + 3 + 4) ümumi riyazi cəmini toplayaraq dövr tamamlandıqdan sonra yekun nəticəni (10) konsola çıxarın.",
+            "starterCode": "let cem = 0;\n// Kodunuzu buraya yazın\n\nconsole.log(cem);\n",
+            "expectedOutput": "10",
+            "hint": "Dövr daxilində hər addımda cari ədədi əvvəlcədən təyin edilmiş cem dəyişəninə əlavə edin.",
+            "solutionCode": "let cem = 0;\nfor (let i = 1; i <= 4; i++) {\n  cem += i;\n}\nconsole.log(cem);"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-5-1-1",
+            "title": "For Dövrünün Başlıq Sintaksisi",
+            "instruction": "Proqramçı for dövrü ilə 0-dan 2-yə qədər ədədləri ekrana çıxarmaq istəyir, lakin mühərrik 'SyntaxError: Unexpected token' xətası ilə icranı dayandırır. Kodu tədqiq edin, for dövrünün parametr ayrıcılarını yoxlayaraq sintaksis xətasını aradan qaldırın.",
+            "description": "Proqramçı for dövrü ilə 0-dan 2-yə qədər ədədləri ekrana çıxarmaq istəyir, lakin mühərrik 'SyntaxError: Unexpected token' xətası ilə icranı dayandırır. Kodu tədqiq edin, for dövrünün parametr ayrıcılarını yoxlayaraq sintaksis xətasını aradan qaldırın.",
+            "buggyCode": "for (let i = 0, i < 3, i++) {\n  console.log(i);\n}",
+            "correctCode": "for (let i = 0; i < 3; i++) {\n  console.log(i);\n}",
+            "correctOutput": "0\n1\n2",
+            "expectedOutput": "0\n1\n2",
+            "explanation": "for dövrünün 3 hissəsi bir-birindən nöqtəli vergül (;) ilə ayrılmalıdır."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-5-1-1",
+          "title": "For Dövrünün Başlıq Sintaksisi",
+          "instruction": "Proqramçı for dövrü ilə 0-dan 2-yə qədər ədədləri ekrana çıxarmaq istəyir, lakin mühərrik 'SyntaxError: Unexpected token' xətası ilə icranı dayandırır. Kodu tədqiq edin, for dövrünün parametr ayrıcılarını yoxlayaraq sintaksis xətasını aradan qaldırın.",
+          "description": "Proqramçı for dövrü ilə 0-dan 2-yə qədər ədədləri ekrana çıxarmaq istəyir, lakin mühərrik 'SyntaxError: Unexpected token' xətası ilə icranı dayandırır. Kodu tədqiq edin, for dövrünün parametr ayrıcılarını yoxlayaraq sintaksis xətasını aradan qaldırın.",
+          "buggyCode": "for (let i = 0, i < 3, i++) {\n  console.log(i);\n}",
+          "correctCode": "for (let i = 0; i < 3; i++) {\n  console.log(i);\n}",
+          "correctOutput": "0\n1\n2",
+          "expectedOutput": "0\n1\n2",
+          "explanation": "for dövrünün 3 hissəsi bir-birindən nöqtəli vergül (;) ilə ayrılmalıdır."
+        }
+      },
+      {
+        "id": "topic-5-2",
+        "title": "while və do...while Dövrləri",
+        "exercises": [
+          {
+            "id": "ex-5-2-1",
+            "title": "Eksponensial Artım Prosesi",
+            "instruction": "1-dən başlayaraq hər addımda öz qiymətini ikiqat artıran (1, 2, 4, 8) və maksimum 8 həddinə qədər davam edən ədədi ardıcıllığı alt-alta konsolda əks etdirin.",
+            "starterCode": "let eded = 1;\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "1\n2\n4\n8",
+            "hint": "Şərt ödəndiyi müddətcə təkrarlanmanı təmin etmək üçün while dövründən istifadə edin və hər addımda ədədi 2-yə vurun.",
+            "solutionCode": "let eded = 1;\nwhile (eded <= 8) {\n  console.log(eded);\n  eded *= 2;\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-5-2-1",
+            "title": "Dövr İterasiyasının Tənzimlənməsi",
+            "instruction": "Proqramçı while dövrü vasitəsilə 1-dən 3-ə qədər ədədləri konsola çıxarmaq istəyir, lakin dövr daxilindəki şərt heç vaxt dəyişmədiyindən proqram sonsuz dövr təhlükəsi ilə üzləşir. Kodu araşdırın, dövrün 3 addımdan sonra təbii dayandırılmasını təmin edərək hədəf çıxışı (1, 2, 3) əldə edin.",
+            "description": "Proqramçı while dövrü vasitəsilə 1-dən 3-ə qədər ədədləri konsola çıxarmaq istəyir, lakin dövr daxilindəki şərt heç vaxt dəyişmədiyindən proqram sonsuz dövr təhlükəsi ilə üzləşir. Kodu araşdırın, dövrün 3 addımdan sonra təbii dayandırılmasını təmin edərək hədəf çıxışı (1, 2, 3) əldə edin.",
+            "buggyCode": "let say = 1;\nwhile (say <= 3) {\n  console.log(say);\n}",
+            "correctCode": "let say = 1;\nwhile (say <= 3) {\n  console.log(say);\n  say++;\n}",
+            "correctOutput": "1\n2\n3",
+            "expectedOutput": "1\n2\n3",
+            "explanation": "while dövründə çıxış şərtini təmin edən dəyişən mütləq dövrün daxilində yenilənməlidir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-5-2-1",
+          "title": "Dövr İterasiyasının Tənzimlənməsi",
+          "instruction": "Proqramçı while dövrü vasitəsilə 1-dən 3-ə qədər ədədləri konsola çıxarmaq istəyir, lakin dövr daxilindəki şərt heç vaxt dəyişmədiyindən proqram sonsuz dövr təhlükəsi ilə üzləşir. Kodu araşdırın, dövrün 3 addımdan sonra təbii dayandırılmasını təmin edərək hədəf çıxışı (1, 2, 3) əldə edin.",
+          "description": "Proqramçı while dövrü vasitəsilə 1-dən 3-ə qədər ədədləri konsola çıxarmaq istəyir, lakin dövr daxilindəki şərt heç vaxt dəyişmədiyindən proqram sonsuz dövr təhlükəsi ilə üzləşir. Kodu araşdırın, dövrün 3 addımdan sonra təbii dayandırılmasını təmin edərək hədəf çıxışı (1, 2, 3) əldə edin.",
+          "buggyCode": "let say = 1;\nwhile (say <= 3) {\n  console.log(say);\n}",
+          "correctCode": "let say = 1;\nwhile (say <= 3) {\n  console.log(say);\n  say++;\n}",
+          "correctOutput": "1\n2\n3",
+          "expectedOutput": "1\n2\n3",
+          "explanation": "while dövründə çıxış şərtini təmin edən dəyişən mütləq dövrün daxilində yenilənməlidir."
+        }
+      },
+      {
+        "id": "topic-5-3",
+        "title": "Dövr İdarəetməsi: break və continue",
+        "exercises": [
+          {
+            "id": "ex-5-3-1",
+            "title": "Şərt Əsasında Dövrün Vaxtından Əvvəl Kəsilməsi",
+            "instruction": "1-dən 10-a qədər davam edən təkrarlanma prosesində sayğac 4 həddinə çatdıqda dövrü dərhal dayandırın; nəticədə konsolda yalnız 1, 2 və 3 qiymətləri əks olunmalıdır.",
+            "starterCode": "for (let i = 1; i <= 10; i++) {\n  // Kodunuzu buraya yazın\n  console.log(i);\n}\n",
+            "expectedOutput": "1\n2\n3",
+            "hint": "Dövrün icrasını dərhal dayandırmaq üçün if şərti daxilində break əmrindən istifadə edin.",
+            "solutionCode": "for (let i = 1; i <= 10; i++) {\n  if (i === 4) break;\n  console.log(i);\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-5-3-1",
+            "title": "İterasiya Axınının Davam Etdirilməsi",
+            "instruction": "Proqramçı for dövründə 2 ədədini atlayaraq 1 və 3 ədədlərini konsola çıxarmaq istəyir, lakin dövr idarəetməsindəki yanlışlıq səbəbindən dövr vaxtından əvvəl qırılır və konsola yalnız 1 çıxır. Kodu tədqiq edin, növbəti iterasiyaya keçid məntiqini bərpa edərək 1 və 3 çıxışını əldə edin.",
+            "description": "Proqramçı for dövründə 2 ədədini atlayaraq 1 və 3 ədədlərini konsola çıxarmaq istəyir, lakin dövr idarəetməsindəki yanlışlıq səbəbindən dövr vaxtından əvvəl qırılır və konsola yalnız 1 çıxır. Kodu tədqiq edin, növbəti iterasiyaya keçid məntiqini bərpa edərək 1 və 3 çıxışını əldə edin.",
+            "buggyCode": "for (let i = 1; i <= 3; i++) {\n  if (i === 2) {\n    break;\n  }\n  console.log(i);\n}",
+            "correctCode": "for (let i = 1; i <= 3; i++) {\n  if (i === 2) {\n    continue;\n  }\n  console.log(i);\n}",
+            "correctOutput": "1\n3",
+            "expectedOutput": "1\n3",
+            "explanation": "Dövrü tam dayandırmaq yox, yalnız cari addımı buraxıb davam etmək üçün continue istifadə edilməlidir."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-5-3-1",
+          "title": "İterasiya Axınının Davam Etdirilməsi",
+          "instruction": "Proqramçı for dövründə 2 ədədini atlayaraq 1 və 3 ədədlərini konsola çıxarmaq istəyir, lakin dövr idarəetməsindəki yanlışlıq səbəbindən dövr vaxtından əvvəl qırılır və konsola yalnız 1 çıxır. Kodu tədqiq edin, növbəti iterasiyaya keçid məntiqini bərpa edərək 1 və 3 çıxışını əldə edin.",
+          "description": "Proqramçı for dövründə 2 ədədini atlayaraq 1 və 3 ədədlərini konsola çıxarmaq istəyir, lakin dövr idarəetməsindəki yanlışlıq səbəbindən dövr vaxtından əvvəl qırılır və konsola yalnız 1 çıxır. Kodu tədqiq edin, növbəti iterasiyaya keçid məntiqini bərpa edərək 1 və 3 çıxışını əldə edin.",
+          "buggyCode": "for (let i = 1; i <= 3; i++) {\n  if (i === 2) {\n    break;\n  }\n  console.log(i);\n}",
+          "correctCode": "for (let i = 1; i <= 3; i++) {\n  if (i === 2) {\n    continue;\n  }\n  console.log(i);\n}",
+          "correctOutput": "1\n3",
+          "expectedOutput": "1\n3",
+          "explanation": "Dövrü tam dayandırmaq yox, yalnız cari addımı buraxıb davam etmək üçün continue istifadə edilməlidir."
+        }
+      },
+      {
+        "id": "topic-5-4",
+        "title": "Müasir Dövrlər: for...of və for...in",
+        "exercises": [
+          {
+            "id": "ex-5-4-1",
+            "title": "Kolleksiya Elementlərinin Tək-Tək Oxunması",
+            "instruction": "Verilmiş şəhərlər siyahısındakı hər bir şəhər adını ardıcıl olaraq konsol ekranında alt-alta əks etdirin.",
+            "starterCode": "const seherler = [\"Bakı\", \"Gəncə\", \"Şuşa\"];\n// Kodunuzu buraya yazın\n",
+            "expectedOutput": "Bakı\nGəncə\nŞuşa",
+            "hint": "Massiv və ya kolleksiyaların elementlərini rahatlıqla oxumaq üçün for...of strukturundan istifadə olunur.",
+            "solutionCode": "const seherler = [\"Bakı\", \"Gəncə\", \"Şuşa\"];\nfor (const seher of seherler) {\n  console.log(seher);\n}"
+          }
+        ],
+        "bugFixes": [
+          {
+            "id": "bug-5-4-1",
+            "title": "Kolleksiya İterasiya Növünün Seçimi",
+            "instruction": "Proqramçı massivdəki meyvə adlarını ('Alma', 'Armud') konsola çap etmək istəyir, lakin seçilən dövr növü elementlərin qiymətləri əvəzinə onların indekslərini ('0', '1') çap edir. Kodu araşdırın, massiv qiymətlərini birbaşa iterasiya edən dövr növünü tətbiq edərək hədəf çıxışı əldə edin.",
+            "description": "Proqramçı massivdəki meyvə adlarını ('Alma', 'Armud') konsola çap etmək istəyir, lakin seçilən dövr növü elementlərin qiymətləri əvəzinə onların indekslərini ('0', '1') çap edir. Kodu araşdırın, massiv qiymətlərini birbaşa iterasiya edən dövr növünü tətbiq edərək hədəf çıxışı əldə edin.",
+            "buggyCode": "const meyveler = [\"Alma\", \"Armud\"];\nfor (const m in meyveler) {\n  console.log(m);\n}",
+            "correctCode": "const meyveler = [\"Alma\", \"Armud\"];\nfor (const m of meyveler) {\n  console.log(m);\n}",
+            "correctOutput": "Alma\nArmud",
+            "expectedOutput": "Alma\nArmud",
+            "explanation": "Massivin dəyərlərini əldə etmək üçün for...of istifadə edilməlidir (for...in isə indeksləri qaytarır)."
+          }
+        ],
+        "bugFix": {
+          "id": "bug-5-4-1",
+          "title": "Kolleksiya İterasiya Növünün Seçimi",
+          "instruction": "Proqramçı massivdəki meyvə adlarını ('Alma', 'Armud') konsola çap etmək istəyir, lakin seçilən dövr növü elementlərin qiymətləri əvəzinə onların indekslərini ('0', '1') çap edir. Kodu araşdırın, massiv qiymətlərini birbaşa iterasiya edən dövr növünü tətbiq edərək hədəf çıxışı əldə edin.",
+          "description": "Proqramçı massivdəki meyvə adlarını ('Alma', 'Armud') konsola çap etmək istəyir, lakin seçilən dövr növü elementlərin qiymətləri əvəzinə onların indekslərini ('0', '1') çap edir. Kodu araşdırın, massiv qiymətlərini birbaşa iterasiya edən dövr növünü tətbiq edərək hədəf çıxışı əldə edin.",
+          "buggyCode": "const meyveler = [\"Alma\", \"Armud\"];\nfor (const m in meyveler) {\n  console.log(m);\n}",
+          "correctCode": "const meyveler = [\"Alma\", \"Armud\"];\nfor (const m of meyveler) {\n  console.log(m);\n}",
+          "correctOutput": "Alma\nArmud",
+          "expectedOutput": "Alma\nArmud",
+          "explanation": "Massivin dəyərlərini əldə etmək üçün for...of istifadə edilməlidir (for...in isə indeksləri qaytarır)."
+        }
+      }
+    ]
+  }
+}

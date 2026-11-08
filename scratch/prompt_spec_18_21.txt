@@ -1,0 +1,101 @@
+<USER_REQUEST>
+/browser  javascript.info (The Modern JavaScript Tutorial), MDN Web Docs (Mozilla Developer Network), The Odin Project
+# MISSION: Two-Tier Architectural Refactoring (Part 2: Sections 18 to 21)
+# Target Files: `data_section_18.js`, `data_section_19.js`, `data_section_20.js`, `data_section_21.js`
+
+## ROLE & CONTEXT
+You are an Elite Principal Software Architect and Full-Stack JavaScript Curriculum Engineer.
+You are tasked with refactoring and enriching the backend and security curriculum files `data_section_18.js` through `data_section_21.js` for "JSÖyrən" — a high-performance interactive JavaScript learning platform, code sandbox, and certification simulator.
+
+---
+
+## STRICT ARCHITECTURAL CONSTRAINTS
+1. **NO TOPIC ID MODIFICATIONS:** Keep all existing topic identifiers (`topic-18-1` through `topic-21-3`) exactly as they are. Do NOT create new topics or delete existing ones.
+2. **STRICT MODULAR MAPPING (NO TOPIC MIXING):** Do NOT randomly contaminate lessons. Keep Node.js runtime concepts in Section 18, Express architecture in Section 19, RESTful patterns in Section 20, and DB/Security in Section 21.
+3. **100% AZERBAIJANI PROSE:** All curriculum text (`theory`, `title`, `instruction`, `hint`, `explanation`) must be written in grammatically fluent, natural, professional Azerbaijani (Azərbaycan dili).
+4. **ZERO TEST REGRESSIONS:** Existing exercise IDs (`ex-18-1-1`, etc.) and bug fix IDs (`bug-18-1-1`, etc.) must remain 100% functional and strictly match their deterministic console outputs.
+5. **TWO-TIER PEDAGOGICAL DESIGN PATTERN:**
+   - **Zone 1 (Core Foundations):** Designed for beginners. Clear, friendly prose, visual `<div class="tip-box">` analogies, and baseline syntax.
+   - **Zone 2 (🔬 Dərinləşmə və Mühəndislik):** Advanced engineering, production gotchas, and exam-level edge cases placed strictly at the bottom of the `theory` HTML, separated by:
+     `<hr style="border:0; border-top:1px solid var(--border-secondary); margin:1.5rem 0;">`
+     followed by:
+     `<h4>🔬 Dərinləşmə: [Konsept Adı]</h4>`
+
+---
+
+## CONCRETE TOPIC-BY-TOPIC SPECIFICATION (SECTIONS 18 TO 21)
+
+### ════════════════════════════════════════════════════════════
+### SECTION 18: Node.js Əsasları və İcra Mühiti (`data_section_18.js`)
+### ════════════════════════════════════════════════════════════
+- **`topic-18-1` (Server Nədir, Localhost və Port Anlayışı):**
+  - *Zone 1 (Core):* Server-client model, apartment analogy for Ports, `localhost` (127.0.0.1), `process.env.PORT`, `process.cwd()`.
+  - *Zone 2 (🔬 Dərinləşmə):* **`process` Qlobal Obyekti, CLI Arqumentləri (`process.argv`) və Çoxnüvəli `os.cpus()`:** Parsing flags from the terminal and multi-core process clustering models.
+- **`topic-18-2` (Node.js Daxili HTTP Modulu ilə İlk Server):**
+  - *Zone 1 (Core):* `http.createServer((req, res) => ...)`, `req.url`, `req.method`, status codes, the critical necessity of `res.end()`.
+  - *Zone 2 (🔬 Dərinləşmə):* **`EventEmitter` Nüvəsi və Axınlar (Streams & Buffers):** Event-driven backend mechanics, `emitter.on`, `emitter.emit`, and memory-efficient chunk streaming.
+- **`topic-18-3` (Modul Sistemləri - CommonJS vs ESM və npm):**
+  - *Zone 1 (Core):* `require` / `module.exports` vs modern `import` / `export`, `package.json`, `node_modules` in `.gitignore`.
+  - *Zone 2 (🔬 Dərinləşmə):* **`fs.promises` Asinxron Fayl Sistemi, `path` Modulu və Path Traversal Müdafiəsi:** `path.join`, `path.extname`, and preventing `../` directory traversal vulnerabilities with `path.resolve`.
+
+---
+
+### ════════════════════════════════════════════════════════════
+### SECTION 19: HTTP Protokolu və Express.js ilə Server Qurulması (`data_section_19.js`)
+### ════════════════════════════════════════════════════════════
+- **`topic-19-1` (HTTP Protokolu, Sorğu/Cavab Modeli və Status Kodları):**
+  - *Zone 1 (Core):* Request parts (Method, Path, Headers, Body), Status code categories (2xx, 4xx, 5xx), the trap of returning 200 on errors.
+  - *Zone 2 (🔬 Dərinləşmə):* **İdempotentlik (Idempotence) və Təhlükəsizlik:** Comparing safe/idempotent methods (`GET`, `PUT`, `DELETE`) vs non-idempotent (`POST`), handling retry safety.
+- **`topic-19-2` (Express.js ilə İlk Server və Marşrutlaşdırma):**
+  - *Zone 1 (Core):* `express()`, `app.listen()`, route handlers, `req.params` vs `req.query` vs `req.body`.
+  - *Zone 2 (🔬 Dərinləşmə):* **Marşrut Sıralaması Tələləri (Static before Dynamic) və `express.Router` Modulyarlaşdırılması:** Route matching order (`/users/profile` before `/users/:id`) and mounting modular routers.
+- **`topic-19-3` (Middleware Anlayışı, Konveyer Mexanizmi və In-Memory Tələlər):**
+  - *Zone 1 (Core):* The conveyor belt analogy, `(req, res, next)`, why forgetting `next()` hangs requests, `app.use(express.json())`.
+  - *Zone 2 (🔬 Dərinləşmə):* **"Cannot set headers after they are sent" Xətası, Auth Guards və Məlumat Qarışması (Request Contamination):** Ensuring single-return responses, custom auth guard middleware, and why global variables leak between concurrent requests in single-threaded Node.js.
+
+---
+
+### ════════════════════════════════════════════════════════════
+### SECTION 20: RESTful API Arxitekturası və CRUD Əməliyyatları (`data_section_20.js`)
+### ════════════════════════════════════════════════════════════
+- **`topic-20-1` (REST API Dizayn Prinsipləri, Resurs Nomenklaturası və 204 No Content):**
+  - *Zone 1 (Core):* Plural nouns over verbs (`/api/mehsullar`), kebab-case URLs, statelessness, proper empty body response with `204 No Content`.
+  - *Zone 2 (🔬 Dərinləşmə):* **Alt Resurslar (Nested Sub-resources) və HATEOAS Konvensiyası:** Designing hierarchical endpoints (`/users/:userId/orders`) and hypermedia links (`_links`).
+- **`topic-20-2` (Tam Praktiki CRUD API İcrası və MVC Arxitekturası):**
+  - *Zone 1 (Core):* Standard REST endpoints matrix (POST, GET, PUT/PATCH, DELETE), Model-View-Controller role separation.
+  - *Zone 2 (🔬 Dərinləşmə):* **Kütləvi Mənimsətmə Zəifliyi (Mass Assignment) və BOLA/IDOR Müdafiəsi:** Whitelisting request body fields against illegal privilege escalation and verifying ownership of resources.
+- **`topic-20-3` (Mərkəzləşdirilmiş Xəta İdarəetməsi və Fərdi Xəta Sinifləri):**
+  - *Zone 1 (Core):* Why per-route try-catches are anti-patterns, the 4-argument Express error signature `(err, req, res, next)`.
+  - *Zone 2 (🔬 Dərinləşmə):* **`AppError` Sinifi və Asinxron Xətaların Ötürülməsi:** Subclassing operational errors, route placement gotcha (must be declared last), and forwarding async exceptions via `next(err)`.
+
+---
+
+### ════════════════════════════════════════════════════════════
+### SECTION 21: Verilənlər Bazası Əlaqəsi və Veb Təhlükəsizliyi (`data_section_21.js`)
+### ════════════════════════════════════════════════════════════
+- **`topic-21-1` (Relyasion Baza Əsasları, DDL, Açarlar və Əlaqələr):**
+  - *Zone 1 (Core):* Why in-memory variables fail on reboot, SQL tables, DDL (`CREATE TABLE`), Primary Key vs Foreign Key, ACID transactions, the catastrophic danger of missing `WHERE` in `DELETE`/`UPDATE`.
+  - *Zone 2 (🔬 Dərinləşmə):* **SQL vs NoSQL Memarlıq Seçimi və Tranzaksiya Rollback Qaydaları:** ACID vs BASE tradeoffs, wrapping multi-step bank transfers in `BEGIN`, `COMMIT`, and `ROLLBACK` inside `catch`.
+- **`topic-21-2` (Əlaqə Hovuzu, db.js Modulu və .env Məxfiliyi):**
+  - *Zone 1 (Core):* Taxi stand analogy for Connection Pooling, singleton `db.js`, client leasing and releasing (`client.release()` in `finally`), `.env` secrets.
+  - *Zone 2 (🔬 Dərinləşmə):* **Client Sızması (Connection Leak) və Multiple-Pool Tələləri:** Diagnosing pool exhaustion, never creating `new Pool()` inside route handlers, keeping `.env` out of version control.
+- **`topic-21-3` (SQL Injection Müdafiəsi, Şifrələrin Həşlənməsi və CORS):**
+  - *Zone 1 (Core):* SQL Injection danger via string interpolation, Prepared Statements (`$1, $2`), password hashing with `bcrypt` (`hash`, `compare`), CORS Same-Origin Policy.
+  - *Zone 2 (🔬 Dərinləşmə):* **CORS Preflight (OPTIONS) Sorğuları, Wildcard (*) vs Credentials Tələsi və Helmet Təhlükəsizlik Qalxanı:** Handling preflight status `204`, why `origin: '*'` cannot be used with `credentials: true`, hiding `X-Powered-By`, and rate limiting.
+
+---
+
+## DELIVERABLE INSTRUCTIONS
+Refactor `data_section_18.js`, `data_section_19.js`, `data_section_20.js`, and `data_section_21.js`:
+1. Preserve every existing topic, exercise, and bug-fix structure.
+2. Cleanly format the theory with the Two-Tier architecture: Zone 1 for beginners, Zone 2 with `<h4>🔬 Dərinləşmə: [Konsept Adı]</h4>` for advanced and exam topics.
+3. Validate that all existing automated tests pass with 100% success.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-01T01:03:24+04:00.
+
+The user has mentioned some items in the form @[ITEM]. Here is extra information about the items that were mentioned by the user, in the order that they appear:
+
+/browser is a [Slash Command]:
+<SUBAGENT>The user has explicitly added the `browser` subagent. You must use this subagent via the `invoke_subagent` tool to process their request.</SUBAGENT>
+</ADDITIONAL_METADATA>

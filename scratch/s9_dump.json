@@ -1,0 +1,136 @@
+{
+  "id": "section-9",
+  "title": "Bölmə 9: String Metodları və Template Literals (`${}`)",
+  "icon": "📝",
+  "topics": [
+    {
+      "id": "topic-9-1",
+      "title": "Template Literals (Şablon Sətirlər: `${}`)",
+      "theory": "<h3>📝 Template Literals Nədir?</h3>\n<p>Ənənəvi JavaScript-də mətni və dəyişənləri birləşdirmək üçün <code>+</code> işarəsi ilə uzun və qarışıq sətirlər yazılırdı:<br>\n<code>\"Salam, \" + ad + \". Sizin \" + xal + \" balınız var.\"</code></p>\n\n<p>ES6 ilə gələn <strong>Template Literals (Şablon Sətirlər)</strong> bu prosesi olduqca asan və səliqəli etdi. Adi dırnaqlar deyil, <strong>Backtick (<code>` `</code>)</strong> işarəsi istifadə olunur və dəyişənlər <code>${dəyişən}</code> formasında birbaşa mətnin daxilinə yazılır:</p>\n\n<pre><code>const ad = \"Orxan\";\nconst xal = 95;\nconsole.log(`Salam, ${ad}. Sizin ${xal} balınız var.`);</code></pre>\n\n<div class=\"tip-box\">\n  <strong>✨ Template Literals Üstünlükləri:</strong>\n  <ul>\n    <li><strong>Dinamik İfadə İcrası:</strong> <code>${ }</code> daxilində təkcə dəyişən yox, riyazi hesablamalar da aparmaq olar: <code>`Cəm: ${5 + 10}`</code> -> <code>\"Cəm: 15\"</code>.</li>\n    <li><strong>Çoxsətirli Mətnlər:</strong> Heç bir <code>\\n</code> simvolu qoymadan birbaşa sətir keçidi edə bilərsiniz.</li>\n  </ul>\n</div>",
+      "codeExamples": [
+        {
+          "title": "Template Literals Nümunəsi",
+          "code": "const mehsul = \"Telefon\";\nconst qiymet = 800;\nconst edv = 0.18;\n\nconsole.log(`Məhsul: ${mehsul}, Yekun: ${qiymet + (qiymet * edv)} AZN`);",
+          "output": "Məhsul: Telefon, Yekun: 944 AZN"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "ex-9-1-1",
+          "title": "Dinamik Mətn Şablonunun Qurulması",
+          "instruction": "İstifadəçi adını dinamik şablon daxilinə yerləşdirərək konsola dəqiq olaraq <code>Xoş gəldin, Sabir!</code> mətnini çıxarın.",
+          "starterCode": "const istifadeci = \"Sabir\";\n// Kodunuzu buraya yazın\n",
+          "expectedOutput": "Xoş gəldin, Sabir!",
+          "hint": "Dəyişənləri mətn daxilində birləşdirmək üçün backtick (`) və ${dəyişən} sintaksisindən istifadə edin.",
+          "solutionCode": "const istifadeci = \"Sabir\";\nconsole.log(`Xoş gəldin, ${istifadeci}!`);"
+        },
+        {
+          "id": "ex-9-1-2",
+          "title": "Şablon Daxilində Hesablama Nəticəsi",
+          "instruction": "İki ədədin riyazi cəmini şablon ifadəsi daxilində birbaşa hesablayaraq konsol ekranında <code>Cəm: 40</code> formatında əks etdirin.",
+          "starterCode": "const a = 15;\nconst b = 25;\n// Kodunuzu buraya yazın\n",
+          "expectedOutput": "Cəm: 40",
+          "hint": "Template literal daxilində ${a + b} yazdıqda JavaScript ifadəni qiymətləndirib nəticəni mətnə daxil edir.",
+          "solutionCode": "const a = 15;\nconst b = 25;\nconsole.log(`Cəm: ${a + b}`);"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bug-9-1-1",
+          "title": "Sətir İnterpolasiyası Xətası",
+          "instruction": "Dinamik salamlaşma mesajı 'Salam, Əli!' olmalıdır, lakin sətir interpolasiyası baş vermir və şablon dəyişəni adi hərfi mətn kimi çıxır. Sətir sintaksisini araşdıraraq dəyişənin qiymətini mətnə daxil edin.",
+          "buggyCode": "let ad = \"Rauf\";\nconsole.log(\"Salam, ${ad}!\");",
+          "correctCode": "let ad = \"Rauf\";\nconsole.log(`Salam, ${ad}!`);",
+          "correctOutput": "Salam, Rauf!",
+          "explanation": "${} interpolyasiyasının işləməsi üçün mətn mütləq backtick (`` ` ``) daxilində yazılmalıdır."
+        }
+      ]
+    },
+    {
+      "id": "topic-9-2",
+      "title": "Əsas String Metodları: toUpperCase, toLowerCase, trim, includes",
+      "theory": "<h3>🔤 Mətn Üzərində Əsas Əməliyyatlar</h3>\n<p>Mətnləri emal etmək və təmizləmək üçün ən çox istifadə olunan metodlar:</p>\n\n<ul>\n  <li><strong><code>toUpperCase()</code>:</strong> Bütün hərfləri BÖYÜK hərflərə çevirir:<br>\n  <code>\"salam\".toUpperCase() -> \"SALAM\"</code></li>\n  <li><strong><code>toLowerCase()</code>:</strong> Bütün hərfləri kiçik hərflərə çevirir:<br>\n  <code>\"BAKI\".toLowerCase() -> \"bakı\"</code></li>\n  <li><strong><code>trim()</code>:</strong> Mətnin başlanğıcında və sonundakı lazımsız boşluqları təmizləyir:<br>\n  <code>\"  admin  \".trim() -> \"admin\"</code></li>\n  <li><strong><code>includes(söz)</code>:</strong> Mətndə axtarılan sözün olub-olmadığını yoxlayır (böyük-kiçik hrfə həssasdır):<br>\n  <code>\"JavaScript öyrənirəm\".includes(\"Script\") -> true</code></li>\n  <li><strong><code>startsWith()</code> və <code>endsWith()</code>:</strong> Mətnin müəyyən simvollarla başlayıb-bitdiyini yoxlayır.</li>\n</ul>",
+      "codeExamples": [
+        {
+          "title": "String Metodlarının Zəncirvari Tətbiqi",
+          "code": "const daxilOlan = \"   ELVIN@GMAIL.COM   \";\nconst temizlenmis = daxilOlan.trim().toLowerCase();\n\nconsole.log(temizlenmis);\nconsole.log(temizlenmis.includes(\"@\"));",
+          "output": "elvin@gmail.com\ntrue"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "ex-9-2-1",
+          "title": "Böyük Hərf Registrinə Transformasiya",
+          "instruction": "Kiçik hərflərlə yazılmış proqramlaşdırma dili adını tamamilə böyük hərflərə çevirərək konsol ekranına ötürün.",
+          "starterCode": "const proqram = \"javascript\";\n// Kodunuzu buraya yazın\n",
+          "expectedOutput": "JAVASCRIPT",
+          "hint": "Mətnin bütün simvollarını böyük hərfə çevirmək üçün toUpperCase() metodundan istifadə olunur.",
+          "solutionCode": "const proqram = \"javascript\";\nconsole.log(proqram.toUpperCase());"
+        },
+        {
+          "id": "ex-9-2-2",
+          "title": "Kənar Boşluqların Təmizlənməsi",
+          "instruction": "İstifadəçi tərəfindən daxil edilən və ətrafında artıq boşluqlar olan mətn sətirini səliqəyə salaraq təmizlənmiş formanı konsola çıxarın.",
+          "starterCode": "const ad = \"  Nərgiz  \";\n// Kodunuzu buraya yazın\n",
+          "expectedOutput": "Nərgiz",
+          "hint": "Mətnin başlanğıcındakı və sonundakı lazımsız boşluqları silmək üçün trim() metodundan istifadə edin.",
+          "solutionCode": "const ad = \"  Nərgiz  \";\nconsole.log(ad.trim());"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bug-9-2-1",
+          "title": "Sətir Metodunun Çağırış Xətası",
+          "instruction": "Mətn böyük hərflərlə 'HELLO' olaraq konsola çıxarılmalıdır, lakin metod düzgün çağırılmadığı üçün konsola funksiyanın öz tərifi çıxır. Kodu araşdıraraq metodun icrasını təmin edin.",
+          "buggyCode": "let str = \"hello\";\nconsole.log(str.toUpperCase);",
+          "correctCode": "let str = \"hello\";\nconsole.log(str.toUpperCase());",
+          "correctOutput": "HELLO",
+          "explanation": "Metodlar funksiya olduğu üçün onları icra etmək məqsədilə mütləq mötərizələrlə çağırılmalıdır: str.toUpperCase()."
+        }
+      ]
+    },
+    {
+      "id": "topic-9-3",
+      "title": "Mətnin Bölünməsi və Əvəzlənməsi: split(), replace(), slice()",
+      "theory": "<h3>✂️ Mətni Hissələrə Ayırmaq və Dəyişdirmək</h3>\n<p>Mətnləri manipulyasiya etmək üçün ən çox istifadə olunan 3 güclü metod:</p>\n\n<ul>\n  <li><strong><code>split(ayırıcı)</code>:</strong> Mətni göstərilən ayırıcıya görə bölür və nəticəni <strong>massiv (array)</strong> olaraq qaytarır:<br>\n  <code>\"alma,armud,nar\".split(\",\") -> [\"alma\", \"armud\", \"nar\"]</code><br>\n  <code>\"Salam Dünya\".split(\" \") -> [\"Salam\", \"Dünya\"]</code></li>\n  <li><strong><code>replace(köhnə, yeni)</code>:</strong> Mətndə tapılan ilk uyğun sözü yeni sözlə əvəz edir:<br>\n  <code>\"Salam Python\".replace(\"Python\", \"JS\") -> \"Salam JS\"</code></li>\n  <li><strong><code>slice(start, end)</code>:</strong> Mətnin müəyyən indekslər arasındakı hissəsini kəsib götürür:<br>\n  <code>\"JavaScript\".slice(0, 4) -> \"Java\"</code></li>\n</ul>",
+      "codeExamples": [
+        {
+          "title": "split və replace Nümunəsi",
+          "code": "const metn = \"alma armud heyva\";\nconst massiv = metn.split(\" \");\nconsole.log(massiv);\n\nconst yenilendi = \"Mən Python sevirəm\".replace(\"Python\", \"JavaScript\");\nconsole.log(yenilendi);",
+          "output": "[\n  \"alma\",\n  \"armud\",\n  \"heyva\"\n]\nMən JavaScript sevirəm"
+        }
+      ],
+      "exercises": [
+        {
+          "id": "ex-9-3-1",
+          "title": "Cümlənin Komponentlərə Ayrılması",
+          "instruction": "Boşluqlarla ayrılmış texnologiyalar mətnini ayrı-ayrı elementlərdən ibarət massiv şəklinə salaraq konsolda əks etdirin.",
+          "starterCode": "const cumle = \"HTML CSS JavaScript\";\n// Kodunuzu buraya yazın\n",
+          "expectedOutput": "[\n  \"HTML\",\n  \"CSS\",\n  \"JavaScript\"\n]",
+          "hint": "Mətni müəyyən ayırıcı simvola görə bölərək massiv əldə etmək üçün split(ayirici) metodundan istifadə olunur.",
+          "solutionCode": "const cumle = \"HTML CSS JavaScript\";\nconsole.log(cumle.split(\" \"));"
+        },
+        {
+          "id": "ex-9-3-2",
+          "title": "Hədəf Sözün Əvəzlənməsi",
+          "instruction": "Mətn sətirindəki \"Python\" sözünü \"JavaScript\" sözü ilə əvəzləyərək yenilənmiş salam mesajını konsola çıxarın.",
+          "starterCode": "const mesaj = \"Salam, Python!\";\n// Kodunuzu buraya yazın\n",
+          "expectedOutput": "Salam, JavaScript!",
+          "hint": "Mətndəki sözü başqa bir sözlə dəyişmək üçün replace(kohnesi, yenisi) metodundan istifadə edilir.",
+          "solutionCode": "const mesaj = \"Salam, Python!\";\nconsole.log(mesaj.replace(\"Python\", \"JavaScript\"));"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bug-9-3-1",
+          "title": "split() Ayırıcı Parametr Xətası",
+          "instruction": "Aşağıdakı kodda vergüllə ayrılmış mətni bölmək üçün <code>split()</code>-ə parametr verilməyib və tək elementli massiv yaranıb. <code>split(\",\")</code> yazaraq 3 elementli massiv əldə edin.",
+          "buggyCode": "const meyveler = \"alma,armud,nar\";\nconsole.log(meyveler.split());",
+          "correctCode": "const meyveler = \"alma,armud,nar\";\nconsole.log(meyveler.split(\",\"));",
+          "correctOutput": "[\n  \"alma\",\n  \"armud\",\n  \"nar\"\n]",
+          "explanation": "split() metodu ilə mətni düzgün parçalamaq üçün mütləq ayırıcı simvol (məsələn, vergül ',') ötürülməlidir."
+        }
+      ]
+    }
+  ]
+}
