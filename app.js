@@ -1204,8 +1204,48 @@
         if (fillEl) fillEl.style.width = `${percentage}%`;
     }
 
+    // ---- Global Navigation & Overlay Cleanup ----
+    function closeAllOverlaysAndDrawers() {
+        // 1. Mobile Navigation Drawer & Backdrop
+        const mobileDrawer = document.getElementById('mobile-nav-drawer');
+        const mobileDrawerOverlay = document.getElementById('mobile-drawer-overlay');
+        if (mobileDrawer) mobileDrawer.classList.remove('open');
+        if (mobileDrawerOverlay) {
+            mobileDrawerOverlay.classList.remove('open');
+            mobileDrawerOverlay.style.display = 'none';
+        }
+
+        // 2. Mobile Curriculum Sidebar & Backdrop
+        closeMobileSidebar();
+
+        // 3. Reset Hamburger / Menu toggles
+        const toggles = document.querySelectorAll('.mobile-menu-toggle, #mobile-menu-toggle, #menu-toggle');
+        toggles.forEach(t => t.classList.remove('active'));
+
+        // 4. Force-close any open HTML5 <dialog> elements
+        document.querySelectorAll('dialog[open]').forEach(dialog => {
+            try {
+                dialog.close();
+            } catch (e) {
+                dialog.removeAttribute('open');
+            }
+        });
+
+        // 5. Force-remove active/open state from any lingering overlays, backdrops, and modal cards
+        document.querySelectorAll('.sidebar-overlay.active, .mobile-drawer-overlay.open, .modal.active, .modal.show, .overlay.active, .overlay.open').forEach(el => {
+            el.classList.remove('active', 'open', 'show');
+        });
+
+        // 6. Clean up any stale lock classes and inline overflow on <body> and <html>
+        document.body.classList.remove('modal-open', 'overflow-hidden', 'menu-open', 'drawer-open');
+        document.documentElement.classList.remove('modal-open', 'overflow-hidden', 'menu-open', 'drawer-open');
+        document.body.style.removeProperty('overflow');
+        document.documentElement.style.removeProperty('overflow');
+    }
+
     // ---- View Management ----
     function showView(view) {
+        closeAllOverlaysAndDrawers();
         if (view === 'welcome') view = 'learn';
         if (view === 'sandbox') view = 'playground';
         state.currentView = view;
@@ -5618,7 +5658,10 @@ self.onmessage = async function(e) {
         const toggle = document.getElementById('mobile-menu-toggle') || document.getElementById('menu-toggle');
         
         if (sidebar) sidebar.classList.remove('open');
-        if (overlay) overlay.classList.remove('active');
+        if (overlay) {
+            overlay.classList.remove('active');
+            overlay.style.display = 'none';
+        }
         if (toggle) toggle.classList.remove('active');
     }
 
@@ -9604,58 +9647,72 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         const mobileDrawerOverlay = document.getElementById('mobile-drawer-overlay');
         const mobileDrawerClose = document.getElementById('mobile-drawer-close');
 
-        const openMobileDrawer = () => {
+        const openMobileDrawer = (e) => {
+            if (e && e.stopPropagation) e.stopPropagation();
+            closeMobileSidebar();
             if (mobileDrawer) mobileDrawer.classList.add('open');
-            if (mobileDrawerOverlay) mobileDrawerOverlay.classList.add('open');
+            if (mobileDrawerOverlay) {
+                mobileDrawerOverlay.style.display = 'block';
+                mobileDrawerOverlay.classList.add('open');
+            }
+            if (mobileMenuToggle) mobileMenuToggle.classList.add('active');
         };
 
-        const closeMobileDrawer = () => {
-            if (mobileDrawer) mobileDrawer.classList.remove('open');
-            if (mobileDrawerOverlay) mobileDrawerOverlay.classList.remove('open');
+        const closeMobileDrawer = (e) => {
+            if (e && e.stopPropagation) e.stopPropagation();
+            closeAllOverlaysAndDrawers();
         };
 
-        if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', openMobileDrawer);
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+                    closeMobileDrawer(e);
+                } else {
+                    openMobileDrawer(e);
+                }
+            });
+        }
         if (mobileDrawerClose) mobileDrawerClose.addEventListener('click', closeMobileDrawer);
         if (mobileDrawerOverlay) mobileDrawerOverlay.addEventListener('click', closeMobileDrawer);
 
         document.querySelectorAll('.mobile-nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 const view = item.dataset.view;
+                closeAllOverlaysAndDrawers();
                 if (view) showView(view);
-                closeMobileDrawer();
             });
         });
 
         const mobileTasksBtn = document.getElementById('mobile-tasks-btn');
         if (mobileTasksBtn) {
             mobileTasksBtn.addEventListener('click', () => {
+                closeAllOverlaysAndDrawers();
                 showView('tasks-panel');
-                closeMobileDrawer();
             });
         }
 
         const mobileErrorsBtn = document.getElementById('mobile-errors-btn');
         if (mobileErrorsBtn) {
             mobileErrorsBtn.addEventListener('click', () => {
+                closeAllOverlaysAndDrawers();
                 showView('errors-panel');
-                closeMobileDrawer();
             });
         }
 
         const mobileResetBtn = document.getElementById('mobile-reset-btn');
         if (mobileResetBtn) {
             mobileResetBtn.addEventListener('click', () => {
+                closeAllOverlaysAndDrawers();
                 resetProgress();
-                closeMobileDrawer();
             });
         }
 
         // Initialize Live Terminal in Hero
         initHeroTerminal();
 
-        // Mobile sidebar
-        const menuToggle = document.getElementById('mobile-menu-toggle') || document.getElementById('menu-toggle');
-        if (menuToggle) menuToggle.addEventListener('click', toggleMobileSidebar);
+        // Mobile sidebar (only for dedicated sidebar-toggle button, avoiding collision with mobile-menu-toggle)
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        if (sidebarToggle) sidebarToggle.addEventListener('click', toggleMobileSidebar);
         const sidebarOverlay = document.getElementById('sidebar-overlay');
         if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeMobileSidebar);
 

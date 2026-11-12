@@ -822,14 +822,19 @@ body::after {
     inset: 0;
     background: rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 150;
     opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
     transition: opacity var(--transition-normal);
 }
 
 .sidebar-overlay.active {
     display: block;
     opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
 }
 
 /* ---- Main Content & Viewport ---- */
@@ -8336,12 +8341,31 @@ body.view-topic .main-content {
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 490;
     display: none;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.25s ease;
 }
 
 .mobile-drawer-overlay.open {
     display: block;
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+/* Fail-safe Inactive Overlay & Backdrop Reset */
+.sidebar-overlay:not(.active),
+.mobile-drawer-overlay:not(.open),
+.overlay:not(.active):not(.open),
+.modal-backdrop:not(.active):not(.show) {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
 }
 
 
