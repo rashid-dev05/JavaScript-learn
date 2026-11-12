@@ -1241,6 +1241,10 @@
         document.documentElement.classList.remove('modal-open', 'overflow-hidden', 'menu-open', 'drawer-open');
         document.body.style.removeProperty('overflow');
         document.documentElement.style.removeProperty('overflow');
+
+        // 7. Hide mobile floating JavaScript keyboard bar
+        hideMobileKeyboardBar();
+        activeCodeMirror = null;
     }
 
     // ---- View Management ----
@@ -1578,6 +1582,7 @@
                         debouncedSaveProgress();
                     });
                     state.editors[exId] = cm;
+                    registerCodeMirrorForMobileToolbar(cm);
                     setTimeout(() => cm.refresh(), 50);
                 }
             });
@@ -1685,6 +1690,7 @@
                         debouncedSaveProgress();
                     });
                     state.editors[`bf-${bfId}`] = cm;
+                    registerCodeMirrorForMobileToolbar(cm);
                     setTimeout(() => cm.refresh(), 50);
                 }
             });
@@ -4642,6 +4648,7 @@ self.onmessage = async function(e) {
                 'Tab': (cm) => cm.replaceSelection('  ', 'end'),
             }
         });
+        registerCodeMirrorForMobileToolbar(state.sandboxEditor);
     }
 
     async function runPlayground() {
@@ -4914,6 +4921,7 @@ self.onmessage = async function(e) {
                         });
 
                         state.panelEditors[task.id] = cm;
+                        registerCodeMirrorForMobileToolbar(cm);
                         setTimeout(() => cm.refresh(), 50);
                     }
                 });
@@ -5050,6 +5058,7 @@ self.onmessage = async function(e) {
         });
 
         state.panelEditors[bugId] = cm;
+        registerCodeMirrorForMobileToolbar(cm);
         requestAnimationFrame(() => {
             cm.refresh();
         });
@@ -6150,6 +6159,7 @@ self.onmessage = async function(e) {
                 'Tab': (cm) => cm.replaceSelection('  ', 'end')
             }
         });
+        registerCodeMirrorForMobileToolbar(examState.editorInstance);
 
         requestAnimationFrame(() => {
             setTimeout(() => examState.editorInstance && examState.editorInstance.refresh(), 50);
@@ -7358,6 +7368,7 @@ self.onmessage = async function(e) {
 
         if (hourglassState.editorInstance) {
             window.hourglassEditor = hourglassState.editorInstance;
+        registerCodeMirrorForMobileToolbar(hourglassState.editorInstance);
             requestAnimationFrame(() => {
                 setTimeout(() => hourglassState.editorInstance && hourglassState.editorInstance.refresh(), 50);
             });
@@ -7384,6 +7395,7 @@ self.onmessage = async function(e) {
         });
 
         window.hourglassEditor = hourglassState.editorInstance;
+        registerCodeMirrorForMobileToolbar(hourglassState.editorInstance);
 
         hourglassState.editorInstance.on('change', () => {
             if (!hourglassState.inProgress) return;
@@ -9146,6 +9158,7 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
                 tabSize: 2,
                 lineWrapping: true
             });
+            registerCodeMirrorForMobileToolbar(ecosystemEditor);
         }
         if (ecosystemEditor) {
             ecosystemEditor.setValue(topic.interactivePractice.starterCode);
@@ -9989,7 +10002,12 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         // Header Reset Progress button
         const headerResetBtn = document.getElementById('header-reset-progress-btn');
         if (headerResetBtn) {
-            headerResetBtn.addEventListener('click', resetAllProgress);
+            headerResetBtn.addEventListener('click', (e) => {
+                if (e && e.currentTarget && typeof e.currentTarget.blur === 'function') {
+                    e.currentTarget.blur();
+                }
+                resetAllProgress();
+            });
         }
 
         // Tab buttons
@@ -10071,6 +10089,171 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         initSidebarAutoCollapse();
     }
 
+    // =========================================================================
+    // MOBILE FLOATING JS SYMBOL ACCESSORY BAR
+    // (Fokuslanmış CodeMirror redaktoru üçün virtual klaviatura üzərində panel)
+    // =========================================================================
+    let activeCodeMirror = null;
+    let mobileToolbarBlurTimeout = null;
+    const registeredCodeMirrors = new WeakSet();
+
+    function updateMobileKeyboardBarPosition() {
+        const bar = document.getElementById('mobile-js-keyboard-bar');
+        if (!bar || bar.style.display === 'none' || window.innerWidth > 768) return;
+
+        const vv = window.visualViewport;
+        if (vv) {
+            const barHeight = bar.offsetHeight || 48;
+            // Dock flush directly above virtual keyboard using visualViewport
+            const topPos = Math.round(vv.offsetTop + vv.height - barHeight);
+            bar.style.top = `${Math.max(0, topPos)}px`;
+            bar.style.bottom = 'auto';
+        } else {
+            bar.style.top = 'auto';
+            bar.style.bottom = '0px';
+        }
+    }
+
+    function showMobileKeyboardBar() {
+        if (window.innerWidth > 768) return;
+        const bar = document.getElementById('mobile-js-keyboard-bar');
+        if (!bar) return;
+        bar.style.display = 'flex';
+        updateMobileKeyboardBarPosition();
+    }
+
+    function hideMobileKeyboardBar() {
+        const bar = document.getElementById('mobile-js-keyboard-bar');
+        if (!bar) return;
+        bar.style.display = 'none';
+    }
+
+    function handleCodeMirrorFocus(cm) {
+        if (mobileToolbarBlurTimeout) {
+            clearTimeout(mobileToolbarBlurTimeout);
+            mobileToolbarBlurTimeout = null;
+        }
+        activeCodeMirror = cm;
+        showMobileKeyboardBar();
+    }
+
+    function handleCodeMirrorBlur(cm) {
+        if (activeCodeMirror === cm) {
+            mobileToolbarBlurTimeout = setTimeout(() => {
+                if (activeCodeMirror === cm) {
+                    activeCodeMirror = null;
+                    hideMobileKeyboardBar();
+                }
+            }, 180);
+        }
+    }
+
+    function registerCodeMirrorForMobileToolbar(cm) {
+        if (!cm || typeof cm.on !== 'function' || registeredCodeMirrors.has(cm)) return;
+        registeredCodeMirrors.add(cm);
+
+        cm.on('focus', () => handleCodeMirrorFocus(cm));
+        cm.on('blur', () => handleCodeMirrorBlur(cm));
+    }
+
+    function initMobileKeyboardBar() {
+        const bar = document.getElementById('mobile-js-keyboard-bar');
+        if (!bar) return;
+
+        // 1. Hook CodeMirror init mechanism if available globally
+        if (typeof CodeMirror !== 'undefined' && typeof CodeMirror.defineInitHook === 'function') {
+            CodeMirror.defineInitHook((cm) => {
+                registerCodeMirrorForMobileToolbar(cm);
+            });
+        }
+
+        // 2. Global focus listener via event delegation to catch any CodeMirror instance
+        document.addEventListener('focusin', (e) => {
+            const cmEl = e.target && e.target.closest && e.target.closest('.CodeMirror');
+            if (cmEl && cmEl.CodeMirror) {
+                registerCodeMirrorForMobileToolbar(cmEl.CodeMirror);
+                handleCodeMirrorFocus(cmEl.CodeMirror);
+            }
+        }, true);
+
+        // 3. Track visualViewport resize and scroll on touch/mobile devices
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', updateMobileKeyboardBarPosition);
+            window.visualViewport.addEventListener('scroll', updateMobileKeyboardBarPosition);
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                hideMobileKeyboardBar();
+            } else if (activeCodeMirror) {
+                showMobileKeyboardBar();
+            }
+        });
+
+        window.addEventListener('scroll', updateMobileKeyboardBarPosition, { passive: true });
+
+        // 4. Non-blurring symbol button interactions
+        const symbolBtns = bar.querySelectorAll('.mobile-js-btn');
+        let lastInsertTime = 0;
+
+        function insertSymbol(symbol) {
+            if (!activeCodeMirror) return;
+            const now = Date.now();
+            if (now - lastInsertTime < 120) return;
+            lastInsertTime = now;
+
+            try {
+                activeCodeMirror.replaceSelection(symbol, 'end');
+                activeCodeMirror.focus();
+                if (navigator.vibrate) {
+                    try { navigator.vibrate(12); } catch (_) {}
+                }
+            } catch (err) {
+                console.warn('[MobileToolbar] Simvol daxil edilərkən xəta:', err);
+            }
+        }
+
+        symbolBtns.forEach(btn => {
+            const symbol = btn.getAttribute('data-symbol');
+            if (!symbol) return;
+
+            let touchHandled = false;
+
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchHandled = true;
+                if (mobileToolbarBlurTimeout) {
+                    clearTimeout(mobileToolbarBlurTimeout);
+                    mobileToolbarBlurTimeout = null;
+                }
+                insertSymbol(symbol);
+            }, { passive: false });
+
+            btn.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                if (touchHandled) {
+                    touchHandled = false;
+                    return;
+                }
+                if (mobileToolbarBlurTimeout) {
+                    clearTimeout(mobileToolbarBlurTimeout);
+                    mobileToolbarBlurTimeout = null;
+                }
+                insertSymbol(symbol);
+            });
+        });
+
+        // 5. Register any already existing CodeMirror instances in memory
+        if (state.sandboxEditor) registerCodeMirrorForMobileToolbar(state.sandboxEditor);
+        if (typeof examState !== 'undefined' && examState.editorInstance) registerCodeMirrorForMobileToolbar(examState.editorInstance);
+        if (typeof hourglassState !== 'undefined' && hourglassState.editorInstance) registerCodeMirrorForMobileToolbar(hourglassState.editorInstance);
+        if (typeof window !== 'undefined' && window.hourglassEditor) registerCodeMirrorForMobileToolbar(window.hourglassEditor);
+        if (typeof ecosystemEditor !== 'undefined' && ecosystemEditor) registerCodeMirrorForMobileToolbar(ecosystemEditor);
+        if (state.panelEditors) {
+            Object.values(state.panelEditors).forEach(registerCodeMirrorForMobileToolbar);
+        }
+    }
+
     // ---- Initialization ----
     async function init() {
         // Initialize Modern Asynchronous Storage Engine (IndexedDB + Migration)
@@ -10100,6 +10283,9 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
 
         // Setup event listeners
         setupEventListeners();
+
+        // Initialize Mobile JS Keyboard Toolbar
+        initMobileKeyboardBar();
 
         // Load JavaScript execution environment
         await initJavaScriptEngine();

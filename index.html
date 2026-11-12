@@ -172,10 +172,6 @@
                         <!-- Hero Section (Screenshot 1 Inspiration) -->
                         <section class="hero-section">
                             <div class="hero-content">
-                                <div class="hero-badge-pill">
-                                    <span class="pulse-emerald-dot"></span>
-                                    <span>JAVASCRIPT ES2026 · BRAUZERİNİZDƏ İŞLƏYİR</span>
-                                </div>
                                 <h1 class="hero-title">
                                     JavaScript-i mənimsə.<br>
                                     <span class="gradient-text">Hər dəfə bir real sətir ilə.</span>
@@ -694,7 +690,7 @@
                         <!-- Dashboard Header Card -->
                         <div class="progress-hero-card">
                             <div class="progress-hero-left">
-                                <span class="rank-pill" id="user-rank-pill">Level 1: JavaScript Çırağı</span>
+                                <span class="rank-pill" id="user-rank-pill">Level 1: JavaScript Çırağı 🐣</span>
                                 <h2>Nailiyyətlər və İrəliləyiş Mərkəzi</h2>
                                 <p>Sizin bootcamp boyu qət etdiyiniz yol, topladığınız təcrübə xalları (XP) və qazandığınız nişanlar.</p>
                             </div>
@@ -763,8 +759,10 @@
                                         <span class="h-stat-lbl">Aktiv Günlər</span>
                                     </div>
                                 </div>
-                                <div class="heatmap-grid" id="heatmap-grid">
-                                    <!-- 12-week GitHub style grid populated dynamically -->
+                                <div class="heatmap-wrapper">
+                                    <div class="heatmap-grid" id="heatmap-grid">
+                                        <!-- 12-week GitHub style grid populated dynamically -->
+                                    </div>
                                 </div>
                                 <div class="heatmap-legend">
                                     <span>Az</span>
@@ -1458,6 +1456,43 @@
 
     <!-- Toast Notification -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- ============================================
+         MOBILE FLOATING JS SYMBOL ACCESSORY BAR
+         (CodeMirror redaktorları üçün virtual klaviatura üzərində sürətli simvol paneli)
+         ============================================ -->
+    <div id="mobile-js-keyboard-bar" class="mobile-js-keyboard-bar" aria-label="JavaScript Simvol Paneli" style="display: none;">
+        <div class="mobile-js-bar-track">
+            <!-- Group 1 (Blocks & Calls — 4 buttons): { , } , ( , ) -->
+            <div class="mobile-js-group" data-group="blocks">
+                <button type="button" class="mobile-js-btn" data-symbol="{" aria-label="Açılan fiqurlu mötərizə">{</button>
+                <button type="button" class="mobile-js-btn" data-symbol="}" aria-label="Bağlanan fiqurlu mötərizə">}</button>
+                <button type="button" class="mobile-js-btn" data-symbol="(" aria-label="Açılan dairəvi mötərizə">(</button>
+                <button type="button" class="mobile-js-btn" data-symbol=")" aria-label="Bağlanan dairəvi mötərizə">)</button>
+            </div>
+            <!-- Group 2 (Arrays & Strings — 4 buttons): [ , ] , " , ' -->
+            <div class="mobile-js-group" data-group="arrays-strings">
+                <button type="button" class="mobile-js-btn" data-symbol="[" aria-label="Açılan kvadrat mötərizə">[</button>
+                <button type="button" class="mobile-js-btn" data-symbol="]" aria-label="Bağlanan kvadrat mötərizə">]</button>
+                <button type="button" class="mobile-js-btn" data-symbol='"' aria-label="Cüt dırnaq">&quot;</button>
+                <button type="button" class="mobile-js-btn" data-symbol="'" aria-label="Tək dırnaq">&#39;</button>
+            </div>
+            <!-- Group 3 (Statements & ES6 — 4 buttons): ; , = , => , ` -->
+            <div class="mobile-js-group" data-group="statements-es6">
+                <button type="button" class="mobile-js-btn" data-symbol=";" aria-label="Nöqtəli vergül">;</button>
+                <button type="button" class="mobile-js-btn" data-symbol="=" aria-label="Bərabər">=</button>
+                <button type="button" class="mobile-js-btn" data-symbol="=&gt;" aria-label="Ox funksiyası">=&gt;</button>
+                <button type="button" class="mobile-js-btn" data-symbol="`" aria-label="Bektik">&#96;</button>
+            </div>
+            <!-- Group 4 (Template & Operators — 4 buttons): $ , . , : , ! -->
+            <div class="mobile-js-group" data-group="template-ops">
+                <button type="button" class="mobile-js-btn" data-symbol="$" aria-label="Dollar simvolu">$</button>
+                <button type="button" class="mobile-js-btn" data-symbol="." aria-label="Nöqtə">.</button>
+                <button type="button" class="mobile-js-btn" data-symbol=":" aria-label="İki nöqtə">:</button>
+                <button type="button" class="mobile-js-btn" data-symbol="!" aria-label="Nida">!</button>
+            </div>
+        </div>
+    </div>
 
     <!-- CodeMirror Core and JavaScript Mode -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
