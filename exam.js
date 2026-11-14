@@ -250,7 +250,7 @@
     }
 
     function openQuestionBankModal() {
-        const modal = document.getElementById('question-bank-modal');
+        const modal = document.getElementById('question-bank-modal') || document.getElementById('exam-bank-modal');
         if (!modal) return;
 
         populateSectionFilterDropdown();
@@ -266,10 +266,16 @@
         renderQuestionBank(curSec, curDiff, curQuery);
 
         if (modal.showModal) {
-            modal.showModal();
+            try {
+                if (!modal.open) modal.showModal();
+            } catch (e) {
+                modal.setAttribute('open', '');
+            }
         } else {
-            modal.classList.remove('hidden');
+            modal.setAttribute('open', '');
         }
+        modal.classList.remove('hidden');
+        modal.classList.add('active');
 
         // Modala fokuslanma
         if (searchInput) {
@@ -278,14 +284,19 @@
     }
 
     function closeQuestionBankModal() {
-        const modal = document.getElementById('question-bank-modal');
+        const modal = document.getElementById('question-bank-modal') || document.getElementById('exam-bank-modal');
         if (!modal) return;
 
         if (modal.close) {
-            modal.close();
-        } else {
-            modal.classList.add('hidden');
+            try {
+                if (modal.open) modal.close();
+            } catch (e) {
+                modal.removeAttribute('open');
+            }
         }
+        modal.removeAttribute('open');
+        modal.classList.add('hidden');
+        modal.classList.remove('active');
     }
 
     function launchQuestionPractice(qid) {
@@ -337,6 +348,12 @@
                 if (e.key === 'Escape') {
                     closeQuestionBankModal();
                 }
+            });
+
+            modal.addEventListener('cancel', () => {
+                modal.removeAttribute('open');
+                modal.classList.add('hidden');
+                modal.classList.remove('active');
             });
         }
 

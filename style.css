@@ -188,7 +188,8 @@ body {
 .errors-panel-view:not(.hidden),
 .exam-view:not(.hidden),
 .view-section:not(.hidden),
-.fullscreen-modal {
+.fullscreen-modal:not(.hidden)[open],
+.fullscreen-modal:not(.hidden).active {
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -309,7 +310,16 @@ body::after {
     outline-offset: 3px;
 }
 
-.hidden {
+.hidden,
+[hidden],
+dialog:not([open]),
+dialog:not([open]).exam-modal,
+dialog:not([open]).question-bank-modal,
+dialog:not([open]).exam-bank-modal,
+#question-bank-modal:not([open]),
+#exam-bank-modal:not([open]),
+.question-bank-modal:not([open]),
+.exam-bank-modal:not([open]) {
     display: none !important;
 }
 
@@ -4167,20 +4177,40 @@ dialog.exam-modal::backdrop {
 }
 
 /* ============================================
-   QUESTION BANK LIQUID-GLASS MODAL & CARDS
+   QUESTION BANK MODAL (SOLID OPAQUE DARK)
    ============================================ */
-dialog.exam-modal.question-bank-modal {
-    max-width: 1040px !important;
-    width: 95vw !important;
-    max-height: 90vh !important;
+dialog.exam-modal.question-bank-modal,
+#question-bank-modal,
+#exam-bank-modal,
+.question-bank-modal,
+.exam-bank-modal {
     border-radius: 24px;
-    background: rgba(13, 18, 33, 0.94);
+    background-color: #0b0f19 !important; /* Solid opaque background - NO transparency */
+    background: #0b0f19 !important;
     border: 1px solid rgba(99, 102, 241, 0.35);
     box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85), 0 0 50px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-dialog.exam-modal.question-bank-modal::backdrop {
-    background: rgba(8, 12, 22, 0.82);
+@media (min-width: 769px) {
+    dialog.exam-modal.question-bank-modal[open],
+    #question-bank-modal[open],
+    #exam-bank-modal[open],
+    .question-bank-modal[open],
+    .exam-bank-modal[open] {
+        max-width: 1040px !important;
+        width: 95vw !important;
+        max-height: 90vh !important;
+        background-color: #0b0f19 !important;
+        background: #0b0f19 !important;
+    }
+}
+
+dialog.exam-modal.question-bank-modal::backdrop,
+#question-bank-modal::backdrop,
+#exam-bank-modal::backdrop,
+.question-bank-modal::backdrop,
+.exam-bank-modal::backdrop {
+    background: rgba(8, 12, 22, 0.92);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
@@ -9449,9 +9479,9 @@ dialog::backdrop {
 }
 
 @media (max-width: 768px) {
-    dialog.exam-modal:not(.question-bank-modal):not(.result-modal),
-    dialog.diagram-modal,
-    dialog.hourglass-result-modal {
+    dialog.exam-modal:not(.question-bank-modal):not(.result-modal)[open],
+    dialog.diagram-modal[open],
+    dialog.hourglass-result-modal[open] {
         position: fixed !important;
         inset: auto 0 0 0 !important;
         margin: 0 !important;
@@ -9498,35 +9528,57 @@ dialog::backdrop {
         justify-content: center !important;
     }
 
-    dialog.exam-modal.question-bank-modal {
+    /* Replace/update the Exam Question Bank modal container selector */
+    #exam-bank-modal:not(.hidden)[open],
+    #exam-bank-modal[open],
+    .exam-bank-modal:not(.hidden)[open],
+    .exam-bank-modal[open],
+    #question-bank-modal:not(.hidden)[open],
+    #question-bank-modal[open],
+    .question-bank-modal:not(.hidden)[open],
+    .question-bank-modal[open],
+    dialog.exam-modal.question-bank-modal[open],
+    dialog.exam-modal.question-bank-modal:not(.hidden)[open],
+    #exam-bank-modal.active,
+    #question-bank-modal.active,
+    .exam-bank-modal.active,
+    .question-bank-modal.active {
         position: fixed !important;
         inset: 0 !important;
         margin: 0 !important;
-        width: 100vw !important;
-        max-width: 100vw !important;
+        width: 100% !important;
+        max-width: 100% !important;
         height: 100dvh !important;
         min-height: 100dvh !important;
         max-height: 100dvh !important;
+        z-index: 2500 !important;
+        background-color: #0b0f19 !important; /* Solid opaque background - NO transparency */
+        background: #0b0f19 !important;
         border-radius: 0 !important;
         border: none !important;
-        padding: 0 !important;
         display: flex !important;
         flex-direction: column !important;
+        overflow-y: auto !important;
+        padding: max(1rem, env(safe-area-inset-top)) 1rem max(1.25rem, env(safe-area-inset-bottom)) !important;
+        box-sizing: border-box !important;
     }
 
-    dialog.exam-modal.question-bank-modal .question-bank-container {
+    dialog.exam-modal.question-bank-modal .question-bank-container,
+    #question-bank-modal .question-bank-container,
+    #exam-bank-modal .question-bank-container,
+    .question-bank-modal .question-bank-container,
+    .exam-bank-modal .question-bank-container {
         width: 100% !important;
-        max-width: 100vw !important;
+        max-width: 100% !important;
         height: 100% !important;
-        min-height: 100dvh !important;
-        max-height: 100dvh !important;
+        min-height: 100% !important;
         border-radius: 0 !important;
         border: none !important;
         display: flex !important;
         flex-direction: column !important;
     }
 
-    dialog.exam-modal.result-modal {
+    dialog.exam-modal.result-modal[open] {
         position: fixed !important;
         inset: 0 !important;
         margin: 0 !important;
@@ -11510,4 +11562,23 @@ button:active,
     #mobile-js-keyboard-bar {
         display: none !important;
     }
+}
+
+/* ==========================================================================
+   STRICT MODAL & HIDDEN ELEMENT VISIBILITY SAFETY NET
+   Hidden elements and unopened dialogs are NEVER forced visible
+   ========================================================================== */
+.hidden,
+[hidden],
+dialog:not([open]),
+#question-bank-modal:not([open]),
+#exam-bank-modal:not([open]),
+.question-bank-modal:not([open]),
+.exam-bank-modal:not([open]),
+dialog.exam-modal.question-bank-modal:not([open]),
+#question-bank-modal.hidden,
+#exam-bank-modal.hidden,
+.question-bank-modal.hidden,
+.exam-bank-modal.hidden {
+    display: none !important;
 }

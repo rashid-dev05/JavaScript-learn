@@ -11,6 +11,48 @@
     const EXAM_HISTORY_KEY = 'jsoyren_exam_history';
     const TOTAL_SECTIONS = 21;
 
+    // ---- Təhlükəsiz Brauzer Yaddaşı (Storage) Qoruyucusu ----
+    const safeStorage = {
+        getItem(key) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    return localStorage.getItem(key);
+                }
+            } catch (e) {
+                console.warn('[Storage] ' + key + ' oxunarkən xəta:', e);
+            }
+            return null;
+        },
+        setItem(key, value) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem(key, value);
+                    return true;
+                }
+            } catch (e) {
+                console.warn('[Storage] ' + key + ' yazılarkən xəta (kvota və ya qadağa):', e);
+            }
+            return false;
+        },
+        removeItem(key) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.removeItem(key);
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+    };
+
+    // Dinamik Kurikulum Keşləməsi (O(1) axtarış və yeniləmə)
+    let _cachedCurriculumTaskIds = null;
+    let _cachedTotalCurriculumTasks = null;
+    function invalidateCurriculumCache() {
+        _cachedCurriculumTaskIds = null;
+        _cachedTotalCurriculumTasks = null;
+    }
+
     // Vahid Etibarlı Mənbə (Single Source of Truth) dinamik sayğacları
     function getTotalCurriculumTasks() {
         if (!CURRICULUM || CURRICULUM.length === 0) {
@@ -169,6 +211,7 @@
     let CURRICULUM = [];
 
     function buildCurriculum() {
+        invalidateCurriculumCache();
         if (typeof window !== 'undefined' && Array.isArray(window.CURRICULUM) && window.CURRICULUM.length > 0 && CURRICULUM.length === 0) {
             CURRICULUM = window.CURRICULUM;
             return;
@@ -197,6 +240,7 @@
      * Kurikulumdakı bütün mövcud tapşırıq və xəta sazlama ID-lərinin toplusunu qaytarır.
      */
     function getAllCurriculumTaskIds(curriculum) {
+        if (!curriculum && _cachedCurriculumTaskIds) return _cachedCurriculumTaskIds;
         const cur = (Array.isArray(curriculum) && curriculum.length > 0)
             ? curriculum
             : (Array.isArray(CURRICULUM) && CURRICULUM.length > 0 ? CURRICULUM : []);
@@ -221,6 +265,7 @@
                 }
             });
         });
+        if (!curriculum && cur === CURRICULUM) _cachedCurriculumTaskIds = validIds;
         return validIds;
     }
 
@@ -228,12 +273,13 @@
      * Bütün 21 kurikulum bölməsi üzrə tapşırıqların dəqiq sayını dinamik hesablayır.
      */
     function calculateTotalCurriculumTasks(curriculum) {
+        if (!curriculum && _cachedTotalCurriculumTasks !== null) return _cachedTotalCurriculumTasks;
         const cur = (Array.isArray(curriculum) && curriculum.length > 0)
             ? curriculum
             : (Array.isArray(CURRICULUM) && CURRICULUM.length > 0 ? CURRICULUM : []);
         if (!Array.isArray(cur) || cur.length === 0) return 0;
 
-        return cur.reduce((total, section) => {
+        const totalTaskCount = cur.reduce((total, section) => {
             if (!section || !Array.isArray(section.topics)) return total;
             const sectionTasks = section.topics.reduce((topicTotal, topic) => {
                 if (!topic) return topicTotal;
@@ -247,6 +293,8 @@
             }, 0);
             return total + sectionTasks;
         }, 0);
+        if (!curriculum && cur === CURRICULUM) _cachedTotalCurriculumTasks = totalTaskCount;
+        return totalTaskCount;
     }
 
     /**
@@ -902,6 +950,8 @@
         examState.testOutputs = {};
         examState.revealedHints = {};
         examState.surrenderedQuestions = new Set();
+        examState.questions = [];
+        examState.currentIndex = 0;
         examState.currentExamQuestions = [];
         examState.currentQuestionIndex = 0;
 
@@ -942,14 +992,16 @@
                 StorageEngine.clearAllProgress(true);
             } catch (e) {}
         }
-        const keysToRemove = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && (key.startsWith('jsoyren_') || key.startsWith('pyoyren_')) && key !== THEME_KEY) {
-                keysToRemove.push(key);
+        try {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.startsWith('jsoyren_') || key.startsWith('pyoyren_')) && key !== THEME_KEY) {
+                    keysToRemove.push(key);
+                }
             }
-        }
-        keysToRemove.forEach(k => localStorage.removeItem(k));
+            keysToRemove.forEach(k => safeStorage.removeItem(k));
+        } catch (e) {}
 
         // 4. Reset streak to Day 1 / Tier 1
         const todayStr = getTodayDateString();
@@ -1088,27 +1140,60 @@
 
     // ---- Navigation Rendering ----
     function renderNav() {
-        const nav = document.getElementById('sidebar-nav');
+        // Çoxsəviyyəli konteyner axtarışı (Desktop, Mobile və Dinamik DOM üçün)
+        let nav = document.getElementById('sidebar-nav') ||
+                  document.querySelector('.sidebar-nav') ||
+                  document.querySelector('#sidebar nav') ||
+                  document.getElementById('mobile-sidebar-nav');
+
+        // Özünübərpa edən fallback: Əgər #sidebar mövcuddursa, amma nav yoxdursa, dinamik yaradılır
+        if (!nav) {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                nav = document.createElement('nav');
+                nav.className = 'sidebar-nav';
+                nav.id = 'sidebar-nav';
+                sidebar.appendChild(nav);
+            }
+        }
+
+        // Qoruyucu DOM yoxlaması: nav konteyneri tapılmadıqda heç bir xəta törətmədən təhlükəsiz çıxış
+        if (!nav) {
+            console.warn('[renderNav] Navigasiya konteyneri (#sidebar-nav) tapılmadı. İcra təhlükəsiz dayandırıldı.');
+            return;
+        }
+
+        // Təhlükəsiz təmizləmə
         nav.innerHTML = '';
 
+        if (!Array.isArray(CURRICULUM) || CURRICULUM.length === 0) {
+            return;
+        }
+
+        const completedSet = (state && state.completedTopics instanceof Set) 
+            ? state.completedTopics 
+            : new Set();
+
         CURRICULUM.forEach(section => {
+            if (!section || !Array.isArray(section.topics)) return;
+
             const sectionEl = document.createElement('div');
             sectionEl.className = 'nav-section';
-            sectionEl.dataset.sectionId = section.id;
+            sectionEl.dataset.sectionId = section.id || '';
 
-            // Check if any topic in this section is the current one
-            const hasActive = section.topics.some(t => t.id === state.currentTopicId);
+            // Aktiv mövzu yoxlaması
+            const hasActive = section.topics.some(t => t && t.id === state.currentTopicId);
             if (hasActive) sectionEl.classList.add('expanded');
 
-            // Section progress
-            const completedInSection = section.topics.filter(t => state.completedTopics.has(t.id)).length;
+            // Bölmə üzrə irəliləyiş
+            const completedInSection = section.topics.filter(t => t && completedSet.has(t.id)).length;
             const totalInSection = section.topics.length;
 
             const header = document.createElement('div');
             header.className = 'nav-section-header';
             header.innerHTML = `
                 <span class="nav-section-icon">${section.icon || '📌'}</span>
-                <span class="nav-section-title">${section.title}</span>
+                <span class="nav-section-title">${section.title || ''}</span>
                 <span class="nav-section-progress">${completedInSection}/${totalInSection}</span>
                 <span class="nav-section-arrow">▶</span>
             `;
@@ -1121,15 +1206,17 @@
             topicsList.className = 'nav-topics';
 
             section.topics.forEach(topic => {
+                if (!topic) return;
+
                 const topicEl = document.createElement('div');
                 topicEl.className = 'nav-topic';
                 if (topic.id === state.currentTopicId) topicEl.classList.add('active');
-                if (state.completedTopics.has(topic.id)) topicEl.classList.add('completed');
+                if (completedSet.has(topic.id)) topicEl.classList.add('completed');
 
-                const statusIcon = state.completedTopics.has(topic.id) ? '✓' : '';
+                const statusIcon = completedSet.has(topic.id) ? '✓' : '';
                 topicEl.innerHTML = `
                     <span class="nav-topic-status">${statusIcon}</span>
-                    <span class="nav-topic-title">${topic.title}</span>
+                    <span class="nav-topic-title">${topic.title || ''}</span>
                 `;
                 topicEl.addEventListener('click', () => {
                     cancelSidebarCollapseTimer();
@@ -1230,9 +1317,15 @@
                 dialog.removeAttribute('open');
             }
         });
+        const qbModal = document.getElementById('question-bank-modal') || document.getElementById('exam-bank-modal');
+        if (qbModal) {
+            try { if (qbModal.open) qbModal.close(); } catch (e) { qbModal.removeAttribute('open'); }
+            qbModal.classList.add('hidden');
+            qbModal.classList.remove('active');
+        }
 
         // 5. Force-remove active/open state from any lingering overlays, backdrops, and modal cards
-        document.querySelectorAll('.sidebar-overlay.active, .mobile-drawer-overlay.open, .modal.active, .modal.show, .overlay.active, .overlay.open').forEach(el => {
+        document.querySelectorAll('.sidebar-overlay.active, .mobile-drawer-overlay.open, .modal.active, .modal.show, .overlay.active, .overlay.open, .exam-modal.active, .question-bank-modal.active, .exam-bank-modal.active').forEach(el => {
             el.classList.remove('active', 'open', 'show');
         });
 
@@ -1416,8 +1509,9 @@
         renderTopicView();
         renderNav();
         
-        // Scroll to top
-        document.getElementById('main-content').scrollTop = 0;
+        // Scroll to top safely
+        const mainContentEl = document.getElementById('main-content');
+        if (mainContentEl) mainContentEl.scrollTop = 0;
         if (typeof window.scrollTo === 'function') window.scrollTo(0, 0);
     }
 
@@ -1430,15 +1524,17 @@
         const allTopics = getAllTopics();
         const currentIndex = getTopicIndex(topic.id);
 
-        // Breadcrumb
-        document.getElementById('topic-section-name').textContent = section.title;
-        document.getElementById('topic-name').textContent = topic.title;
+        // Breadcrumb with defensive null checks
+        const secNameEl = document.getElementById('topic-section-name');
+        if (secNameEl) secNameEl.textContent = section.title;
+        const topicNameEl = document.getElementById('topic-name');
+        if (topicNameEl) topicNameEl.textContent = topic.title;
 
-        // Nav buttons
+        // Nav buttons with defensive null checks
         const prevBtn = document.getElementById('prev-topic-btn');
         const nextBtn = document.getElementById('next-topic-btn');
-        prevBtn.disabled = currentIndex <= 0;
-        nextBtn.disabled = currentIndex >= allTopics.length - 1;
+        if (prevBtn) prevBtn.disabled = currentIndex <= 0;
+        if (nextBtn) nextBtn.disabled = currentIndex >= allTopics.length - 1;
 
         // Tab reset
         setActiveTab('theory');
@@ -1512,7 +1608,7 @@
 
     function renderExercises(topic) {
         const container = document.getElementById('exercises-container');
-        container.innerHTML = '';
+        if (container) container.innerHTML = '';
 
         if (!topic.exercises || topic.exercises.length === 0) {
             container.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:2rem;">Bu mövzu üçün tapşırıqlar hazırlanır...</p>';
@@ -1603,7 +1699,7 @@
 
     function renderBugFixes(topic) {
         const container = document.getElementById('bugfix-container');
-        container.innerHTML = '';
+        if (container) container.innerHTML = '';
 
         const bugFixList = (topic.bugFixes && Array.isArray(topic.bugFixes) && topic.bugFixes.length > 0)
             ? topic.bugFixes
@@ -1851,12 +1947,55 @@
         const matches = clean.match(/console\s*\.\s*(?:log|info|warn|error)\s*\(([\s\S]*?)\)/g);
         if (!matches || matches.length === 0) return false;
 
+        // Təhlükəsiz arqument analizatoru (ReDoS mühafizəli O(N) leksik skaner)
+        function splitArgsSafely(str) {
+            const args = [];
+            let current = '';
+            let inSingle = false;
+            let inDouble = false;
+            let inTemplate = false;
+            let escaped = false;
+            let depth = 0;
+
+            for (let i = 0; i < str.length; i++) {
+                const ch = str[i];
+                if (escaped) {
+                    current += ch;
+                    escaped = false;
+                    continue;
+                }
+                if (ch === '\\') {
+                    current += ch;
+                    escaped = true;
+                    continue;
+                }
+                if (ch === "'" && !inDouble && !inTemplate) {
+                    inSingle = !inSingle;
+                } else if (ch === '"' && !inSingle && !inTemplate) {
+                    inDouble = !inDouble;
+                } else if (ch === '`' && !inSingle && !inDouble) {
+                    inTemplate = !inTemplate;
+                } else if (!inSingle && !inDouble && !inTemplate) {
+                    if (ch === '(' || ch === '[' || ch === '{') depth++;
+                    else if (ch === ')' || ch === ']' || ch === '}') depth = Math.max(0, depth - 1);
+                    else if (ch === ',' && depth === 0) {
+                        args.push(current.trim());
+                        current = '';
+                        continue;
+                    }
+                }
+                current += ch;
+            }
+            if (current.trim().length > 0) args.push(current.trim());
+            return args;
+        }
+
         for (const m of matches) {
             const inner = m.replace(/^console\s*\.\s*(?:log|info|warn|error)\s*\(/, '').replace(/\)$/, '').trim();
             if (isLiteralValue(inner)) {
                 continue;
             }
-            const args = inner.split(/,(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/);
+            const args = splitArgsSafely(inner);
             const allLiteral = args.every(a => isLiteralValue(a));
             if (!allLiteral) {
                 return false;
@@ -2632,7 +2771,7 @@
         set innerHTML(val) {
             this._innerHTML = String(val);
             this.children = [];
-            const tagRegex = /<([a-zA-Z0-9]+)([^>]*)>(.*?)<\/\1>|<([a-zA-Z0-9]+)([^>]*)\/?>/g;
+            const tagRegex = /<([a-zA-Z0-9]+)([^>]*)>(.*?)<\/\1>|<([a-zA-Z0-9]+)([^>]*)\/?>/gs;
             let match;
             while ((match = tagRegex.exec(val)) !== null) {
                 const tag = match[1] || match[4];
@@ -2643,7 +2782,13 @@
                 if (classMatch) child.className = classMatch[1];
                 const idMatch = attrs.match(/id=['"]([^'"]+)['"]/);
                 if (idMatch) child.id = idMatch[1];
-                if (inner) child.textContent = inner;
+                if (inner) {
+                    if (/<[a-zA-Z0-9]+[^>]*>/.test(inner)) {
+                        child.innerHTML = inner;
+                    } else {
+                        child.textContent = inner;
+                    }
+                }
                 this.appendChild(child);
             }
         }
@@ -3169,7 +3314,13 @@
             version: 'v20.11.0',
             argv: ['/usr/bin/node', '/home/jsoyren/project/app.js', '--mode=exam', '--port=5000'],
             nextTick: (fn, ...args) => {
-                Promise.resolve().then(() => fn(...args));
+                Promise.resolve().then(() => {
+                    try {
+                        if (typeof fn === 'function') fn(...args);
+                    } catch (err) {
+                        targetConsole.error(err);
+                    }
+                });
             },
             exit: (code = 0) => {
                 throw new Error(`[Proses dayandırıldı] process.exit(${code})`);
@@ -3269,12 +3420,15 @@
                 const cb = typeof options === 'function' ? options : callback;
                 if (typeof cb === 'function') {
                     const encoding = typeof options === 'string' ? options : (options && options.encoding);
-                    try {
-                        const content = mockFs.readFileSync(file, encoding);
-                        cb(null, content);
-                    } catch(err) {
-                        cb(err);
-                    }
+                    const runAsync = (typeof queueMicrotask === 'function') ? queueMicrotask : (fn => setTimeout(fn, 0));
+                    runAsync(() => {
+                        try {
+                            const content = mockFs.readFileSync(file, encoding);
+                            cb(null, content);
+                        } catch(err) {
+                            cb(err);
+                        }
+                    });
                 } else {
                     return mockFs.promises.readFile(file, options);
                 }
@@ -3886,9 +4040,14 @@ function formatConsoleArg(arg, depth = 0, seen = new WeakSet()) {
                 if (arg.length === 0) return '[]';
                 const indent = '  '.repeat(depth);
                 const childIndent = '  '.repeat(depth + 1);
+                const maxItems = 100;
+                const limit = Math.min(arg.length, maxItems);
                 const items = [];
-                for (let i = 0; i < arg.length; i++) {
+                for (let i = 0; i < limit; i++) {
                     items.push(childIndent + (i in arg ? formatConsoleArg(arg[i], depth + 1, seen) : '<empty>'));
+                }
+                if (arg.length > maxItems) {
+                    items.push(childIndent + `... və daha ${arg.length - maxItems} element`);
                 }
                 return '[\n' + items.join(',\n') + '\n' + indent + ']';
             }
@@ -3900,11 +4059,16 @@ function formatConsoleArg(arg, depth = 0, seen = new WeakSet()) {
             if (keys.length === 0) return '{}';
             const indent = '  '.repeat(depth);
             const childIndent = '  '.repeat(depth + 1);
+            const maxKeys = 100;
+            const limit = Math.min(keys.length, maxKeys);
             const props = [];
-            for (let i = 0; i < keys.length; i++) {
+            for (let i = 0; i < limit; i++) {
                 const k = keys[i];
                 const valStr = formatConsoleArg(arg[k], depth + 1, seen);
                 props.push(childIndent + JSON.stringify(k) + ': ' + valStr);
+            }
+            if (keys.length > maxKeys) {
+                props.push(childIndent + `... və daha ${keys.length - maxKeys} xassə`);
             }
             return '{\n' + props.join(',\n') + '\n' + indent + '}';
         }
@@ -4130,6 +4294,15 @@ ${createMockExpress.toString()}
 ${formatConsoleArg.toString()}
 ${createSandboxConsole.toString()}
 
+// Worker daxilində şəbəkə və xarici skript inyeksiyasının bloklanması
+if (typeof self !== 'undefined') {
+    self.importScripts = function() {
+        throw new Error('[Təhlükəsizlik Sandbox]: Worker mühitində importScripts istifadəsinə icazə verilmir!');
+    };
+    self.XMLHttpRequest = undefined;
+    self.WebSocket = undefined;
+}
+
 let __uncaughtError = null;
 
 function __handleUncaught(err) {
@@ -4293,23 +4466,27 @@ self.onmessage = async function(e) {
             queueMicrotask: wrappedQueueMicrotask
         };
         const fn = new AsyncFunction(
-            'console', 'document', 'window', 'Event', 'CustomEvent',
+            'console', 'document', 'window', 'globalThis', 'self', 'top', 'parent', 'frames',
+            'Event', 'CustomEvent',
             'localStorage', 'sessionStorage', 'navigator',
             'requestAnimationFrame', 'cancelAnimationFrame', 'fetch',
             'process', 'path', 'os', 'fs', '__dirname', '__filename', 'global', 'express',
             'cors', 'pool', 'pg', 'require', 'EventEmitter', 'bcrypt', 'jwt', 'http', 'AppError',
             'module', 'exports',
             'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'queueMicrotask',
-            code
+            'XMLHttpRequest', 'WebSocket',
+            '"use strict";\n' + code
         );
         await fn(
-            mockConsole, mockDoc, mockWin, MockEvent, MockCustomEvent,
+            mockConsole, mockDoc, mockWin, mockWin, mockWin, mockWin, mockWin, mockWin,
+            MockEvent, MockCustomEvent,
             mockLocalStorage, mockSessionStorage, mockNav,
             mockRequestAnimationFrame, mockCancelAnimationFrame, mockFetch,
             mockProcess, mockPath, mockOs, mockFs, mockDirname, mockFilename, mockGlobal, express,
             cors, pool, pg, mockRequire, EventEmitter, bcrypt, jwt, http, AppError,
             mockModule, mockExports,
-            wrappedSetTimeout, wrappedClearTimeout, wrappedSetInterval, wrappedClearInterval, wrappedQueueMicrotask
+            wrappedSetTimeout, wrappedClearTimeout, wrappedSetInterval, wrappedClearInterval, wrappedQueueMicrotask,
+            undefined, undefined
         );
     } catch(err) {
         if (err && err.name && err.message) {
@@ -4485,18 +4662,21 @@ self.onmessage = async function(e) {
                     clearInterval: wrappedClearInterval,
                     queueMicrotask: wrappedQueueMicrotask
                 };
+                // Sandbox Təhlükəsizlik Zirehi: globalThis, self, top, parent, frames qlobal obyektlərini kölgələmək
                 const fn = new AsyncFunction(
-                    'console', 'document', 'window', 'Event', 'CustomEvent',
+                    'console', 'document', 'window', 'globalThis', 'self', 'top', 'parent', 'frames',
+                    'Event', 'CustomEvent',
                     'localStorage', 'sessionStorage', 'navigator',
                     'requestAnimationFrame', 'cancelAnimationFrame', 'fetch',
                     'process', 'path', 'os', 'fs', '__dirname', '__filename', 'global', 'express',
                     'cors', 'pool', 'pg', 'require', 'EventEmitter', 'bcrypt', 'jwt', 'http', 'AppError',
                     'module', 'exports',
                     'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'queueMicrotask',
-                    preprocessModuleCode(code)
+                    'XMLHttpRequest', 'WebSocket',
+                    '"use strict";\n' + preprocessModuleCode(code)
                 );
                 await fn(
-                    mockConsole, mockDoc, mockWin,
+                    mockConsole, mockDoc, mockWin, mockWin, mockWin, mockWin, mockWin, mockWin,
                     typeof Event !== 'undefined' ? Event : MockEvent,
                     typeof CustomEvent !== 'undefined' ? CustomEvent : MockCustomEvent,
                     mockLocalStorage, mockSessionStorage, mockNav,
@@ -4504,7 +4684,8 @@ self.onmessage = async function(e) {
                     mockProcess, mockPath, mockOs, mockFs, mockDirname, mockFilename, mockGlobal, express,
                     cors, pool, pg, mockRequire, EventEmitter, bcrypt, jwt, http, AppError,
                     mockModule, mockExports,
-                    wrappedSetTimeout, wrappedClearTimeout, wrappedSetInterval, wrappedClearInterval, wrappedQueueMicrotask
+                    wrappedSetTimeout, wrappedClearTimeout, wrappedSetInterval, wrappedClearInterval, wrappedQueueMicrotask,
+                    undefined, undefined
                 );
 
                 const deadline = Date.now() + Math.max(100, timeoutMs - 100);
@@ -7815,7 +7996,7 @@ self.onmessage = async function(e) {
         }
 
         try {
-            const result = await runJavaScriptDirect(code, 3000);
+            const result = await runJavaScript(code, 3000);
             const userOutput = cleanStr(result.output);
             const expectedOutput = cleanStr(ch.expectedOutput);
 
@@ -9021,7 +9202,7 @@ self.onmessage = async function(e) {
     function saveEcosystemProgress() {
         try {
             if (state.completedEcosystemTopics) {
-                localStorage.setItem('jsoyren_ecosystem_progress', JSON.stringify([...state.completedEcosystemTopics]));
+                safeStorage.setItem('jsoyren_ecosystem_progress', JSON.stringify([...state.completedEcosystemTopics]));
             }
         } catch (e) {
             console.warn('Could not save ecosystem progress:', e);
@@ -9463,7 +9644,7 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         // Hourglass Challenges XP
         let hourglassXP = 0;
         try {
-            const hgHistoryRaw = localStorage.getItem('jsoyren_hourglass_history');
+            const hgHistoryRaw = safeStorage.getItem('jsoyren_hourglass_history');
             if (hgHistoryRaw) {
                 const hgHistory = JSON.parse(hgHistoryRaw);
                 if (Array.isArray(hgHistory)) {
@@ -9479,7 +9660,7 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         totalXP += hourglassXP;
 
         try {
-            const historyRaw = localStorage.getItem(EXAM_HISTORY_KEY);
+            const historyRaw = safeStorage.getItem(EXAM_HISTORY_KEY);
             if (historyRaw) {
                 const history = JSON.parse(historyRaw);
                 if (Array.isArray(history)) {
@@ -9530,7 +9711,7 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
             ACHIEVEMENTS_CONFIG.forEach(badge => {
                 const current = badge.getCurrent(state);
                 const isUnlocked = current >= badge.target || (state.unlockedAchievements && state.unlockedAchievements.has(badge.id));
-                const pct = Math.min(100, Math.round((current / badge.target) * 100));
+                const pct = badge.target > 0 ? Math.min(100, Math.round((current / badge.target) * 100)) : 0;
 
                 const card = document.createElement('div');
                 card.className = `badge-card ${isUnlocked ? 'unlocked' : 'locked'}`;
@@ -10266,36 +10447,83 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         }
 
         // Build curriculum from loaded data files
-        buildCurriculum();
+        try {
+            buildCurriculum();
+        } catch (err) {
+            console.error('[App] buildCurriculum xətası:', err);
+        }
 
         // Load saved progress
-        loadProgress();
+        try {
+            loadProgress();
+        } catch (err) {
+            console.error('[App] loadProgress xətası:', err);
+        }
 
         // Persist standardized unified state schema initially
-        saveProgress();
+        try {
+            saveProgress();
+        } catch (err) {
+            console.warn('[App] saveProgress xətası:', err);
+        }
 
         // Init theme
-        initTheme();
+        try {
+            initTheme();
+        } catch (err) {
+            console.warn('[App] initTheme xətası:', err);
+        }
 
         // Render navigation
-        renderNav();
-        updateProgressBar();
+        try {
+            renderNav();
+        } catch (err) {
+            console.error('[App] renderNav xətası:', err);
+        }
+
+        try {
+            updateProgressBar();
+        } catch (err) {
+            console.warn('[App] updateProgressBar xətası:', err);
+        }
 
         // Setup event listeners
-        setupEventListeners();
+        try {
+            setupEventListeners();
+        } catch (err) {
+            console.error('[App] setupEventListeners xətası:', err);
+        }
 
         // Initialize Mobile JS Keyboard Toolbar
-        initMobileKeyboardBar();
+        try {
+            initMobileKeyboardBar();
+        } catch (err) {
+            console.warn('[App] initMobileKeyboardBar xətası:', err);
+        }
 
         // Load JavaScript execution environment
-        await initJavaScriptEngine();
+        try {
+            await initJavaScriptEngine();
+        } catch (err) {
+            console.warn('[App] initJavaScriptEngine xətası:', err);
+        }
 
         // Hide loading screen, show app
         const loadingScreen = document.getElementById('loading-screen');
         const app = document.getElementById('app');
         
-        loadingScreen.classList.add('fade-out');
-        app.classList.remove('hidden');
+        if (loadingScreen) {
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                if (loadingScreen && loadingScreen.parentNode) {
+                    loadingScreen.remove();
+                }
+            }, 500);
+        }
+
+        if (app) {
+            app.classList.remove('hidden');
+        }
 
         // Default View Initialization: Always land on Welcome Dashboard on initial load and refresh
         state.currentTopicId = null;
@@ -10305,8 +10533,6 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
             } catch (e) {}
         }
         showView('welcome');
-
-        setTimeout(() => loadingScreen.remove(), 500);
     }
 
     if (typeof window !== 'undefined') {
