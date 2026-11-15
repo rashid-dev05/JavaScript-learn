@@ -688,7 +688,7 @@ function renderRoadmap(options = {}) {
 
     const roadmapFractionEl = document.getElementById('roadmap-fraction');
     if (roadmapFractionEl) {
-        roadmapFractionEl.textContent = `${completedSectionsCount}/${totalSectionsCount} bölmə (${validCompletedTasks}/${totalCurriculumTasks} tapşırıq)`;
+        roadmapFractionEl.innerHTML = `${completedSectionsCount}/${totalSectionsCount} bölmə <span class="info-fraction-sub">(${validCompletedTasks}/${totalCurriculumTasks} tapşırıq)</span>`;
     }
 
     const circleFill = document.getElementById('roadmap-circle-fill');

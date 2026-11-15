@@ -18,6 +18,7 @@ const PRECACHE_ASSETS = [
     './roadmap.js',
     './exam.js',
     './data_hourglass_challenges.js',
+    './simulator.js',
     './data_sections_1_5.js',
     './data_sections_6_9.js',
     './data_sections_10_13.js',

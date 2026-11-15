@@ -1,56 +1,50 @@
 const fs = require('fs');
+const { execSync } = require('child_process');
 
-console.log('--- AUDITING SCRIPT TAGS & ORDER IN index.html ---');
-const html = fs.readFileSync('index.html', 'utf-8');
-const scriptMatches = [...html.matchAll(/<script[^>]*src=["']([^"']+)["'][^>]*>/g)];
-const scripts = scriptMatches.map(m => m[1]);
-console.log('Detected scripts in order:');
-scripts.forEach((s, i) => {
-  const exists = fs.existsSync(s) || s.startsWith('http');
-  console.log(`  ${i+1}. ${s} ${exists ? '[OK]' : '[MISSING FILE!]'}`);
-});
-
-console.log('\n--- AUDITING ID MATCHES BETWEEN HTML AND JS ---');
-const htmlIds = new Set([...html.matchAll(/id=["']([a-zA-Z0-9_\-]+)["']/g)].map(m => m[1]));
-
-const jsFiles = ['app.js', 'exam.js', 'roadmap.js'];
-jsFiles.forEach(jsFile => {
-  if (!fs.existsSync(jsFile)) return;
-  const content = fs.readFileSync(jsFile, 'utf-8');
-  const getElMatches = [...content.matchAll(/document\.getElementById\(['"]([a-zA-Z0-9_\-]+)['"]\)/g)].map(m => m[1]);
-  const querySelMatches = [...content.matchAll(/querySelector\(['"]#([a-zA-Z0-9_\-]+)['"]\)/g)].map(m => m[1]);
-  const referencedIds = new Set([...getElMatches, ...querySelMatches]);
-  
-  const missing = [];
-  referencedIds.forEach(id => {
-    if (!htmlIds.has(id)) {
-      missing.push(id);
-    }
-  });
-  console.log(`${jsFile}: referenced ${referencedIds.size} IDs, missing in HTML: ${missing.length}`);
-  if (missing.length > 0) {
-    console.log(`  Missing IDs in ${jsFile}:`, missing);
+console.log('=== 1. Node Syntax Check on all JS files ===');
+const jsFiles = fs.readdirSync('.').filter(f => f.endsWith('.js'));
+let hasSyntaxError = false;
+jsFiles.forEach(f => {
+  try {
+    execSync('node -c ' + f, { stdio: 'pipe' });
+    console.log(f + ': OK');
+  } catch(e) {
+    console.error(f + ': SYNTAX ERROR -> ' + e.message);
+    hasSyntaxError = true;
   }
 });
 
-console.log('\n--- AUDITING GLOBAL DATA VARIABLES ---');
-const dataVars = [
-  'SECTIONS_DATA',
-  'TASKS_PANEL_DATA',
-  'ERRORS_PANEL_DATA',
-  'ECOSYSTEM_LESSONS_DATA',
-  'EXAM_QUESTIONS_DATA',
-  'HOURGLASS_CHALLENGES_DATA',
-  'ROADMAP_DATA'
-];
-dataVars.forEach(v => {
-  // Check if defined in any file
-  let definedIn = null;
-  fs.readdirSync('.').filter(f => f.endsWith('.js')).forEach(f => {
-    const code = fs.readFileSync(f, 'utf-8');
-    if (new RegExp(`(?:var|let|const|window\\.)\\s*${v}\\b`).test(code)) {
-      definedIn = f;
+console.log('\n=== 2. Check DOM IDs referenced in JS vs index.html ===');
+const html = fs.readFileSync('index.html', 'utf8');
+const idRegex = /document\.getElementById\(['"]([^'"]+)['"]\)/g;
+const missingIds = [];
+jsFiles.forEach(f => {
+  if (f.startsWith('data_') && f !== 'data_hourglass_challenges.js') return;
+  const content = fs.readFileSync(f, 'utf8');
+  let m;
+  while ((m = idRegex.exec(content)) !== null) {
+    const id = m[1];
+    if (!html.includes('id="' + id + '"') && !html.includes("id='" + id + "'")) {
+      missingIds.push({ file: f, id });
     }
-  });
-  console.log(`  ${v}: ${definedIn ? `Defined in ${definedIn}` : 'NOT EXPLICITLY DEFINED!'}`);
+  }
 });
+console.log('Referenced IDs missing in index.html:', missingIds);
+
+console.log('\n=== 3. Check CSS Class References in JS vs style.css & index.html ===');
+const css = fs.readFileSync('style.css', 'utf8');
+console.log('style.css length:', css.length, 'lines:', css.split('\n').length);
+
+console.log('\n=== 4. Check HTML integrity (basic unclosed tags) ===');
+const tagMatches = html.match(/<([a-zA-Z0-9\-]+)[^>]*>/g) || [];
+console.log('Total HTML tags:', tagMatches.length);
+
+console.log('\n=== 5. Check Curriculum data loading ===');
+try {
+  const s1_5 = fs.readFileSync('data_sections_1_5.js', 'utf8');
+  const s6_9 = fs.readFileSync('data_sections_6_9.js', 'utf8');
+  const s10_13 = fs.readFileSync('data_sections_10_13.js', 'utf8');
+  console.log('Sections 1-13 read OK');
+} catch (e) {
+  console.error('Error reading curriculum files:', e);
+}

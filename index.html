@@ -2,7 +2,7 @@
 <html lang="az" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>JSÖyrən - Müasir JavaScript Developer Bootcamp (ES2026)</title>
     <meta name="description" content="Müasir JavaScript (ES6+) dilini sıfırdan peşəkar səviyyəyə qədər öyrənin. İnteraktiv bootcamp yol xəritəsi, 21 modul üzrə tam praktiki tapşırıqlar, arxitektura sxemi, playground və canlı imtahan simulyatoru.">
     
@@ -262,7 +262,7 @@
                                     </div>
                                     <div class="progress-info-text">
                                         <span class="info-title">Ümumi İrəliləyiş</span>
-                                        <span class="info-fraction" id="roadmap-fraction">0/21 bölmə (0/201 tapşırıq)</span>
+                                        <span class="info-fraction" id="roadmap-fraction">0/21 bölmə <span class="info-fraction-sub">(0/201 tapşırıq)</span></span>
                                     </div>
                                 </div>
                             </div>
@@ -793,8 +793,8 @@
                                     </p>
                                     <div class="cert-footer">
                                         <div class="cert-meta">
-                                            <span>Sertifikat ID: <strong id="cert-id">JS-2026-BOOTCAMP</strong></span>
-                                            <span>Verilmə Tarixi: <strong id="cert-date">Canlı</strong></span>
+                                            <span class="cert-meta-row">Sertifikat ID: <strong id="cert-id">JS-2026-BOOTCAMP</strong></span>
+                                            <span class="cert-meta-row">Verilmə Tarixi: <strong id="cert-date">Canlı</strong></span>
                                         </div>
                                         <div class="cert-stamp">✓ TƏSDİQLƏNDİ</div>
                                     </div>
@@ -1238,7 +1238,7 @@
                             </select>
                         </div>
                         <div class="filter-group filter-search">
-                            <input type="text" id="tasks-search-input" class="panel-search-input" placeholder="Tapşırıq axtar...">
+                            <input type="text" id="tasks-search-input" class="panel-search-input" placeholder="Tapşırıq axtar..." aria-label="Tapşırıq axtar">
                         </div>
                     </div>
 
@@ -1275,7 +1275,7 @@
                             </select>
                         </div>
                         <div class="filter-group filter-search">
-                            <input type="text" id="errors-search-input" class="panel-search-input" placeholder="Xəta axtar...">
+                            <input type="text" id="errors-search-input" class="panel-search-input" placeholder="Xəta axtar..." aria-label="Xəta axtar">
                         </div>
                     </div>
 
@@ -1366,7 +1366,7 @@
             <div class="qb-toolbar">
                 <div class="qb-search-wrapper">
                     <span class="qb-search-icon">🔍</span>
-                    <input type="text" id="qb-search-input" class="qb-search-input" placeholder="Sual və ya açar söz axtar..." autocomplete="off">
+                    <input type="text" id="qb-search-input" class="qb-search-input" placeholder="Sual və ya açar söz axtar..." autocomplete="off" aria-label="Sual və ya açar söz axtar">
                     <button type="button" id="qb-search-clear" class="qb-search-clear hidden" title="Axtarışı təmizlə">✕</button>
                 </div>
                 <div class="qb-filters-row">
@@ -1529,6 +1529,8 @@
     <!-- Hourglass Challenges Data -->
     <script src="data_hourglass_challenges.js"></script>
     
+    <!-- Code Runner Sandbox Simulator -->
+    <script src="simulator.js"></script>
     <!-- App Logic Engine -->
     <script src="app.js"></script>
 
@@ -1559,5 +1561,7 @@
             });
         }
     </script>
+    <!-- Təcrid Olunmuş Təhlükəsiz Kod İcraçısı Iframe Sandbox (YALNIZ sandbox="allow-scripts") -->
+    <iframe id="code-runner-frame" sandbox="allow-scripts" class="hidden" style="display:none;" title="JSÖyrən Sandboxed Code Runner" aria-hidden="true"></iframe>
 </body>
 </html>

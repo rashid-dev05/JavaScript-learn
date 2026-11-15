@@ -11,6 +11,27 @@
     const EXAM_HISTORY_KEY = 'jsoyren_exam_history';
     const TOTAL_SECTIONS = 21;
 
+    // ---- Pre-Execution Unicode Normalizer ----
+    function sanitizeCodeForExecution(rawCode) {
+        if (typeof rawCode !== 'string') return '';
+        return rawCode
+            // 1. Sıfır enli və görünməz idarəetmə simvollarının silinməsi
+            .replace(/[\u200B-\u200D\uFEFF\u200E\u200F]/g, '')
+            // 2. Qırılmayan və xüsusi tipoqrafik boşluqların standart boşluğa çevrilməsi
+            .replace(/[\u00A0\u202F\u2000-\u200A]/g, ' ')
+            // 3. Tipoqrafik liqatura və riyazi simvolların ASCII JS tokenlərinə çevrilməsi
+            .replace(/\u21D2/g, '=>') // ⇒
+            .replace(/\u2A7E/g, '>=') // ⩾
+            .replace(/\u2265/g, '>=') // ≥
+            .replace(/\u2A7D/g, '<=') // ⩽
+            .replace(/\u2264/g, '<=') // ≤
+            .replace(/\u2260/g, '!==') // ≠
+            // 4. Tipoqrafik qoşa dırnaqların standart " dırnağına çevrilməsi
+            .replace(/[\u201C\u201D\u201E\u201F\u00AB\u00BB]/g, '"')
+            // 5. Tipoqrafik tək dırnaqların standart ' dırnağına çevrilməsi
+            .replace(/[\u2018\u2019\u201A\u201B\u2032]/g, "'");
+    }
+
     // ---- Təhlükəsiz Brauzer Yaddaşı (Storage) Qoruyucusu ----
     const safeStorage = {
         getItem(key) {
@@ -1047,7 +1068,7 @@
         const roadmapPct = document.getElementById('roadmap-pct');
         if (roadmapPct) roadmapPct.textContent = '0%';
         const roadmapFraction = document.getElementById('roadmap-fraction');
-        if (roadmapFraction) roadmapFraction.textContent = `0/21 bölmə (0/${totalCurriculumTasks} tapşırıq)`;
+        if (roadmapFraction) roadmapFraction.innerHTML = `0/21 bölmə <span class="info-fraction-sub">(0/${totalCurriculumTasks} tapşırıq)</span>`;
         const circleFill = document.getElementById('roadmap-circle-fill');
         if (circleFill) circleFill.style.strokeDashoffset = 2 * Math.PI * 42;
 
@@ -1140,95 +1161,92 @@
 
     // ---- Navigation Rendering ----
     function renderNav() {
-        // Çoxsəviyyəli konteyner axtarışı (Desktop, Mobile və Dinamik DOM üçün)
-        let nav = document.getElementById('sidebar-nav') ||
-                  document.querySelector('.sidebar-nav') ||
-                  document.querySelector('#sidebar nav') ||
-                  document.getElementById('mobile-sidebar-nav');
+        // Çoxsəviyyəli və çoxlu hədəfli konteyner axtarışı (Desktop və Mobile üçün)
+        let navTargets = document.querySelectorAll('#sidebar-nav, .sidebar-nav, #mobile-sidebar-nav');
 
         // Özünübərpa edən fallback: Əgər #sidebar mövcuddursa, amma nav yoxdursa, dinamik yaradılır
-        if (!nav) {
+        if (!navTargets || navTargets.length === 0) {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) {
-                nav = document.createElement('nav');
-                nav.className = 'sidebar-nav';
-                nav.id = 'sidebar-nav';
-                sidebar.appendChild(nav);
+                const createdNav = document.createElement('nav');
+                createdNav.className = 'sidebar-nav';
+                createdNav.id = 'sidebar-nav';
+                sidebar.appendChild(createdNav);
+                navTargets = [createdNav];
+            } else {
+                console.warn('[renderNav] Navigasiya konteyneri tapılmadı. İcra təhlükəsiz dayandırıldı.');
+                return;
             }
-        }
-
-        // Qoruyucu DOM yoxlaması: nav konteyneri tapılmadıqda heç bir xəta törətmədən təhlükəsiz çıxış
-        if (!nav) {
-            console.warn('[renderNav] Navigasiya konteyneri (#sidebar-nav) tapılmadı. İcra təhlükəsiz dayandırıldı.');
-            return;
-        }
-
-        // Təhlükəsiz təmizləmə
-        nav.innerHTML = '';
-
-        if (!Array.isArray(CURRICULUM) || CURRICULUM.length === 0) {
-            return;
         }
 
         const completedSet = (state && state.completedTopics instanceof Set) 
             ? state.completedTopics 
             : new Set();
 
-        CURRICULUM.forEach(section => {
-            if (!section || !Array.isArray(section.topics)) return;
+        const hasCurriculum = Array.isArray(CURRICULUM) && CURRICULUM.length > 0;
 
-            const sectionEl = document.createElement('div');
-            sectionEl.className = 'nav-section';
-            sectionEl.dataset.sectionId = section.id || '';
+        navTargets.forEach(nav => {
+            if (!nav) return;
+            nav.innerHTML = '';
 
-            // Aktiv mövzu yoxlaması
-            const hasActive = section.topics.some(t => t && t.id === state.currentTopicId);
-            if (hasActive) sectionEl.classList.add('expanded');
+            if (!hasCurriculum) return;
 
-            // Bölmə üzrə irəliləyiş
-            const completedInSection = section.topics.filter(t => t && completedSet.has(t.id)).length;
-            const totalInSection = section.topics.length;
+            CURRICULUM.forEach(section => {
+                if (!section || !Array.isArray(section.topics)) return;
 
-            const header = document.createElement('div');
-            header.className = 'nav-section-header';
-            header.innerHTML = `
-                <span class="nav-section-icon">${section.icon || '📌'}</span>
-                <span class="nav-section-title">${section.title || ''}</span>
-                <span class="nav-section-progress">${completedInSection}/${totalInSection}</span>
-                <span class="nav-section-arrow">▶</span>
-            `;
-            header.addEventListener('click', () => {
-                cancelSidebarCollapseTimer();
-                sectionEl.classList.toggle('expanded');
-            });
+                const sectionEl = document.createElement('div');
+                sectionEl.className = 'nav-section';
+                sectionEl.dataset.sectionId = section.id || '';
 
-            const topicsList = document.createElement('div');
-            topicsList.className = 'nav-topics';
+                // Aktiv mövzu yoxlaması
+                const hasActive = section.topics.some(t => t && t.id === state.currentTopicId);
+                if (hasActive) sectionEl.classList.add('expanded');
 
-            section.topics.forEach(topic => {
-                if (!topic) return;
+                // Bölmə üzrə irəliləyiş
+                const completedInSection = section.topics.filter(t => t && completedSet.has(t.id)).length;
+                const totalInSection = section.topics.length;
 
-                const topicEl = document.createElement('div');
-                topicEl.className = 'nav-topic';
-                if (topic.id === state.currentTopicId) topicEl.classList.add('active');
-                if (completedSet.has(topic.id)) topicEl.classList.add('completed');
-
-                const statusIcon = completedSet.has(topic.id) ? '✓' : '';
-                topicEl.innerHTML = `
-                    <span class="nav-topic-status">${statusIcon}</span>
-                    <span class="nav-topic-title">${topic.title || ''}</span>
+                const header = document.createElement('div');
+                header.className = 'nav-section-header';
+                header.innerHTML = `
+                    <span class="nav-section-icon">${section.icon || '📌'}</span>
+                    <span class="nav-section-title">${section.title || ''}</span>
+                    <span class="nav-section-progress">${completedInSection}/${totalInSection}</span>
+                    <span class="nav-section-arrow">▶</span>
                 `;
-                topicEl.addEventListener('click', () => {
+                header.addEventListener('click', () => {
                     cancelSidebarCollapseTimer();
-                    navigateToTopic(topic.id);
-                    closeMobileSidebar();
+                    sectionEl.classList.toggle('expanded');
                 });
-                topicsList.appendChild(topicEl);
-            });
 
-            sectionEl.appendChild(header);
-            sectionEl.appendChild(topicsList);
-            nav.appendChild(sectionEl);
+                const topicsList = document.createElement('div');
+                topicsList.className = 'nav-topics';
+
+                section.topics.forEach(topic => {
+                    if (!topic) return;
+
+                    const topicEl = document.createElement('div');
+                    topicEl.className = 'nav-topic';
+                    if (topic.id === state.currentTopicId) topicEl.classList.add('active');
+                    if (completedSet.has(topic.id)) topicEl.classList.add('completed');
+
+                    const statusIcon = completedSet.has(topic.id) ? '✓' : '';
+                    topicEl.innerHTML = `
+                        <span class="nav-topic-status">${statusIcon}</span>
+                        <span class="nav-topic-title">${topic.title || ''}</span>
+                    `;
+                    topicEl.addEventListener('click', () => {
+                        cancelSidebarCollapseTimer();
+                        navigateToTopic(topic.id);
+                        closeMobileSidebar();
+                    });
+                    topicsList.appendChild(topicEl);
+                });
+
+                sectionEl.appendChild(header);
+                sectionEl.appendChild(topicsList);
+                nav.appendChild(sectionEl);
+            });
         });
     }
 
@@ -1554,11 +1572,14 @@
 
     function renderTheory(topic) {
         const container = document.getElementById('theory-content');
-        container.innerHTML = topic.theory || '<p>Nəzəriyyə hazırlanır...</p>';
+        if (container) {
+            container.innerHTML = topic.theory || '<p>Nəzəriyyə hazırlanır...</p>';
+        }
 
         // Render code examples
         const examplesContainer = document.getElementById('code-examples');
-        examplesContainer.innerHTML = '';
+        if (examplesContainer) {
+            examplesContainer.innerHTML = '';
 
         if (topic.codeExamples && topic.codeExamples.length > 0) {
             topic.codeExamples.forEach((example, idx) => {
@@ -1605,13 +1626,14 @@
             });
         }
     }
+}
 
     function renderExercises(topic) {
         const container = document.getElementById('exercises-container');
         if (container) container.innerHTML = '';
 
         if (!topic.exercises || topic.exercises.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:2rem;">Bu mövzu üçün tapşırıqlar hazırlanır...</p>';
+            if (container) container.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:2rem;">Bu mövzu üçün tapşırıqlar hazırlanır...</p>';
             return;
         }
 
@@ -1706,7 +1728,7 @@
             : (topic.bugFix ? [topic.bugFix] : []);
 
         if (bugFixList.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:2rem;">Bu mövzu üçün xəta düzəltmə testləri hazırlanır...</p>';
+            if (container) container.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:2rem;">Bu mövzu üçün xəta düzəltmə testləri hazırlanır...</p>';
             return;
         }
 
@@ -4717,6 +4739,13 @@ self.onmessage = async function(e) {
     }
 
     function runJavaScript(code, timeoutMs = 2500) {
+        // Hər hansı icradan öncə tipoqrafik Unicode simvolları təmizlənir
+        code = (typeof sanitizeCodeForExecution === 'function')
+            ? sanitizeCodeForExecution(code)
+            : (typeof Simulator !== 'undefined' && typeof Simulator.sanitizeCodeForExecution === 'function')
+                ? Simulator.sanitizeCodeForExecution(code)
+                : code;
+
         return new Promise((resolve) => {
             let worker = null;
             let timer = null;
@@ -4844,12 +4873,21 @@ self.onmessage = async function(e) {
             if (runBtn) runBtn.disabled = false;
             return;
         }
-        const code = state.sandboxEditor.getValue();
+        const rawCode = state.sandboxEditor.getValue();
+        const code = (typeof sanitizeCodeForExecution === 'function')
+            ? sanitizeCodeForExecution(rawCode)
+            : rawCode;
 
         output.innerHTML = '<span class="running-indicator"><span class="running-dots"><span></span><span></span><span></span></span> İcra olunur...</span>';
 
         try {
-            const result = await runJavaScript(code);
+            // Təcrid olunmuş Sandboxed Iframe Simulator ilə təhlükəsiz icra
+            let result;
+            if (typeof Simulator !== 'undefined' && typeof Simulator.run === 'function') {
+                result = await Simulator.run(code, 2500);
+            } else {
+                result = await runJavaScript(code);
+            }
             if (result && result.error) {
                 output.innerHTML = `<span class="output-error">${escapeHtml(result.error)}</span>`;
             } else {
@@ -8782,7 +8820,7 @@ self.onmessage = async function(e) {
 
         const roadmapFractionEl = document.getElementById('roadmap-fraction');
         if (roadmapFractionEl) {
-            roadmapFractionEl.textContent = `${completedSectionsCount}/${totalSectionsCount} bölmə (${validCompletedTasks}/${totalCurriculumTasks} tapşırıq)`;
+            roadmapFractionEl.innerHTML = `${completedSectionsCount}/${totalSectionsCount} bölmə <span class="info-fraction-sub">(${validCompletedTasks}/${totalCurriculumTasks} tapşırıq)</span>`;
         }
 
         const circleFill = document.getElementById('roadmap-circle-fill');
@@ -10435,6 +10473,110 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
         }
     }
 
+    // ==========================================================================
+    // STANDALONE PWA & MOBILE ZERO-ZOOM ENGINE
+    // Completely disables pinch-to-zoom, double-tap zoom, gesture zoom & auto-focus zoom
+    // ==========================================================================
+    function initPreventUnwantedZoom() {
+        // 1. Dinamik Viewport Meta Kilidləmə (Əgər brauzer tərəfindən dəyişdirilibsə)
+        function enforceViewportMetaLock() {
+            try {
+                if (typeof document === 'undefined') return;
+                let meta = document.querySelector('meta[name="viewport"]');
+                const lockContent = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    meta.name = 'viewport';
+                    meta.content = lockContent;
+                    document.head.appendChild(meta);
+                } else if (meta.content !== lockContent) {
+                    meta.content = lockContent;
+                }
+            } catch (e) {}
+        }
+        enforceViewportMetaLock();
+
+        if (typeof document === 'undefined' || typeof window === 'undefined') return;
+
+        // 2. Çoxbarmaqlı Pinch-to-Zoom qarşısının alınması (Multi-touch gesture)
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches && e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches && e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 3. iOS Safari WebKit Gesture Hadisələri (gesturestart, gesturechange, gestureend)
+        ['gesturestart', 'gesturechange', 'gestureend'].forEach(function(eventType) {
+            document.addEventListener(eventType, function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        });
+
+        // 4. Double-Tap to Zoom qarşısının alınması (touchend & dblclick)
+        // DİQQƏT: İstifadəçinin CodeMirror daxilində və ya input sahələrində mətn seçməsini və ya kursor qoymasını bloklamırıq!
+        let lastTouchEndTime = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            const target = e.target;
+            const isTextEditorOrInput = target && target.closest && (
+                target.closest('input, textarea, select, [contenteditable="true"]') ||
+                target.closest('.CodeMirror') ||
+                target.closest('.interactive-editor')
+            );
+
+            if (!isTextEditorOrInput && (now - lastTouchEndTime <= 300)) {
+                e.preventDefault();
+            }
+            lastTouchEndTime = now;
+        }, { passive: false });
+
+        document.addEventListener('dblclick', function(e) {
+            const target = e.target;
+            const isTextEditorOrInput = target && target.closest && (
+                target.closest('input, textarea, select, [contenteditable="true"]') ||
+                target.closest('.CodeMirror') ||
+                target.closest('.interactive-editor')
+            );
+
+            if (!isTextEditorOrInput) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 5. Desktop Trekpad və Siçan Təkəri ilə Pinch-to-Zoom (Ctrl + Wheel)
+        window.addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 6. Klaviaturada Zoom Qısayolları (Ctrl/Cmd + '+', '-', '0')
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+                e.preventDefault();
+            }
+        });
+
+        // 7. VisualViewport miqyasının 1.0 səviyyəsində bərpası
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', function() {
+                if (window.visualViewport.scale > 1.01) {
+                    enforceViewportMetaLock();
+                }
+            });
+        }
+    }
+
+    try {
+        initPreventUnwantedZoom();
+    } catch (e) {}
+
     // ---- Initialization ----
     async function init() {
         // Initialize Modern Asynchronous Storage Engine (IndexedDB + Migration)
@@ -10494,6 +10636,13 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
             console.error('[App] setupEventListeners xətası:', err);
         }
 
+        // Standalone PWA & Mobile Zero-Zoom Engine Initialization
+        try {
+            initPreventUnwantedZoom();
+        } catch (err) {
+            console.warn('[App] initPreventUnwantedZoom xətası:', err);
+        }
+
         // Initialize Mobile JS Keyboard Toolbar
         try {
             initMobileKeyboardBar();
@@ -10536,6 +10685,7 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
     }
 
     if (typeof window !== 'undefined') {
+        window.sanitizeCodeForExecution = sanitizeCodeForExecution;
         window.appState = state;
         window.state = state;
         window.syncPlatformProgress = syncPlatformProgress;

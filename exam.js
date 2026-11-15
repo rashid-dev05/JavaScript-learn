@@ -411,10 +411,10 @@
     }
 
     // Brauzer mühitində DOM hazır olduqda avtomatik inisializasiya
-    if (typeof document !== 'undefined') {
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initQuestionBank);
-        } else {
+        } else if (typeof document.getElementById === 'function') {
             initQuestionBank();
         }
     }
