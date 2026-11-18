@@ -5925,13 +5925,14 @@ body.view-topic .main-content {
 }
 
 /* Interactive macOS Terminal Card - Permanently Locked Dimensions (CLS Prevention) */
+#hero-terminal-card,
 .hero-terminal-card,
 .hero-terminal-window {
     width: 100%;
     max-width: 480px;
-    min-height: 380px;
-    height: 520px;
-    max-height: min(520px, 85dvh);
+    min-height: 435px;
+    height: 435px;
+    max-height: 435px;
     background: #090D16;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 16px;
@@ -5944,6 +5945,7 @@ body.view-topic .main-content {
     z-index: 1;
     box-sizing: border-box;
     flex-shrink: 0;
+    contain: layout paint;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -5954,13 +5956,13 @@ body.view-topic .main-content {
 }
 
 .terminal-header {
-    height: 44px;
-    min-height: 44px;
-    max-height: 44px;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    padding: 0.85rem 1.1rem;
     background: #0D1322;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     gap: 12px;
@@ -6035,12 +6037,10 @@ body.view-topic .main-content {
 
 .terminal-body,
 .terminal-code-body {
-    height: 310px;
-    min-height: 310px;
-    max-height: 310px;
-    padding: 1rem 1.35rem;
-    font-size: 0.81rem;
-    line-height: 1.48;
+    height: 265px;
+    min-height: 265px;
+    max-height: 265px;
+    padding: 0;
     background: #070B13;
     display: flex;
     flex-direction: column;
@@ -6049,13 +6049,46 @@ body.view-topic .main-content {
     flex-shrink: 0;
 }
 
+#terminal-code-content {
+    display: block;
+    padding: 1.15rem 1.2rem;
+    height: 265px;
+    min-height: 265px;
+    max-height: 265px;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    white-space: pre;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    color: #CBD5E1;
+}
+
+#terminal-code-content::-webkit-scrollbar,
+.terminal-body::-webkit-scrollbar {
+    height: 4px;
+}
+
+#terminal-code-content::-webkit-scrollbar-track,
+.terminal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#terminal-code-content::-webkit-scrollbar-thumb,
+.terminal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 4px;
+}
+
 .terminal-code {
     margin: 0;
+    padding: 0;
     color: #CBD5E1;
     font-family: var(--font-code);
     position: relative;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
     white-space: pre;
 }
 
@@ -6073,7 +6106,13 @@ body.view-topic .main-content {
     }
 }
 
-.terminal-cursor {
+.terminal-cursor,
+#terminal-cursor {
+    display: none !important;
+}
+
+#terminal-code-content::after {
+    content: "█";
     display: inline-block;
     color: #06B6D4;
     margin-left: 2px;
@@ -6095,12 +6134,12 @@ body.view-topic .main-content {
 
 .terminal-output-pane,
 .terminal-console-drawer {
-    height: 166px;
-    min-height: 166px;
-    max-height: 166px;
+    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
     background: #04070D;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 0.85rem 1.35rem;
+    padding: 0.75rem 1.1rem;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -6135,9 +6174,11 @@ body.view-topic .main-content {
     line-height: 1.5;
     color: #38BDF8;
     white-space: pre-wrap;
+    word-break: break-word;
     font-family: var(--font-code);
     flex-grow: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .output-line {
@@ -10143,31 +10184,161 @@ dialog::backdrop {
         width: 100% !important;
     }
 
+    #hero-terminal-card,
     .hero-terminal-card,
     .hero-terminal-window {
+        width: 100% !important;
         max-width: 100% !important;
-        height: auto !important;
-        min-height: auto !important;
-        max-height: none !important;
+        min-height: 435px !important;
+        height: 435px !important;
+        max-height: 435px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        flex-shrink: 0 !important;
+        contain: layout paint !important;
+    }
+
+    .terminal-header {
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+        padding: 0.85rem 1.1rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
     }
 
     .terminal-body,
     .terminal-code-body {
-        height: auto !important;
-        min-height: 200px !important;
-        max-height: 320px !important;
+        height: 265px !important;
+        min-height: 265px !important;
+        max-height: 265px !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
+        background: #070B13 !important;
+    }
+
+    #terminal-code-content {
+        display: block !important;
+        padding: 1.15rem 1.2rem !important;
+        height: 265px !important;
+        min-height: 265px !important;
+        max-height: 265px !important;
+        font-size: 0.8rem !important;
+        line-height: 1.55 !important;
+        white-space: pre !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-sizing: border-box !important;
+    }
+
+    .terminal-code {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+        white-space: pre !important;
+        overflow: visible !important;
+    }
+
+    .terminal-cursor,
+    #terminal-cursor {
+        display: none !important;
+    }
+
+    #terminal-code-content::after {
+        content: "█" !important;
+        display: inline-block !important;
+        color: #06B6D4 !important;
+        margin-left: 2px !important;
+        font-size: 0.85em !important;
+        animation: blinkCursor 1s step-end infinite !important;
+        vertical-align: baseline !important;
     }
 
     .terminal-output-pane,
     .terminal-console-drawer {
-        height: auto !important;
+        height: 120px !important;
         min-height: 120px !important;
-        max-height: 200px !important;
+        max-height: 120px !important;
+        padding: 0.75rem 1.1rem !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .terminal-output-content {
+        margin: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
     }
 
 }
 
 @media (max-width: 640px) {
+    /* Hero Live Terminal Card Spacing & Zero CLS Proportions (<= 640px) */
+    #hero-terminal-card,
+    .hero-terminal-card,
+    .hero-terminal-window {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 435px !important;
+        height: 435px !important;
+        max-height: 435px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        flex-shrink: 0 !important;
+        contain: layout paint !important;
+    }
+
+    .terminal-header {
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+        padding: 0.85rem 1.1rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-sizing: border-box !important;
+    }
+
+    .terminal-body,
+    .terminal-code-body {
+        height: 265px !important;
+        min-height: 265px !important;
+        max-height: 265px !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    #terminal-code-content {
+        display: block !important;
+        padding: 1.15rem 1.2rem !important;
+        height: 265px !important;
+        min-height: 265px !important;
+        max-height: 265px !important;
+        font-size: 0.8rem !important;
+        line-height: 1.55 !important;
+        white-space: pre !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-sizing: border-box !important;
+    }
+
+    .terminal-output-pane,
+    .terminal-console-drawer {
+        height: 120px !important;
+        min-height: 120px !important;
+        max-height: 120px !important;
+        padding: 0.75rem 1.1rem !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
     /* Hero Title Spacing & Font */
     .hero-title {
         font-size: clamp(1.85rem, 7vw, 2.35rem) !important;

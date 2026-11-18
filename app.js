@@ -8869,6 +8869,7 @@ self.onmessage = async function(e) {
         const outputEl = document.getElementById('terminal-output-content');
         const timeEl = document.getElementById('terminal-exec-time');
         const titleEl = document.getElementById('terminal-file-title');
+        const bodyEl = document.getElementById('terminal-body');
 
         if (!card || !runBtn || !codeEl || !outputEl) return;
         if (card.dataset.initialized === 'true') return;
@@ -9008,6 +9009,8 @@ self.onmessage = async function(e) {
             charIndex = 0;
             currentSpan = null;
 
+            if (bodyEl) bodyEl.scrollLeft = 0;
+            if (codeEl) codeEl.scrollLeft = 0;
             codeEl.innerHTML = '';
             outputEl.innerHTML = '';
             if (timeEl) timeEl.textContent = '...';
@@ -9029,6 +9032,8 @@ self.onmessage = async function(e) {
             runBtn.textContent = '⏳ İcra...';
 
             // Instantly fill full code if still typing
+            if (bodyEl) bodyEl.scrollLeft = 0;
+            if (codeEl) codeEl.scrollLeft = 0;
             codeEl.innerHTML = '';
             currentSpan = null;
             for (const item of charStream) {
