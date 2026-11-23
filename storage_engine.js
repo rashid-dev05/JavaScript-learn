@@ -117,9 +117,9 @@
                 'jsoyren_theme'
             ];
 
-            // Bütün mövcud jsoyren_* açarlarını da əlavə edirik
-            for (let i = 0; i < localStorage.length; i++) {
-                const k = localStorage.key(i);
+            // Bütün mövcud jsoyren_* açarlarını təhlükəsiz snapshot massivi ilə əlavə edirik
+            const existingStorageKeys = Object.keys(localStorage);
+            for (const k of existingStorageKeys) {
                 if (k && (k.startsWith('jsoyren_') || k.startsWith('pyoyren_')) && !keysToMigrate.includes(k)) {
                     keysToMigrate.push(k);
                 }

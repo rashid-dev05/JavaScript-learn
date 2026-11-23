@@ -4,7 +4,7 @@
  * Strategiya: Stale-While-Revalidate (Lokal resurslar & CDN) + Network-First (Naviqasiya üçün Offline Fallback)
  */
 
-const CACHE_NAME = 'jsoyren-pwa-v1.0.0';
+const CACHE_NAME = 'jsoyren-pwa-v1.0.2';
 
 // İlkin keşlənməli olan lokal və xarici kritik resurslar
 const PRECACHE_ASSETS = [
@@ -35,13 +35,13 @@ const PRECACHE_ASSETS = [
     './ecosystem_lessons_data.js',
     './data_exam_questions.js',
     './app.js',
-    // CodeMirror CDN faylları (Offline işləməsi üçün)
-    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js',
+    // CodeMirror Lokal faylları (100% Oflayn və sıfır xarici xəbərdarlıq)
+    './lib/codemirror/codemirror.min.css',
+    './lib/codemirror/dracula.min.css',
+    './lib/codemirror/codemirror.min.js',
+    './lib/codemirror/javascript.min.js',
+    './lib/codemirror/matchbrackets.min.js',
+    './lib/codemirror/closebrackets.min.js',
     // Google Fonts
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap'
 ];

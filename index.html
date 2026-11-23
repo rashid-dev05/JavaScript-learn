@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="az" data-theme="dark">
+<html lang="az" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -8,7 +8,15 @@
     
     <!-- Favicon & PWA App Icons -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23F7DF1E'/><text x='50' y='68' font-family='sans-serif' font-size='55' font-weight='bold' text-anchor='middle' fill='%23000'>JS</text></svg>">
-    <link rel="manifest" href="manifest.json">
+    <!-- PWA Web App Manifest (Yalnız http:// və ya https:// mühitində dinamik inyeksiya edilir; file:// protokolunda CORS xətasını aradan qaldırır) -->
+    <script>
+        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = './manifest.json';
+            document.head.appendChild(manifestLink);
+        }
+    </script>
     <meta name="theme-color" content="#090D16">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,12 +29,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- CodeMirror Styles -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <!-- CodeMirror Styles (Lokal fayllar: Edge Tracking Prevention xəbərdarlıqlarını və CDN asılılığını 100% aradan qaldırır) -->
+    <link rel="stylesheet" href="lib/codemirror/codemirror.min.css">
+    <link rel="stylesheet" href="lib/codemirror/dracula.min.css">
     
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Theme Early Initializer (Prevents FOUC) -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('jsoyren_theme');
+                if (savedTheme) {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
 </head>
 <body class="blueprint-canvas view-learn">
     <!-- Loading Screen -->
@@ -83,53 +107,15 @@
 
             <!-- Right Utility Elements -->
             <div class="navbar-right">
-                <div class="engine-badge" title="V8 / SpiderMonkey Brauzer Mühiti Aktivdir">
-                    <span class="engine-dot"></span>
-                    <span class="engine-text">ES2026 · brauzerinizdə işləyir</span>
-                </div>
+                <button type="button" id="theme-toggle-btn" class="header-icon-btn" title="Temanı dəyiş (Ağ / Qaranlıq)" aria-label="Temanı dəyiş">
+                    <span id="theme-toggle-icon">🌙</span>
+                </button>
                 <button class="top-nav-reset-btn" id="header-reset-progress-btn" type="button" title="Bütün irəliləməni sıfırla" aria-label="Bütün irəliləməni sıfırla"><span>🔄</span></button>
                 <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menyu">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </header>
-
-        <!-- Mobile Drawer Navigation -->
-        <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-            <div class="mobile-nav-header">
-                <div class="brand-badge">
-                    <span class="brand-icon">⚡</span>
-                    <span class="brand-text">js/bootcamp</span>
-                </div>
-                <button class="mobile-drawer-close" id="mobile-drawer-close">✕</button>
-            </div>
-            <div class="mobile-nav-links">
-                <button class="mobile-nav-item active" data-view="learn">
-                    <span class="nav-icon">📖</span> Öyrən
-                </button>
-                <button class="mobile-nav-item" data-view="exam">
-                    <span class="nav-icon">⏱️</span> İmtahan
-                </button>
-                <button class="mobile-nav-item" data-view="playground">
-                    <span class="nav-icon">💻</span> Playground
-                </button>
-                <button class="mobile-nav-item" data-view="errors-panel">
-                    <span class="nav-icon">🐛</span> Xəta Paneli
-                </button>
-                <button class="mobile-nav-item" data-view="diagram">
-                    <span class="nav-icon">🕸️</span> Sxem
-                </button>
-                <button class="mobile-nav-item" data-view="progress">
-                    <span class="nav-icon">🏆</span> İrəliləyiş
-                </button>
-            </div>
-            <div class="mobile-nav-footer">
-                <button class="mobile-sub-btn" id="mobile-tasks-btn">📋 Tapşırıqlar Paneli (130)</button>
-                <button class="mobile-sub-btn" id="mobile-errors-btn">🐛 Xəta Paneli (210)</button>
-                <button class="mobile-sub-btn reset" id="mobile-reset-btn">🔄 İrəliləyişi Sıfırla</button>
-            </div>
-        </div>
-        <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
 
         <!-- App Body Layout -->
         <div class="app-layout" id="app-layout">
@@ -1494,11 +1480,46 @@
         </div>
     </div>
 
-    <!-- CodeMirror Core and JavaScript Mode -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <!-- ============================================
+         MOBILE NAVIGATION DRAWER & BACKDROP OVERLAY
+         (Kök <body> elementinin birbaşa övladları - z-index və stacking context tələsindən təcrid olunmuş)
+         ============================================ -->
+    <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+            <div class="brand-badge">
+                <span class="brand-icon">⚡</span>
+                <span class="brand-text">js/bootcamp</span>
+            </div>
+            <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Menyunu bağla">✕</button>
+        </div>
+        <div class="mobile-nav-links">
+            <button class="mobile-nav-item active" data-view="learn">
+                <span class="nav-icon">📖</span> Öyrən
+            </button>
+            <button class="mobile-nav-item" data-view="exam">
+                <span class="nav-icon">⏱️</span> İmtahan
+            </button>
+            <button class="mobile-nav-item" data-view="playground">
+                <span class="nav-icon">💻</span> Playground
+            </button>
+            <button class="mobile-nav-item" data-view="errors-panel">
+                <span class="nav-icon">🐛</span> Xəta Paneli
+            </button>
+            <button class="mobile-nav-item" data-view="diagram">
+                <span class="nav-icon">🕸️</span> Sxem
+            </button>
+            <button class="mobile-nav-item" data-view="progress">
+                <span class="nav-icon">🏆</span> İrəliləyiş
+            </button>
+        </div>
+    </div>
+
+    <!-- CodeMirror Core and JavaScript Mode (Lokal resurslar: 100% oflayn və sıfır xarici xəbərdarlıq) -->
+    <script src="lib/codemirror/codemirror.min.js"></script>
+    <script src="lib/codemirror/javascript.min.js"></script>
+    <script src="lib/codemirror/matchbrackets.min.js"></script>
+    <script src="lib/codemirror/closebrackets.min.js"></script>
     
     <!-- Curriculum Data -->
     <script src="data_sections_1_5.js"></script>
@@ -1534,9 +1555,9 @@
     <!-- App Logic Engine -->
     <script src="app.js"></script>
 
-    <!-- Progressive Web App Service Worker Registration -->
+    <!-- Progressive Web App Service Worker Registration (Yalnız http/https mühitində qeydiyyatdan keçirilir; file:// protokolunda TypeError xətasını aradan qaldırır) -->
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then((registration) => {

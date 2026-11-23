@@ -1145,18 +1145,96 @@
 
     const resetProgress = resetAllProgress;
 
-    // ---- Theme ----
+    // ---- Theme & Mode Switcher ----
+    function updateThemeUI() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const isDark = currentTheme === 'dark';
+
+        // Update Header Theme Toggle Button & Icon
+        const toggleIcon = document.getElementById('theme-toggle-icon');
+        const toggleBtn = document.getElementById('theme-toggle-btn');
+        if (toggleIcon) {
+            // Light rejimdə olanda Ay (🌙) göstərilir ki, kliklədikdə qaranlıq rejimə keçsin
+            // Dark rejimdə olanda Günəş (☀️) göstərilir ki, kliklədikdə işıqlı ağ rejimə keçsin
+            toggleIcon.textContent = isDark ? '☀️' : '🌙';
+        }
+        if (toggleBtn) {
+            toggleBtn.setAttribute('title', isDark ? 'Açıq rejimə keç (Ağ tema)' : 'Qaranlıq rejimə keç (Tünd tema)');
+            toggleBtn.setAttribute('aria-label', isDark ? 'Açıq rejimə keç' : 'Qaranlıq rejimə keç');
+        }
+
+        // Update Meta Theme Color for Mobile Status Bar
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', isDark ? '#090D16' : '#FAF9F5');
+        }
+
+        // Update CodeMirror instances across all views
+        const cmTheme = isDark ? 'dracula' : 'default';
+        if (typeof CodeMirror !== 'undefined') {
+            document.querySelectorAll('.CodeMirror').forEach(el => {
+                if (el.CodeMirror) {
+                    try {
+                        el.CodeMirror.setOption('theme', cmTheme);
+                        el.CodeMirror.refresh();
+                    } catch (e) {}
+                }
+            });
+        }
+        try {
+            if (state && state.sandboxEditor) {
+                state.sandboxEditor.setOption('theme', cmTheme);
+                state.sandboxEditor.refresh();
+            }
+            if (state && state.editors) {
+                Object.values(state.editors).forEach(cm => {
+                    if (cm && cm.setOption) {
+                        cm.setOption('theme', cmTheme);
+                        cm.refresh();
+                    }
+                });
+            }
+            if (state && state.panelEditors) {
+                Object.values(state.panelEditors).forEach(cm => {
+                    if (cm && cm.setOption) {
+                        cm.setOption('theme', cmTheme);
+                        cm.refresh();
+                    }
+                });
+            }
+            if (typeof examState !== 'undefined' && examState && examState.editorInstance) {
+                examState.editorInstance.setOption('theme', cmTheme);
+                examState.editorInstance.refresh();
+            }
+            if (typeof hourglassState !== 'undefined' && hourglassState && hourglassState.editorInstance) {
+                hourglassState.editorInstance.setOption('theme', cmTheme);
+                hourglassState.editorInstance.refresh();
+            }
+        } catch (e) {}
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        try {
+            localStorage.setItem(THEME_KEY, nextTheme);
+        } catch (e) {}
+        updateThemeUI();
+    }
+
     function initTheme() {
         try {
             const saved = localStorage.getItem(THEME_KEY);
             if (saved) {
                 document.documentElement.setAttribute('data-theme', saved);
             } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
+                document.documentElement.setAttribute('data-theme', 'light');
             }
         } catch (e) {
-            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.setAttribute('data-theme', 'light');
         }
+        updateThemeUI();
     }
 
     // ---- Navigation Rendering ----
@@ -1314,17 +1392,19 @@
         // 1. Mobile Navigation Drawer & Backdrop
         const mobileDrawer = document.getElementById('mobile-nav-drawer');
         const mobileDrawerOverlay = document.getElementById('mobile-drawer-overlay');
-        if (mobileDrawer) mobileDrawer.classList.remove('open');
+        if (mobileDrawer) {
+            mobileDrawer.classList.remove('open', 'active');
+        }
         if (mobileDrawerOverlay) {
-            mobileDrawerOverlay.classList.remove('open');
-            mobileDrawerOverlay.style.display = 'none';
+            mobileDrawerOverlay.classList.remove('open', 'active');
+            mobileDrawerOverlay.style.removeProperty('display');
         }
 
         // 2. Mobile Curriculum Sidebar & Backdrop
         closeMobileSidebar();
 
         // 3. Reset Hamburger / Menu toggles
-        const toggles = document.querySelectorAll('.mobile-menu-toggle, #mobile-menu-toggle, #menu-toggle');
+        const toggles = document.querySelectorAll('.mobile-menu-toggle, #mobile-menu-toggle, #menu-toggle, #sidebar-toggle');
         toggles.forEach(t => t.classList.remove('active'));
 
         // 4. Force-close any open HTML5 <dialog> elements
@@ -1706,16 +1786,22 @@
             });
 
             // Hint button
-            card.querySelector('.exercise-hint-btn').addEventListener('click', () => {
-                const hintEl = document.getElementById(`hint-${exId}`);
-                hintEl.classList.toggle('show');
-            });
+            const hintBtn = card.querySelector('.exercise-hint-btn');
+            if (hintBtn) {
+                hintBtn.addEventListener('click', () => {
+                    const hintEl = document.getElementById(`hint-${exId}`);
+                    if (hintEl) hintEl.classList.toggle('show');
+                });
+            }
 
             // Submit button
-            card.querySelector('.exercise-submit-btn').addEventListener('click', () => {
-                const cm = state.editors[exId];
-                if (cm) submitExercise(exId, exercise, cm);
-            });
+            const submitBtn = card.querySelector('.exercise-submit-btn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    const cm = state.editors[exId];
+                    if (cm) submitExercise(exId, exercise, cm);
+                });
+            }
         });
     }
 
@@ -1814,12 +1900,16 @@
             });
 
             // Hint button
-            card.querySelector('.exercise-hint-btn').addEventListener('click', () => {
-                const resultEl = document.getElementById(`bugfix-result-${bfId}`);
-                const hintText = (bugfix.hints && bugfix.hints.join(' | ')) || bugfix.hint || bugfix.explanation || 'Kodu diqqətlə nəzərdən keçirin və sintaksisi yoxlayın.';
-                resultEl.innerHTML = `<div class="bugfix-explanation">💡 <strong>İpucu:</strong> ${escapeHtml(hintText)}</div>`;
-                resultEl.classList.toggle('show');
-            });
+            const hintBtn = card.querySelector('.exercise-hint-btn');
+            if (hintBtn) {
+                hintBtn.addEventListener('click', () => {
+                    const resultEl = document.getElementById(`bugfix-result-${bfId}`);
+                    if (!resultEl) return;
+                    const hintText = (bugfix.hints && bugfix.hints.join(' | ')) || bugfix.hint || bugfix.explanation || 'Kodu diqqətlə nəzərdən keçirin və sintaksisi yoxlayın.';
+                    resultEl.innerHTML = `<div class="bugfix-explanation">💡 <strong>İpucu:</strong> ${escapeHtml(hintText)}</div>`;
+                    resultEl.classList.toggle('show');
+                });
+            }
 
             // Reset button
             const resetBtn = card.querySelector('.exercise-reset-btn');
@@ -1837,10 +1927,13 @@
             }
 
             // Submit button
-            card.querySelector('.exercise-submit-btn').addEventListener('click', () => {
-                const cm = state.editors[`bf-${bfId}`];
-                if (cm) submitBugFix(bfId, bugfix, cm);
-            });
+            const submitBtn = card.querySelector('.exercise-submit-btn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    const cm = state.editors[`bf-${bfId}`];
+                    if (cm) submitBugFix(bfId, bugfix, cm);
+                });
+            }
         });
     }
 
@@ -2146,6 +2239,7 @@
         if (!resultEl || !card) return;
 
         const submitBtn = card.querySelector('.exercise-submit-btn') || card.querySelector(`button[data-id="${exId}"]`);
+        if (submitBtn && submitBtn.disabled) return;
 
         // Validation check
         const val = validateCodeSubmission(code, exercise.starterCode, false, {
@@ -2315,6 +2409,7 @@
         if (!resultEl || !card) return;
 
         const submitBtn = card.querySelector('.exercise-submit-btn') || card.querySelector(`button[data-bugfix-id="${bfId}"]`);
+        if (submitBtn && submitBtn.disabled) return;
 
         // Validation check
         const val = validateCodeSubmission(code, bugfix.buggyCode, true, {
@@ -4354,9 +4449,20 @@ if (typeof self !== 'undefined') {
 }
 
 self.onmessage = async function(e) {
-    const code = preprocessModuleCode(e.data.code);
+    let code = '';
     const logs = [];
     __uncaughtError = null;
+
+    try {
+        code = preprocessModuleCode((e.data && e.data.code) ? e.data.code : '');
+    } catch (prepErr) {
+        self.postMessage({
+            output: '',
+            error: 'Sintaksis xətası: ' + (prepErr.message || String(prepErr)),
+            returnValue: undefined
+        });
+        return;
+    }
 
     const mockConsole = createSandboxConsole(logs);
 
@@ -4751,6 +4857,7 @@ self.onmessage = async function(e) {
             let timer = null;
             let blobUrl = null;
             let settled = false;
+            let safetyTimer = null;
 
             const cleanup = () => {
                 if (safetyTimer) clearTimeout(safetyTimer);
@@ -4773,7 +4880,7 @@ self.onmessage = async function(e) {
                 resolve(val || { output: '', error: null });
             };
 
-            const safetyTimer = setTimeout(() => {
+            safetyTimer = setTimeout(() => {
                 safeResolve({
                     output: '',
                     error: 'İcra vaxt limiti (2.5s) aşdı! Kodunuzda sonsuz dövr (məsələn, while(true)) və ya asılı qalmış asinxron əməliyyat aşkar edildi.'
@@ -4869,7 +4976,7 @@ self.onmessage = async function(e) {
         }
 
         const output = document.getElementById('sandbox-output');
-        if (!state.sandboxEditor) {
+        if (!state.sandboxEditor || !output) {
             if (runBtn) runBtn.disabled = false;
             return;
         }
@@ -5146,16 +5253,22 @@ self.onmessage = async function(e) {
                 });
 
                 // Hint button
-                card.querySelector('.exercise-hint-btn').addEventListener('click', () => {
-                    const hintEl = document.getElementById(`hint-${task.id}`);
-                    hintEl.classList.toggle('show');
-                });
+                const hintBtn = card.querySelector('.exercise-hint-btn');
+                if (hintBtn) {
+                    hintBtn.addEventListener('click', () => {
+                        const hintEl = document.getElementById(`hint-${task.id}`);
+                        if (hintEl) hintEl.classList.toggle('show');
+                    });
+                }
 
                 // Submit button
-                card.querySelector('.exercise-submit-btn').addEventListener('click', () => {
-                    const cm = state.panelEditors[task.id];
-                    if (cm) submitPanelTask(task.id, task, cm);
-                });
+                const submitBtn = card.querySelector('.exercise-submit-btn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        const cm = state.panelEditors[task.id];
+                        if (cm) submitPanelTask(task.id, task, cm);
+                    });
+                }
             });
 
             group.appendChild(header);
@@ -5379,22 +5492,28 @@ self.onmessage = async function(e) {
                 }
 
                 // Hint button
-                card.querySelector('.exercise-hint-btn').addEventListener('click', () => {
-                    const resultEl = document.getElementById(`result-${bug.id}`);
-                    if (!resultEl) return;
-                    const hintText = bug.hint || bug.explanation || 'Kodu diqqətlə nəzərdən keçirin və sintaksisi yoxlayın.';
-                    resultEl.innerHTML = `<div class="bugfix-explanation">💡 <strong>İpucu:</strong> ${escapeHtml(hintText)}</div>`;
-                    resultEl.classList.toggle('show');
-                });
+                const hintBtn = card.querySelector('.exercise-hint-btn');
+                if (hintBtn) {
+                    hintBtn.addEventListener('click', () => {
+                        const resultEl = document.getElementById(`result-${bug.id}`);
+                        if (!resultEl) return;
+                        const hintText = bug.hint || bug.explanation || 'Kodu diqqətlə nəzərdən keçirin və sintaksisi yoxlayın.';
+                        resultEl.innerHTML = `<div class="bugfix-explanation">💡 <strong>İpucu:</strong> ${escapeHtml(hintText)}</div>`;
+                        resultEl.classList.toggle('show');
+                    });
+                }
 
                 // Submit button
-                card.querySelector('.exercise-submit-btn').addEventListener('click', () => {
-                    let cm = state.panelEditors[bug.id];
-                    if (!cm) {
-                        cm = mountLazyEditor(bug.id, bug);
-                    }
-                    if (cm) submitPanelError(bug.id, bug, cm);
-                });
+                const submitBtn = card.querySelector('.exercise-submit-btn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        let cm = state.panelEditors[bug.id];
+                        if (!cm) {
+                            cm = mountLazyEditor(bug.id, bug);
+                        }
+                        if (cm) submitPanelError(bug.id, bug, cm);
+                    });
+                }
 
                 itemsWrap.appendChild(card);
             });
@@ -5547,6 +5666,7 @@ self.onmessage = async function(e) {
         if (!resultEl || !card) return;
 
         const submitBtn = card.querySelector('.exercise-submit-btn') || card.querySelector(`button[data-id="${taskId}"]`);
+        if (submitBtn && submitBtn.disabled) return;
 
         // Validation check
         const val = validateCodeSubmission(code, task.starterCode, false, {
@@ -5712,6 +5832,7 @@ self.onmessage = async function(e) {
         if (!resultEl || !card) return;
 
         const submitBtn = card.querySelector('.exercise-submit-btn') || card.querySelector(`button[data-id="${bugId}"]`);
+        if (submitBtn && submitBtn.disabled) return;
 
         // Validation check
         const val = validateCodeSubmission(code, bug.buggyCode, true, {
@@ -5872,7 +5993,7 @@ self.onmessage = async function(e) {
     function toggleMobileSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        const toggle = document.getElementById('mobile-menu-toggle') || document.getElementById('menu-toggle');
+        const toggle = document.getElementById('sidebar-toggle') || document.getElementById('menu-toggle');
         
         if (sidebar) sidebar.classList.toggle('open');
         if (overlay) overlay.classList.toggle('active');
@@ -5883,7 +6004,7 @@ self.onmessage = async function(e) {
         cancelSidebarCollapseTimer();
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        const toggle = document.getElementById('mobile-menu-toggle') || document.getElementById('menu-toggle');
+        const toggle = document.getElementById('sidebar-toggle') || document.getElementById('menu-toggle');
         
         if (sidebar) sidebar.classList.remove('open');
         if (overlay) {
@@ -6328,7 +6449,7 @@ self.onmessage = async function(e) {
                     if (typeof StorageEngine !== 'undefined') {
                         await StorageEngine.clearExamHistory();
                     }
-                    localStorage.removeItem(EXAM_HISTORY_KEY);
+                    safeStorage.removeItem(EXAM_HISTORY_KEY);
                     renderExamHistory();
                     showToast('İmtahan tarixçəsi təmizləndi', 'info');
                 }
@@ -7036,6 +7157,9 @@ self.onmessage = async function(e) {
 
     async function testExamCurrentCode() {
         if (!examState.inProgress || !examState.editorInstance) return;
+        const testBtn = document.getElementById('exam-test-code-btn');
+        if (testBtn && testBtn.disabled) return;
+
         if (examState.surrenderedQuestions && examState.surrenderedQuestions.has(examState.currentIndex)) {
             showToast('Bu sual üzrə artıq təslim olunub və bal qazanıla bilməz', 'warning');
             return;
@@ -7056,22 +7180,29 @@ self.onmessage = async function(e) {
             type: q.type
         });
         if (!val.valid) {
-            outputText.textContent = val.message;
-            outputText.className = 'exam-test-output-text error';
-            outputStatus.textContent = 'Kod tələblərə cavab vermir';
+            if (outputText) {
+                outputText.textContent = val.message;
+                outputText.className = 'exam-test-output-text error';
+            }
+            if (outputStatus) {
+                outputStatus.textContent = 'Kod tələblərə cavab vermir';
+            }
             examState.validatedQuestions.delete(examState.currentIndex);
             updateStepperPillState(examState.currentIndex);
             showToast(val.message, 'warning');
             return;
         }
 
-        const testBtn = document.getElementById('exam-test-code-btn');
         if (testBtn) testBtn.disabled = true;
 
         examState.userAnswers[examState.currentIndex] = code;
-        outputText.textContent = 'İcra olunur...';
-        outputText.className = 'exam-test-output-text';
-        outputStatus.textContent = 'Test edilir...';
+        if (outputText) {
+            outputText.textContent = 'İcra olunur...';
+            outputText.className = 'exam-test-output-text';
+        }
+        if (outputStatus) {
+            outputStatus.textContent = 'Test edilir...';
+        }
 
         try {
             const result = await runJavaScript(code);
@@ -7096,9 +7227,13 @@ self.onmessage = async function(e) {
                 displayText = `Sizin çıxış:\n${userOut || '(Boş çıxış)'}\n\nGözlənilən çıxış:\n${expectedOut}`;
             }
 
-            outputText.textContent = displayText;
-            outputText.className = `exam-test-output-text ${isSuccess ? 'success' : 'error'}`;
-            outputStatus.textContent = statusText;
+            if (outputText) {
+                outputText.textContent = displayText;
+                outputText.className = `exam-test-output-text ${isSuccess ? 'success' : 'error'}`;
+            }
+            if (outputStatus) {
+                outputStatus.textContent = statusText;
+            }
 
             examState.testOutputs[examState.currentIndex] = {
                 output: displayText,
@@ -7115,9 +7250,13 @@ self.onmessage = async function(e) {
                 savePracticeQuestionProgress(q.id, code, isSuccess, examState.testOutputs[examState.currentIndex]);
             }
         } catch (execErr) {
-            outputText.textContent = `İcra zamanı xəta:\n${execErr.message || String(execErr)}`;
-            outputText.className = 'exam-test-output-text error';
-            outputStatus.textContent = 'Xəta baş verdi';
+            if (outputText) {
+                outputText.textContent = `İcra zamanı xəta:\n${execErr.message || String(execErr)}`;
+                outputText.className = 'exam-test-output-text error';
+            }
+            if (outputStatus) {
+                outputStatus.textContent = 'Xəta baş verdi';
+            }
         } finally {
             if (testBtn && !(examState.surrenderedQuestions && examState.surrenderedQuestions.has(examState.currentIndex))) {
                 testBtn.disabled = false;
@@ -7382,6 +7521,7 @@ self.onmessage = async function(e) {
         if (subtitleEl) subtitleEl.textContent = `Tarix: ${attempt.dateStr} — Sərf edilən vaxt: ${attempt.timeSpentStr}`;
 
         const body = document.getElementById('exam-result-body');
+        if (!body) return;
         const passedClass = attempt.passed ? 'passed' : 'failed';
 
         let reviewHtml = '';
@@ -8448,20 +8588,27 @@ self.onmessage = async function(e) {
                 if (stored) parsed = (typeof stored === 'string') ? JSON.parse(stored) : stored;
             }
             if (!parsed) {
-                const raw = localStorage.getItem('jsoyren_streak_data');
+                const raw = safeStorage.getItem('jsoyren_streak_data');
                 if (raw) parsed = JSON.parse(raw);
             }
         } catch (e) {
             parsed = null;
         }
 
-        const legacyStreak = parseInt(
-            ((typeof StorageEngine !== 'undefined') ? StorageEngine.getItemSync('jsoyren_streak') : null) ||
-            localStorage.getItem('jsoyren_streak') || '1',
-            10
-        );
-        const legacyDate = ((typeof StorageEngine !== 'undefined') ? StorageEngine.getItemSync('jsoyren_last_active_date') : null) ||
-            localStorage.getItem('jsoyren_last_active_date');
+        let legacyStreak = 1;
+        let legacyDate = null;
+        try {
+            legacyStreak = parseInt(
+                ((typeof StorageEngine !== 'undefined') ? StorageEngine.getItemSync('jsoyren_streak') : null) ||
+                safeStorage.getItem('jsoyren_streak') || '1',
+                10
+            );
+            legacyDate = ((typeof StorageEngine !== 'undefined') ? StorageEngine.getItemSync('jsoyren_last_active_date') : null) ||
+                safeStorage.getItem('jsoyren_last_active_date');
+        } catch (e) {
+            legacyStreak = 1;
+            legacyDate = null;
+        }
 
         const streak = parsed && typeof parsed.streak === 'number' ? parsed.streak : (legacyStreak || 1);
         const lastActiveDate = parsed && parsed.lastActiveDate ? parsed.lastActiveDate : legacyDate;
@@ -8960,6 +9107,10 @@ self.onmessage = async function(e) {
 
         function typeNextChar() {
             if (isExecuting) return;
+            if (typeof state !== 'undefined' && state.currentView && state.currentView !== 'learn') {
+                loopTimeout = setTimeout(typeNextChar, 1000);
+                return;
+            }
 
             if (charIndex < charStream.length) {
                 const item = charStream[charIndex++];
@@ -9886,23 +10037,32 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
 
         const openMobileDrawer = (e) => {
             if (e && e.stopPropagation) e.stopPropagation();
+            if (e && e.preventDefault) e.preventDefault();
             closeMobileSidebar();
-            if (mobileDrawer) mobileDrawer.classList.add('open');
-            if (mobileDrawerOverlay) {
-                mobileDrawerOverlay.style.display = 'block';
-                mobileDrawerOverlay.classList.add('open');
+            if (mobileDrawer) {
+                mobileDrawer.classList.add('open', 'active');
             }
-            if (mobileMenuToggle) mobileMenuToggle.classList.add('active');
+            if (mobileDrawerOverlay) {
+                mobileDrawerOverlay.style.removeProperty('display');
+                mobileDrawerOverlay.classList.add('open', 'active');
+            }
+            if (mobileMenuToggle) {
+                mobileMenuToggle.classList.add('active');
+            }
+            document.body.classList.add('drawer-open');
         };
 
         const closeMobileDrawer = (e) => {
             if (e && e.stopPropagation) e.stopPropagation();
+            if (e && e.preventDefault) e.preventDefault();
             closeAllOverlaysAndDrawers();
         };
 
         if (mobileMenuToggle) {
             mobileMenuToggle.addEventListener('click', (e) => {
-                if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+                if (e && e.stopPropagation) e.stopPropagation();
+                if (e && e.preventDefault) e.preventDefault();
+                if (mobileDrawer && (mobileDrawer.classList.contains('open') || mobileDrawer.classList.contains('active'))) {
                     closeMobileDrawer(e);
                 } else {
                     openMobileDrawer(e);
@@ -9920,27 +10080,15 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
             });
         });
 
-        const mobileTasksBtn = document.getElementById('mobile-tasks-btn');
-        if (mobileTasksBtn) {
-            mobileTasksBtn.addEventListener('click', () => {
-                closeAllOverlaysAndDrawers();
-                showView('tasks-panel');
-            });
-        }
-
-        const mobileErrorsBtn = document.getElementById('mobile-errors-btn');
-        if (mobileErrorsBtn) {
-            mobileErrorsBtn.addEventListener('click', () => {
-                closeAllOverlaysAndDrawers();
-                showView('errors-panel');
-            });
-        }
-
-        const mobileResetBtn = document.getElementById('mobile-reset-btn');
-        if (mobileResetBtn) {
-            mobileResetBtn.addEventListener('click', () => {
-                closeAllOverlaysAndDrawers();
-                resetProgress();
+        // Diagram Modal Close Action
+        const diagModalClose = document.getElementById('diagram-modal-close');
+        if (diagModalClose) {
+            diagModalClose.addEventListener('click', () => {
+                const diagModal = document.getElementById('diagram-modal');
+                if (diagModal) {
+                    if (diagModal.close) diagModal.close();
+                    else diagModal.classList.add('hidden');
+                }
             });
         }
 
@@ -10223,6 +10371,17 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
             });
         }
 
+        // Header Theme Toggle button
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', (e) => {
+                if (e && e.currentTarget && typeof e.currentTarget.blur === 'function') {
+                    e.currentTarget.blur();
+                }
+                toggleTheme();
+            });
+        }
+
         // Header Reset Progress button
         const headerResetBtn = document.getElementById('header-reset-progress-btn');
         if (headerResetBtn) {
@@ -10294,8 +10453,8 @@ const Bun = typeof Bun !== 'undefined' ? Bun : {
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            // Escape to close mobile sidebar
-            if (e.key === 'Escape') closeMobileSidebar();
+            // Escape to close mobile sidebar and overlays
+            if (e.key === 'Escape') closeAllOverlaysAndDrawers();
 
             // Ctrl+Enter or Cmd+Enter to execute code in Playground
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
